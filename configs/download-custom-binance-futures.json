@@ -1,0 +1,12 @@
+{
+  "exchange": {
+    "name": "binance",
+    "ccxt_config": {"enableRateLimit": true},
+    "ccxt_async_config": {"enableRateLimit": true}
+  },
+  "timeout": 60,
+  "dataformat_ohlcv": "feather",
+  "dataformat_trades": "feather",
+  "trading_mode": "futures",
+  "margin_mode": "isolated"
+}

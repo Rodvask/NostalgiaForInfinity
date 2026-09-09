@@ -3142,7 +3142,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # Informative 1d Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_1d_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -3323,7 +3323,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # Informative 4h Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_4h_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -3533,7 +3533,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # Informative 1h Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_1h_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -3733,7 +3733,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # Informative 15m Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_15m_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -3891,7 +3891,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # Coin Pair Base Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def base_tf_5m_indicators(self, metadata: dict, df: DataFrame) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     metadata_pair = metadata["pair"]
@@ -4382,7 +4382,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # BTC Informative 1d Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def btc_informative_1d_indicators(self, btc_pair: str, btc_info_timeframe: str) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -4441,7 +4441,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # BTC Informative 4h Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def btc_informative_4h_indicators(self, btc_pair: str, btc_info_timeframe: str) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -4501,7 +4501,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # BTC Informative 1h Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def btc_informative_1h_indicators(self, btc_pair: str, btc_info_timeframe: str) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -4571,7 +4571,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # BTC Informative 15m Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def btc_informative_15m_indicators(self, btc_pair: str, btc_info_timeframe: str) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -4641,7 +4641,7 @@ class NostalgiaForInfinityX8(IStrategy):
   # BTC Informative 5m Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def btc_informative_5m_indicators(self, btc_pair: str, btc_info_timeframe: str) -> DataFrame:
-    debug_time = False
+    debug_time = True
     if debug_time:
       tik = time.perf_counter()
     dp = self.dp
@@ -5673,128 +5673,7 @@ class NostalgiaForInfinityX8(IStrategy):
   def populate_exit_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
     df.loc[:, "exit_long"] = 0
     df.loc[:, "exit_short"] = 0
-    _keep_cols = frozenset({
-    "AROOND_14",
-    "AROOND_14_15m",
-    "AROOND_14_1h",
-    "AROOND_14_4h",
-    "AROONU_14",
-    "AROONU_14_15m",
-    "AROONU_14_1d",
-    "AROONU_14_1h",
-    "AROONU_14_4h",
-    "BBB_20_2.0_1h",
-    "BBL_20_2.0",
-    "BBL_20_2.0_1h",
-    "BBU_20_2.0",
-    "BBU_20_2.0_1h",
-    "BB_ABOVE_COUNT",
-    "BB_BELOW_COUNT",
-    "BTC_RSI_14_4h",
-    "CMF_20",
-    "CMF_20_1h",
-    "CMF_20_4h",
-    "EMA_100",
-    "EMA_100_4h",
-    "EMA_12",
-    "EMA_12_4h",
-    "EMA_16",
-    "EMA_20",
-    "EMA_200",
-    "EMA_200_1d",
-    "EMA_200_4h",
-    "EMA_26",
-    "EMA_50",
-    "EMA_50_1d",
-    "EMA_50_4h",
-    "EMA_9",
-    "KST_10_15_20_30_10_10_10_15",
-    "KSTs_9",
-    "MFI_14",
-    "RANGE_PCT_14_1d",
-    "ROC_2",
-    "ROC_2_1d",
-    "ROC_2_1h",
-    "ROC_2_4h",
-    "ROC_9",
-    "ROC_9_15m",
-    "ROC_9_1d",
-    "ROC_9_1h",
-    "ROC_9_4h",
-    "RSI_14",
-    "RSI_14_1h",
-    "RSI_14_4h",
-    "RSI_20",
-    "RSI_3",
-    "RSI_3_15m",
-    "RSI_3_1d",
-    "RSI_3_1h",
-    "RSI_3_4h",
-    "RSI_4",
-    "SMA_16",
-    "SMA_200_dec_12_1h",
-    "SMA_200_dec_24",
-    "SMA_200_dec_6_4h",
-    "SMA_200_inc_12_1h",
-    "SMA_200_inc_24",
-    "SMA_200_inc_6_4h",
-    "SMA_21",
-    "SMA_30",
-    "SMA_9",
-    "STOCHRSIk_14_14_3_3",
-    "STOCHRSIk_14_14_3_3_15m",
-    "STOCHRSIk_14_14_3_3_1d",
-    "STOCHRSIk_14_14_3_3_1h",
-    "STOCHRSIk_14_14_3_3_4h",
-    "WILLR_14",
-    "WILLR_480",
-    "WILLR_84_1h",
-    "bt_agefilter_ok",
-    "btc_pct_close_max_24_5m",
-    "btc_pct_close_max_72_5m",
-    "close",
-    "close_max_12",
-    "close_max_24",
-    "close_max_48",
-    "close_min_12",
-    "close_min_48",
-    "crossed_above_EMA_12_26",
-    "crossed_below_EMA_12_26",
-    "date",
-    "enter_long",
-    "enter_short",
-    "enter_tag",
-    "exchange",
-    "exit_long",
-    "exit_short",
-    "global_protections_long_dump",
-    "global_protections_long_pump",
-    "global_protections_short_dump",
-    "global_protections_short_pump",
-    "high",
-    "high_max_12_1h",
-    "high_max_12_4h",
-    "high_max_24_1h",
-    "high_max_24_4h",
-    "high_max_48_1h",
-    "high_max_6_1h",
-    "live_data_ok",
-    "low",
-    "low_min_12_1h",
-    "low_min_12_4h",
-    "low_min_24_1h",
-    "low_min_24_4h",
-    "low_min_6_1h",
-    "open",
-    "protections_long_global",
-    "protections_long_rebuy",
-    "protections_short_global",
-    "protections_short_rebuy",
-    "volume"
-    })
-    _drop = [c for c in df.columns if c not in _keep_cols]
-    if _drop:
-      df = df.drop(columns=_drop)
+
     return df
 
   #
