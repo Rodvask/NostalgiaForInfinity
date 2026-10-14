@@ -258,6 +258,7 @@ class NostalgiaForInfinityX8(IStrategy):
   short_rebuy_mode_name = "short_rebuy"
   short_high_profit_mode_name = "short_hp"
   short_rapid_mode_name = "short_rapid"
+  short_grind_mode_name = "short_grind"
   short_top_coins_mode_name = "short_tc"
   short_scalp_mode_name = "short_scalp"
 
@@ -44039,7 +44040,7 @@ class NostalgiaForInfinityX8(IStrategy):
         first_entry_distance_ratio = (exit_rate - first_entry.safe_price) / first_entry.safe_price
         # First entry exit
         if first_entry_distance_ratio > (
-          (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
+          (self.grind_mode_first_entry_profit_threshold_futures + fee_open_rate + fee_close_rate)
           if is_futures
           else (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
         ):
@@ -44079,7 +44080,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if derisk_use_grind_stops and (
           first_entry_distance_ratio
           < (
-            self.grind_mode_first_entry_stop_threshold_spot
+            self.grind_mode_first_entry_stop_threshold_futures
             if is_futures
             else self.grind_mode_first_entry_stop_threshold_spot
           )
@@ -55809,23 +55810,11 @@ class NostalgiaForInfinityX8(IStrategy):
         derisk_3_threshold = self.system_v4_derisk_level_3_spot[1]
         derisk_3_stake = self.system_v4_derisk_level_3_stake_spot
     else:
+      # Non-v4 trades: de-risk stays disabled. A planned "system_v4_2" family is referenced
+      # nowhere else (no parameter tables, no system name, no flags), so nothing is read here.
       derisk_1_enable = derisk_2_enable = derisk_3_enable = False
       derisk_1_threshold = derisk_2_threshold = derisk_3_threshold = 0.0
       derisk_1_stake = derisk_2_stake = derisk_3_stake = 0.0
-      if is_futures_mode:
-        derisk_1_threshold = self.system_v4_2_derisk_level_1_futures[1]
-        derisk_1_stake = self.system_v4_2_derisk_level_1_stake_futures
-        derisk_2_threshold = self.system_v4_2_derisk_level_2_futures[1]
-        derisk_2_stake = self.system_v4_2_derisk_level_2_stake_futures
-        derisk_3_threshold = self.system_v4_2_derisk_level_3_futures[1]
-        derisk_3_stake = self.system_v4_2_derisk_level_3_stake_futures
-      else:
-        derisk_1_threshold = self.system_v4_2_derisk_level_1_spot[1]
-        derisk_1_stake = self.system_v4_2_derisk_level_1_stake_spot
-        derisk_2_threshold = self.system_v4_2_derisk_level_2_spot[1]
-        derisk_2_stake = self.system_v4_2_derisk_level_2_stake_spot
-        derisk_3_threshold = self.system_v4_2_derisk_level_3_spot[1]
-        derisk_3_stake = self.system_v4_2_derisk_level_3_stake_spot
     derisk_enable = self.derisk_enable
     # ---------------------------------------------------------------------
     # De-risk level 1
@@ -58097,7 +58086,7 @@ class NostalgiaForInfinityX8(IStrategy):
         first_entry_distance_ratio = -(exit_rate - first_entry.safe_price) / first_entry.safe_price
         # First entry exit
         if first_entry_distance_ratio > (
-          (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
+          (self.grind_mode_first_entry_profit_threshold_futures + fee_open_rate + fee_close_rate)
           if is_futures
           else (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
         ):
@@ -58137,7 +58126,7 @@ class NostalgiaForInfinityX8(IStrategy):
         if derisk_use_grind_stops and (
           first_entry_distance_ratio
           < (
-            self.grind_mode_first_entry_stop_threshold_spot
+            self.grind_mode_first_entry_stop_threshold_futures
             if is_futures
             else self.grind_mode_first_entry_stop_threshold_spot
           )
