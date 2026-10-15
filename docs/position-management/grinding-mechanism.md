@@ -285,7 +285,12 @@ Each grind level (1-6) has its own set of parameters:
 - **regular_mode_stake_multiplier_spot/futures**: Stake multipliers for regular mode
 - **rebuy_mode_stake_multiplier**: Stake multiplier for rebuy mode
 - **grind_mode_stake_multiplier_spot/futures**: Stake multipliers for grind mode
-- **grind_mode_first_entry_profit_threshold_spot/futures**: Profit threshold for first entry exit
+- **grind_mode_first_entry_profit_threshold_spot/futures**: Profit threshold for the first entry exit.
+  Margin-relative (freqtrade convention): the code compares `price move * leverage` against it, so the
+  futures value is the spot value scaled by the grind-mode leverage (0.018 → 0.054 at 3x) and the
+  price trigger is the same in spot and futures.
+- **grind_mode_first_entry_stop_threshold_spot/futures**: Loss threshold for the first entry de-risk,
+  margin-relative as well (same scaling, -0.20 → -0.60 at 3x).
 
 ### Risk Parameters
 - **grinding_v1_max_stake**: Maximum total stake ratio for grind positions

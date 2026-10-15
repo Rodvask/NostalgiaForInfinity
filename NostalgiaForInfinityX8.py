@@ -890,10 +890,14 @@ class NostalgiaForInfinityX8(IStrategy):
   # Grind mode
   grind_mode_stake_multiplier_spot = [0.20, 0.30, 0.40, 0.50, 0.60, 0.70]
   grind_mode_stake_multiplier_futures = [0.20, 0.30, 0.40, 0.50]
+  # First-entry thresholds are margin-relative (freqtrade convention: profit on the stake, not on
+  # the price move). The grind functions compare `price_move * trade.leverage`, so the futures
+  # values are the spot values scaled by the default grind-mode leverage (3x): same price trigger
+  # in both modes, constant risk on margin if the leverage is changed.
   grind_mode_first_entry_profit_threshold_spot = 0.018
-  grind_mode_first_entry_profit_threshold_futures = 0.018
+  grind_mode_first_entry_profit_threshold_futures = 0.054
   grind_mode_first_entry_stop_threshold_spot = -0.20
-  grind_mode_first_entry_stop_threshold_futures = -0.20
+  grind_mode_first_entry_stop_threshold_futures = -0.60
   grind_mode_max_slots = 1
   grind_mode_coins = [
     "AAVE",
@@ -44038,11 +44042,12 @@ class NostalgiaForInfinityX8(IStrategy):
       if not is_first_entry_exit_found:
         first_entry = first_filled_entry
         first_entry_distance_ratio = (exit_rate - first_entry.safe_price) / first_entry.safe_price
-        # First entry exit
-        if first_entry_distance_ratio > (
-          (self.grind_mode_first_entry_profit_threshold_futures + fee_open_rate + fee_close_rate)
+        first_entry_margin_ratio = first_entry_distance_ratio * trade_leverage
+        # First entry exit (margin-relative; fees are paid on the notional, so they scale as well)
+        if first_entry_margin_ratio > (
+          (self.grind_mode_first_entry_profit_threshold_futures + ((fee_open_rate + fee_close_rate) * trade_leverage))
           if is_futures
-          else (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
+          else (self.grind_mode_first_entry_profit_threshold_spot + (fee_open_rate + fee_close_rate))
         ):
           sell_amount = first_entry.safe_filled * exit_rate / trade_leverage
           if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
@@ -44078,7 +44083,7 @@ class NostalgiaForInfinityX8(IStrategy):
               return -ft_sell_amount
         # First entry de-risk
         if derisk_use_grind_stops and (
-          first_entry_distance_ratio
+          first_entry_margin_ratio
           < (
             self.grind_mode_first_entry_stop_threshold_futures
             if is_futures
@@ -58084,11 +58089,12 @@ class NostalgiaForInfinityX8(IStrategy):
       if not is_first_entry_exit_found:
         first_entry = first_filled_entry
         first_entry_distance_ratio = -(exit_rate - first_entry.safe_price) / first_entry.safe_price
-        # First entry exit
-        if first_entry_distance_ratio > (
-          (self.grind_mode_first_entry_profit_threshold_futures + fee_open_rate + fee_close_rate)
+        first_entry_margin_ratio = first_entry_distance_ratio * trade_leverage
+        # First entry exit (margin-relative; fees are paid on the notional, so they scale as well)
+        if first_entry_margin_ratio > (
+          (self.grind_mode_first_entry_profit_threshold_futures + ((fee_open_rate + fee_close_rate) * trade_leverage))
           if is_futures
-          else (self.grind_mode_first_entry_profit_threshold_spot + fee_open_rate + fee_close_rate)
+          else (self.grind_mode_first_entry_profit_threshold_spot + (fee_open_rate + fee_close_rate))
         ):
           sell_amount = first_entry.safe_filled * exit_rate / trade_leverage
           if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
@@ -58124,7 +58130,7 @@ class NostalgiaForInfinityX8(IStrategy):
               return -ft_sell_amount
         # First entry de-risk
         if derisk_use_grind_stops and (
-          first_entry_distance_ratio
+          first_entry_margin_ratio
           < (
             self.grind_mode_first_entry_stop_threshold_futures
             if is_futures
