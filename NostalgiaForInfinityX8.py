@@ -728,7 +728,7 @@ class NostalgiaForInfinityX8(IStrategy):
   dynamic_stake_mode = "off"  # off|cap|reslice|both
   dynamic_stake_fixed_ratio = 0.0
   # BOOST: one-shot mid-trade injection to average down. Default off.
-  dynamic_stake_midtrade_enable = True
+  dynamic_stake_midtrade_enable = False
   dynamic_stake_boost_after_hours = 24.0
   dynamic_stake_boost_below = -0.01
   dynamic_stake_boost_amount = 1000.0
@@ -5613,6 +5613,26 @@ class NostalgiaForInfinityX8(IStrategy):
       if not starting_balance:
         return 1.0
       return max(1.0, self.wallets.get_total_stake_amount() / starting_balance)
+    except Exception:
+      return 1.0
+
+  def trade_wallet_ratio(self, trade: Trade) -> float:
+    """Wallet growth vs wallet at this trade's open (per-trade anchor, persists via custom_data)."""
+    if self.dynamic_stake_mode == "off" or self.wallets is None:
+      return 1.0
+    if self.dynamic_stake_fixed_ratio > 0:
+      return self.dynamic_stake_fixed_ratio
+    try:
+      total_now = self.wallets.get_total_stake_amount()
+      total_at_open = trade.get_custom_data(key="wallet_at_open")
+      if not total_at_open:
+        if total_now:
+          trade.set_custom_data(key="wallet_at_open", value=str(total_now))
+        return 1.0
+      total_at_open = float(total_at_open)
+      if total_at_open <= 0:
+        return 1.0
+      return max(1.0, total_now / total_at_open)
     except Exception:
       return 1.0
 
@@ -41043,7 +41063,7 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Dynamic stake experiment (D): re-anchor slice to wallet growth
     if self.dynamic_stake_mode in ("reslice", "both"):
-      slice_amount *= self.dynamic_wallet_ratio()
+      slice_amount *= self.trade_wallet_ratio(trade)
 
     is_system_v4 = self.is_system_v4(trade)
 
@@ -41466,7 +41486,7 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # not reached the max allowed stake for all grinds
     # Dynamic stake experiment (C): index grind cap to wallet growth
-    dynamic_stake_cap_mult = self.dynamic_wallet_ratio() if self.dynamic_stake_mode in ("cap", "both") else 1.0
+    dynamic_stake_cap_mult = self.trade_wallet_ratio(trade) if self.dynamic_stake_mode in ("cap", "both") else 1.0
     is_not_trade_max_stake_v4 = current_stake_amount < (
       slice_amount * self.system_v4_max_stake * dynamic_stake_cap_mult
     )
@@ -47609,7 +47629,7 @@ class NostalgiaForInfinityX8(IStrategy):
           send_notifications = not self.is_backtest_mode()
           # Dynamic stake experiment (D): scale rebuy tranche to wallet growth
           dynamic_stake_buy_mult = (
-            self.dynamic_wallet_ratio() if self.dynamic_stake_mode in ("reslice", "both") else 1.0
+            self.trade_wallet_ratio(trade) if self.dynamic_stake_mode in ("reslice", "both") else 1.0
           )
           buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] * dynamic_stake_buy_mult / trade_leverage
           if buy_amount < (min_stake * 1.5):
@@ -55367,7 +55387,7 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Dynamic stake experiment (D): re-anchor slice to wallet growth
     if self.dynamic_stake_mode in ("reslice", "both"):
-      slice_amount *= self.dynamic_wallet_ratio()
+      slice_amount *= self.trade_wallet_ratio(trade)
 
     is_system_v4 = self.is_system_v4(trade)
 
@@ -55748,7 +55768,7 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # not reached the max allowed stake for all grinds
     # Dynamic stake experiment (C): index grind cap to wallet growth
-    dynamic_stake_cap_mult = self.dynamic_wallet_ratio() if self.dynamic_stake_mode in ("cap", "both") else 1.0
+    dynamic_stake_cap_mult = self.trade_wallet_ratio(trade) if self.dynamic_stake_mode in ("cap", "both") else 1.0
     is_not_trade_max_stake_v4 = current_stake_amount < (
       slice_amount * self.system_v4_max_stake * dynamic_stake_cap_mult
     )
@@ -61581,7 +61601,7 @@ class NostalgiaForInfinityX8(IStrategy):
         ):
           # Dynamic stake experiment (D): scale rebuy tranche to wallet growth
           dynamic_stake_buy_mult = (
-            self.dynamic_wallet_ratio() if self.dynamic_stake_mode in ("reslice", "both") else 1.0
+            self.trade_wallet_ratio(trade) if self.dynamic_stake_mode in ("reslice", "both") else 1.0
           )
           buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] * dynamic_stake_buy_mult / trade_leverage
           if buy_amount < (min_stake * 1.5):
