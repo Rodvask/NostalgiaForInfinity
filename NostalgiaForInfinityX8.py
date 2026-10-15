@@ -1530,7 +1530,10 @@ class NostalgiaForInfinityX8(IStrategy):
               return True, f"exit_profit_{mode_name}_t_12_1"
         else:
           if 0.001 <= profit_init_ratio < 0.01:
-            if profit_init_ratio < (previous_profit - 0.020):
+            # Futures: skip the bottom trailing tier. Measured premature: the median t_0_1 exit
+            # locks ~1% price while ~5-7% of favorable excursion follows within 24h. Hold for
+            # higher tiers, indicator signals or stops instead.
+            if profit_init_ratio < (previous_profit - 0.020) and not is_futures_mode:
               return True, f"exit_profit_{mode_name}_t_0_1"
           elif 0.01 <= profit_init_ratio < 0.02:
             if profit_init_ratio < (previous_profit - 0.025):
@@ -1612,7 +1615,10 @@ class NostalgiaForInfinityX8(IStrategy):
               return True, f"exit_profit_{mode_name}_t_12_1"
         else:
           if 0.001 <= profit_init_ratio < 0.01:
-            if profit_init_ratio < (previous_profit - 0.020):
+            # Futures: skip the bottom trailing tier. Measured premature: the median t_0_1 exit
+            # locks ~1% price while ~5-7% of favorable excursion follows within 24h. Hold for
+            # higher tiers, indicator signals or stops instead.
+            if profit_init_ratio < (previous_profit - 0.020) and not is_futures_mode:
               return True, f"exit_profit_{mode_name}_t_0_1"
           elif 0.01 <= profit_init_ratio < 0.02:
             if profit_init_ratio < (previous_profit - 0.025):

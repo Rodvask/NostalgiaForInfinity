@@ -130,6 +130,12 @@ def test_profit_target_survives_exit_approval(profit_target_case):
   strategy, trade = profit_target_case
   target = strategy.target_profit_cache.data[trade.pair].copy()
   reason = evaluate_exit(strategy, trade)
+  if trade.leverage > 1.0 and trade.enter_tag.strip() in ("144", "641"):
+    # Futures non-scalp modes skip the bottom trailing tier (measured premature):
+    # the position is held and the peak target is left untouched.
+    assert reason is None
+    assert strategy.target_profit_cache.data[trade.pair] == target
+    return
   assert "_t_0_1" in reason
 
   assert approve_exit(strategy, trade, reason)
@@ -141,8 +147,16 @@ def test_profit_target_survives_exit_approval(profit_target_case):
 @pytest.mark.parametrize("filled", [0.0, 0.14, 0.35])
 def test_profit_exit_repeats_after_canceled_order(profit_target_case, filled):
   strategy, trade = profit_target_case
-  reason = evaluate_exit(strategy, trade)
-  assert "_t_0_1" in reason
+  if trade.leverage > 1.0 and trade.enter_tag.strip() in ("144", "641"):
+    # Bottom tier is skipped in futures non-scalp modes; exercise the retry loop one tier up.
+    peak_rate = 95.0 if trade.is_short else 106.0
+    assert evaluate_exit(strategy, trade, peak_rate) is None
+    tier_rate = 98.5 if trade.is_short else 102.0
+    reason = evaluate_exit(strategy, trade, tier_rate)
+    assert "_t_1_1" in reason
+  else:
+    reason = evaluate_exit(strategy, trade)
+    assert "_t_0_1" in reason
   assert approve_exit(strategy, trade, reason)
   order = add_order(
     trade, trade.exit_side, trade.amount, filled, 99.5 if trade.is_short else 100.5, "canceled", reason
@@ -153,7 +167,10 @@ def test_profit_exit_repeats_after_canceled_order(profit_target_case, filled):
   assert trade.amount == pytest.approx(10.0 - filled)
   strategy.target_profit_cache = Cache(strategy.target_profit_cache.path)
 
-  retry_reason = evaluate_exit(strategy, trade)
+  if trade.leverage > 1.0 and trade.enter_tag.strip() in ("144", "641"):
+    retry_reason = evaluate_exit(strategy, trade, 98.5 if trade.is_short else 102.0)
+  else:
+    retry_reason = evaluate_exit(strategy, trade)
 
   assert retry_reason == reason
 
