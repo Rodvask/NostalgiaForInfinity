@@ -1530,10 +1530,11 @@ class NostalgiaForInfinityX8(IStrategy):
               return True, f"exit_profit_{mode_name}_t_12_1"
         else:
           if 0.001 <= profit_init_ratio < 0.01:
-            # Futures: skip the bottom trailing tier. Measured premature: the median t_0_1 exit
-            # locks ~1% price while ~5-7% of favorable excursion follows within 24h. Hold for
-            # higher tiers, indicator signals or stops instead.
-            if profit_init_ratio < (previous_profit - 0.020) and not is_futures_mode:
+            # Futures: tighter trailing than spot (1% vs 2% pullback). Skipping the tier outright
+            # was measured harmful (drawdown 1.8% -> 10.2%); locking closer to the peak keeps the
+            # insurance while giving back less.
+            trailing_pullback = 0.010 if is_futures_mode else 0.020
+            if profit_init_ratio < (previous_profit - trailing_pullback):
               return True, f"exit_profit_{mode_name}_t_0_1"
           elif 0.01 <= profit_init_ratio < 0.02:
             if profit_init_ratio < (previous_profit - 0.025):
@@ -1615,10 +1616,11 @@ class NostalgiaForInfinityX8(IStrategy):
               return True, f"exit_profit_{mode_name}_t_12_1"
         else:
           if 0.001 <= profit_init_ratio < 0.01:
-            # Futures: skip the bottom trailing tier. Measured premature: the median t_0_1 exit
-            # locks ~1% price while ~5-7% of favorable excursion follows within 24h. Hold for
-            # higher tiers, indicator signals or stops instead.
-            if profit_init_ratio < (previous_profit - 0.020) and not is_futures_mode:
+            # Futures: tighter trailing than spot (1% vs 2% pullback). Skipping the tier outright
+            # was measured harmful (drawdown 1.8% -> 10.2%); locking closer to the peak keeps the
+            # insurance while giving back less.
+            trailing_pullback = 0.010 if is_futures_mode else 0.020
+            if profit_init_ratio < (previous_profit - trailing_pullback):
               return True, f"exit_profit_{mode_name}_t_0_1"
           elif 0.01 <= profit_init_ratio < 0.02:
             if profit_init_ratio < (previous_profit - 0.025):

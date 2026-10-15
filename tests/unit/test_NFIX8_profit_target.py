@@ -130,12 +130,6 @@ def test_profit_target_survives_exit_approval(profit_target_case):
   strategy, trade = profit_target_case
   target = strategy.target_profit_cache.data[trade.pair].copy()
   reason = evaluate_exit(strategy, trade)
-  if trade.leverage > 1.0 and trade.enter_tag.strip() in ("144", "641"):
-    # Futures non-scalp modes skip the bottom trailing tier (measured premature):
-    # the position is held and the peak target is left untouched.
-    assert reason is None
-    assert strategy.target_profit_cache.data[trade.pair] == target
-    return
   assert "_t_0_1" in reason
 
   assert approve_exit(strategy, trade, reason)
