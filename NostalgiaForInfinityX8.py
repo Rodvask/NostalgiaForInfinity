@@ -727,6 +727,11 @@ class NostalgiaForInfinityX8(IStrategy):
   # Dynamic stake experiment (C: cap indexing, D: slice re-anchor). Default off.
   dynamic_stake_mode = "off"  # off|cap|reslice|both
   dynamic_stake_fixed_ratio = 0.0
+  # BOOST: one-shot mid-trade injection to average down. Default off.
+  dynamic_stake_midtrade_enable = True
+  dynamic_stake_boost_after_hours = 24.0
+  dynamic_stake_boost_below = -0.01
+  dynamic_stake_boost_amount = 1000.0
 
   # Bad-trade exits. Enable for new v4 trades without changing older open trades.
   system_v4_bad_trade_exit_enable = True
@@ -2748,6 +2753,13 @@ class NostalgiaForInfinityX8(IStrategy):
     is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
     is_system_v3_family = is_system_v3 or is_system_v3_1 or is_system_v3_2
     is_system_v4 = self.is_system_v4(trade)
+
+    # Dynamic stake experiment (BOOST): one-shot mid-trade injection to average down.
+    # Evaluated on every adjust call (all engines/versions), before normal routing.
+    if self.dynamic_stake_midtrade_enable:
+      midtrade_boost = self.midtrade_boost_stake(trade, current_time, current_profit, trade.leverage)
+      if midtrade_boost is not None:
+        return midtrade_boost
 
     if is_backtest:
       is_v2_date = True
@@ -5603,6 +5615,30 @@ class NostalgiaForInfinityX8(IStrategy):
       return max(1.0, self.wallets.get_total_stake_amount() / starting_balance)
     except Exception:
       return 1.0
+
+  def midtrade_boost_stake(self, trade: Trade, current_time: datetime, current_profit: float, trade_leverage: float):
+    """One-shot mid-trade capital injection to average down. Returns (stake, tag) or None."""
+    if not self.dynamic_stake_midtrade_enable:
+      return None
+    if trade.get_custom_data(key="midtrade_boost_done"):
+      return None
+    try:
+      ct = current_time
+      od = trade.open_date_utc
+      if od is None:
+        return None
+      # Normalize tz-awareness on both sides (caller-dependent: naive in backtest adjust, aware elsewhere)
+      if getattr(ct, 'tzinfo', None) is not None and getattr(od, 'tzinfo', None) is None:
+        od = od.replace(tzinfo=ct.tzinfo)
+      elif getattr(od, 'tzinfo', None) is not None and getattr(ct, 'tzinfo', None) is None:
+        od = od.replace(tzinfo=None)
+      open_hours = (ct - od).total_seconds() / 3600.0
+    except Exception:
+      return None
+    if open_hours >= self.dynamic_stake_boost_after_hours and current_profit < self.dynamic_stake_boost_below:
+      trade.set_custom_data(key="midtrade_boost_done", value="1")
+      return self.dynamic_stake_boost_amount / trade_leverage, "midtrade_boost"
+    return None
 
   def get_system_version_flags(self, trade: Trade) -> tuple[bool, bool, bool]:
     """Check the current system version flags with one custom-data lookup."""
