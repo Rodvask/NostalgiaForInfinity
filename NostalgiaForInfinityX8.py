@@ -724,6 +724,9 @@ class NostalgiaForInfinityX8(IStrategy):
   system_v4_max_stake = 1.0  # ratio of first entry
   system_v4_stake_multiplier = 1.0
 
+  # Dynamic stake experiment (C: cap indexing, D: slice re-anchor). Default off.
+  dynamic_stake_mode = "off"  # off|cap|reslice|both
+
   # Bad-trade exits. Enable for new v4 trades without changing older open trades.
   system_v4_bad_trade_exit_enable = True
   legacy_system_bad_trade_exit_enable = False
@@ -5585,6 +5588,18 @@ class NostalgiaForInfinityX8(IStrategy):
   def is_system_v4(self, trade: Trade) -> bool:
     """Check if the current system is v4"""
     return trade.get_custom_data(key="system_version") == self.system_v4_name
+
+  def dynamic_wallet_ratio(self) -> float:
+    """Wallet growth ratio vs starting balance. 1.0 when disabled/unavailable (never tightens)."""
+    if self.dynamic_stake_mode == "off" or self.wallets is None:
+      return 1.0
+    try:
+      starting_balance = self.wallets.get_starting_balance()
+      if not starting_balance:
+        return 1.0
+      return max(1.0, self.wallets.get_total_stake_amount() / starting_balance)
+    except Exception:
+      return 1.0
 
   def get_system_version_flags(self, trade: Trade) -> tuple[bool, bool, bool]:
     """Check the current system version flags with one custom-data lookup."""
@@ -40987,6 +41002,10 @@ class NostalgiaForInfinityX8(IStrategy):
     if is_rebuy_mode:
       slice_amount /= self.system_v4_rebuy_mode_stake_multiplier
 
+    # Dynamic stake experiment (D): re-anchor slice to wallet growth
+    if self.dynamic_stake_mode in ("reslice", "both"):
+      slice_amount *= self.dynamic_wallet_ratio()
+
     is_system_v4 = self.is_system_v4(trade)
 
     has_order_tags = hasattr(filled_orders[0], "ft_order_tag")
@@ -41407,7 +41426,11 @@ class NostalgiaForInfinityX8(IStrategy):
     )
 
     # not reached the max allowed stake for all grinds
-    is_not_trade_max_stake_v4 = current_stake_amount < (slice_amount * self.system_v4_max_stake)
+    # Dynamic stake experiment (C): index grind cap to wallet growth
+    dynamic_stake_cap_mult = self.dynamic_wallet_ratio() if self.dynamic_stake_mode in ("cap", "both") else 1.0
+    is_not_trade_max_stake_v4 = current_stake_amount < (
+      slice_amount * self.system_v4_max_stake * dynamic_stake_cap_mult
+    )
 
     grind_1_cluster_max_profit_stake = trade.get_custom_data(key="grind_1_cluster_max_profit_stake") or 0.0
     grind_1_cluster_max_profit_rate = trade.get_custom_data(key="grind_1_cluster_max_profit_rate") or 0.0
@@ -55299,6 +55322,10 @@ class NostalgiaForInfinityX8(IStrategy):
     if is_rebuy_mode:
       slice_amount /= self.system_v4_rebuy_mode_stake_multiplier
 
+    # Dynamic stake experiment (D): re-anchor slice to wallet growth
+    if self.dynamic_stake_mode in ("reslice", "both"):
+      slice_amount *= self.dynamic_wallet_ratio()
+
     is_system_v4 = self.is_system_v4(trade)
 
     has_order_tags = hasattr(filled_orders[0], "ft_order_tag")
@@ -55677,7 +55704,11 @@ class NostalgiaForInfinityX8(IStrategy):
     )
 
     # not reached the max allowed stake for all grinds
-    is_not_trade_max_stake_v4 = current_stake_amount < (slice_amount * self.system_v4_max_stake)
+    # Dynamic stake experiment (C): index grind cap to wallet growth
+    dynamic_stake_cap_mult = self.dynamic_wallet_ratio() if self.dynamic_stake_mode in ("cap", "both") else 1.0
+    is_not_trade_max_stake_v4 = current_stake_amount < (
+      slice_amount * self.system_v4_max_stake * dynamic_stake_cap_mult
+    )
 
     grind_1_cluster_max_profit_stake = trade.get_custom_data(key="grind_1_cluster_max_profit_stake") or 0.0
     grind_1_cluster_max_profit_rate = trade.get_custom_data(key="grind_1_cluster_max_profit_rate") or 0.0
