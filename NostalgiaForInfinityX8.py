@@ -5639,6 +5639,15 @@ class NostalgiaForInfinityX8(IStrategy):
     except Exception:
       return 1.0
 
+  def dynamic_budget_mult(self, trade: Trade) -> float:
+    """Budget multiplier avoiding double-count: when reslice already scaled the slice,
+    the slice carries the ratio, so the budget adds 1.0; otherwise (cap-only) it adds the ratio."""
+    if self.dynamic_stake_mode == "off" or self.wallets is None:
+      return 1.0
+    if self.dynamic_stake_mode in ("reslice", "both"):
+      return 1.0
+    return self.trade_wallet_ratio(trade, floored=False)
+
   def _trade_derisk_active(self, trade: Trade) -> bool:
     """True if the trade's latest filled exit carries a derisk tag (spec: buys wait)."""
     try:
@@ -5659,7 +5668,7 @@ class NostalgiaForInfinityX8(IStrategy):
     try:
       if self.dynamic_budget_block_after_derisk and self._trade_derisk_active(trade):
         return 0.0
-      ratio = self.trade_wallet_ratio(trade, floored=False)
+      ratio = self.dynamic_budget_mult(trade)
       remaining = slice_amount * cap_ratio * ratio - trade.stake_amount
       if remaining <= 0:
         return 0.0
@@ -41502,7 +41511,7 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # not reached the max allowed stake for all grinds
     # Dynamic stake experiment (C): index grind cap to wallet growth
-    dynamic_stake_cap_mult = self.trade_wallet_ratio(trade) if self.dynamic_stake_mode in ("cap", "both") else 1.0
+    dynamic_stake_cap_mult = self.dynamic_budget_mult(trade)
     is_not_trade_max_stake_v4 = current_stake_amount < (
       slice_amount * self.system_v4_max_stake * dynamic_stake_cap_mult
     )
@@ -55784,7 +55793,7 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # not reached the max allowed stake for all grinds
     # Dynamic stake experiment (C): index grind cap to wallet growth
-    dynamic_stake_cap_mult = self.trade_wallet_ratio(trade) if self.dynamic_stake_mode in ("cap", "both") else 1.0
+    dynamic_stake_cap_mult = self.dynamic_budget_mult(trade)
     is_not_trade_max_stake_v4 = current_stake_amount < (
       slice_amount * self.system_v4_max_stake * dynamic_stake_cap_mult
     )
