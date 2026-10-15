@@ -36892,28 +36892,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_1_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_1_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_1_sub_grind_count > 0:
       grind_profit = (exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
@@ -37015,28 +37014,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_2_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_2_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_2_sub_grind_count > 0:
       grind_profit = (exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
@@ -37138,28 +37136,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_3_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_3_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_3_sub_grind_count > 0:
       grind_profit = (exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
@@ -37288,28 +37285,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_4_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_4_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_4_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_4_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_4_sub_grind_count > 0:
       grind_profit = (exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
@@ -37426,28 +37422,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_5_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_5_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_5_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_5_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_5_sub_grind_count > 0:
       grind_profit = (exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
@@ -37560,28 +37555,27 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "buyback-entry",
-          tag="buyback_1_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "buyback-entry",
+            tag="buyback_1_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "buyback_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if buyback_1_sub_grind_count > 0:
       grind_profit = (exit_rate - buyback_1_current_open_rate) / buyback_1_current_open_rate
@@ -37714,28 +37708,27 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "buyback-entry",
-          tag="buyback_2_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "buyback-entry",
+            tag="buyback_2_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Buyback entry (buyback_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Buyback entry (buyback_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "buyback_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if buyback_2_sub_grind_count > 0:
       grind_profit = (exit_rate - buyback_2_current_open_rate) / buyback_2_current_open_rate
@@ -37868,28 +37861,27 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "buyback-entry",
-          tag="buyback_3_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "buyback-entry",
+            tag="buyback_3_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Buyback entry (buyback_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Buyback entry (buyback_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "buyback_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if buyback_3_sub_grind_count > 0:
       grind_profit = (exit_rate - buyback_3_current_open_rate) / buyback_3_current_open_rate
@@ -39267,29 +39259,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_1_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_1_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_1_sub_grind_count > 0:
       ft_exit_amount, tag = self.long_grind_exit_v3(
@@ -39382,29 +39373,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_2_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_2_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_2_sub_grind_count > 0:
       ft_exit_amount, tag = self.long_grind_exit_v3(
@@ -39497,29 +39487,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_3_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_3_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_3_sub_grind_count > 0:
       ft_exit_amount, tag = self.long_grind_exit_v3(
@@ -39628,29 +39617,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_4_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_4_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_4_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_4_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_4_sub_grind_count > 0:
       ft_exit_amount, tag = self.long_grind_exit_v3(
@@ -39762,29 +39750,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_5_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_5_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_5_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_5_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_5_sub_grind_count > 0:
       ft_exit_amount, tag = self.long_grind_exit_v3(
@@ -39899,29 +39886,28 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "buyback-entry",
-            tag="buyback_1_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "buyback-entry",
+              tag="buyback_1_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
         )
-      log.info(
-        f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "buyback_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     # if buyback_1_sub_grind_count > 0:
     #   grind_profit = (exit_rate - buyback_1_current_open_rate) / buyback_1_current_open_rate
@@ -40043,28 +40029,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * rebuy_stakes[rebuy_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "rebuy",
-            tag="rebuy_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "rebuy",
+              tag="rebuy_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Rebuy (rebuy_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
         )
-      log.info(
-        f"Rebuy (rebuy_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      if has_order_tags:
-        return buy_amount, "rebuy_entry"
-      else:
-        return buy_amount
+        if has_order_tags:
+          return buy_amount, "rebuy_entry"
+        else:
+          return buy_amount
 
     return None
 
@@ -41799,29 +41784,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_1_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_1_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_1_sub_grind_count > 0 and not (
       grind_1_current_grind_profit_rate < (grind_1_profit_threshold + fee_open_rate + fee_close_rate)
@@ -41917,29 +41901,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_2_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_2_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_2_sub_grind_count > 0 and not (
       grind_2_current_grind_profit_rate < (grind_2_profit_threshold + fee_open_rate + fee_close_rate)
@@ -42035,29 +42018,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_3_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_3_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_3_sub_grind_count > 0 and not (
       grind_3_current_grind_profit_rate < (grind_3_profit_threshold + fee_open_rate + fee_close_rate)
@@ -42154,29 +42136,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_4_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_4_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_4_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_4_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_4_sub_grind_count > 0 and not (
       grind_4_current_grind_profit_rate < (grind_4_profit_threshold + fee_open_rate + fee_close_rate)
@@ -42273,29 +42254,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_5_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_5_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_5_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_5_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_5_sub_grind_count > 0 and not (
       grind_5_current_grind_profit_rate < (grind_5_profit_threshold + fee_open_rate + fee_close_rate)
@@ -42413,29 +42393,28 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "buyback-entry",
-            tag="buyback_1_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "buyback-entry",
+              tag="buyback_1_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
         )
-      log.info(
-        f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "buyback_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     # if buyback_1_sub_grind_count > 0:
     #   grind_profit = (exit_rate - buyback_1_current_open_rate) / buyback_1_current_open_rate
@@ -44246,35 +44225,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_derisk_1_stakes[grind_1_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_1_derisk_1_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_1_derisk_1_current_open_rate) / grind_1_derisk_1_current_open_rate
-          grind_profit_stake = grind_1_derisk_1_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="dl1",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_1_derisk_1_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_1_derisk_1_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_1_derisk_1_current_open_rate) / grind_1_derisk_1_current_open_rate
+            grind_profit_stake = grind_1_derisk_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="dl1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_1_derisk_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (dl1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "dl1"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (dl1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "dl1"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_1_derisk_1_sub_grind_count > 0:
@@ -44393,35 +44371,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_derisk_1_stakes[grind_2_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_2_derisk_1_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_2_derisk_1_current_open_rate) / grind_2_derisk_1_current_open_rate
-          grind_profit_stake = grind_2_derisk_1_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="dl2",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_2_derisk_1_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_2_derisk_1_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_2_derisk_1_current_open_rate) / grind_2_derisk_1_current_open_rate
+            grind_profit_stake = grind_2_derisk_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="dl2",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_2_derisk_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (dl2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "dl2"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (dl2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "dl2"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_2_derisk_1_sub_grind_count > 0:
@@ -44532,8 +44509,47 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_1_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
+            grind_profit_stake = grind_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
+          )
+          log.info(
+            f"Grinding entry (gd1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd1"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
+
+    if (
+      is_futures
+      and has_order_tags
+      and (not partial_sell)
+      and slice_profit < (-0.65 / trade_leverage)
+      and (is_derisk or is_derisk_calc or is_grind_mode)
+      and (grind_1_sub_grind_count < grind_1_max_sub_grinds)
+    ):
+      buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
+      if buy_amount < (min_stake * 1.5):
+        buy_amount = min_stake * 1.5
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -44561,47 +44577,6 @@ class NostalgiaForInfinityX8(IStrategy):
           return buy_amount, order_tag
         else:
           return buy_amount
-
-    if (
-      is_futures
-      and has_order_tags
-      and (not partial_sell)
-      and slice_profit < (-0.65 / trade_leverage)
-      and (is_derisk or is_derisk_calc or is_grind_mode)
-      and (grind_1_sub_grind_count < grind_1_max_sub_grinds)
-    ):
-      buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
-      if buy_amount < (min_stake * 1.5):
-        buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      grind_profit = 0.0
-      grind_profit_stake = 0.0
-      if grind_1_sub_grind_count > 0:
-        grind_profit = (exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
-        grind_profit_stake = grind_1_current_grind_stake_profit
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="gd1",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
-          grind_profit_stake=grind_1_current_grind_stake_profit,
-          grind_profit_pct=grind_profit,
-        )
-      )
-      log.info(
-        f"Grinding entry (gd1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-      )
-      order_tag = "gd1"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
 
     # Sell
     if grind_1_sub_grind_count > 0:
@@ -44711,35 +44686,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_2_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
-          grind_profit_stake = grind_2_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd2",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_2_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_2_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
+            grind_profit_stake = grind_2_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd2",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_2_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd2"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd2"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_2_sub_grind_count > 0:
@@ -44849,35 +44823,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_3_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
-          grind_profit_stake = grind_3_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd3",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_3_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_3_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
+            grind_profit_stake = grind_3_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd3",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_3_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd3"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd3"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_3_sub_grind_count > 0:
@@ -44987,35 +44960,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_4_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
-          grind_profit_stake = grind_4_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd4",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_4_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_4_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
+            grind_profit_stake = grind_4_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd4",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_4_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd4"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd4"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_4_sub_grind_count > 0:
@@ -45136,35 +45108,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_5_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
-          grind_profit_stake = grind_5_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd5",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_5_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_5_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
+            grind_profit_stake = grind_5_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd5",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_5_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd5"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd5"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_5_sub_grind_count > 0:
@@ -45274,35 +45245,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_6_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
-          grind_profit_stake = grind_6_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd6",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_6_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_6_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
+            grind_profit_stake = grind_6_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd6",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_6_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd6"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd6"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_6_sub_grind_count > 0:
@@ -45419,35 +45389,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = derisk_1_order.safe_filled * derisk_1_order.safe_price
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if derisk_1_sub_grind_count > 0:
-          grind_profit = (exit_rate - derisk_1_current_open_rate) / derisk_1_current_open_rate
-          grind_profit_stake = derisk_1_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "re-entry",
-            tag="d1",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=derisk_1_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if derisk_1_sub_grind_count > 0:
+            grind_profit = (exit_rate - derisk_1_current_open_rate) / derisk_1_current_open_rate
+            grind_profit_stake = derisk_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "re-entry",
+              tag="d1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=derisk_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Re-entry (d1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "d1"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Re-entry (d1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "d1"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # De-risk level 1
     if (
@@ -46201,25 +46170,24 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = max_stake
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        send_msg(
-          notification_msg(
-            "rebuy",
-            tag="r",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          send_msg(
+            notification_msg(
+              "rebuy",
+              tag="r",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
-        )
-        log.info(
-          f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-        )
-        order_tag = "r"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+          )
+          order_tag = "r"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding g1
     # Grinding entry
@@ -46242,8 +46210,43 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_1_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
+            grind_profit_stake = grind_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
+          )
+          log.info(
+            f"Grinding entry (g1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g1"
+          return buy_amount, order_tag, is_derisk
+
+    if (
+      is_futures
+      and has_order_tags
+      and (not partial_sell)
+      and slice_profit < (-0.65 / trade_leverage)
+      and (grind_1_sub_grind_count < max_grind_1_sub_grinds)
+    ):
+      buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
+      if buy_amount < (min_stake * 1.5):
+        buy_amount = min_stake * 1.5
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -46268,43 +46271,6 @@ class NostalgiaForInfinityX8(IStrategy):
         )
         order_tag = "g1"
         return buy_amount, order_tag, is_derisk
-
-    if (
-      is_futures
-      and has_order_tags
-      and (not partial_sell)
-      and slice_profit < (-0.65 / trade_leverage)
-      and (grind_1_sub_grind_count < max_grind_1_sub_grinds)
-    ):
-      buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
-      if buy_amount < (min_stake * 1.5):
-        buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None, "", is_derisk
-      grind_profit = 0.0
-      grind_profit_stake = 0.0
-      if grind_1_sub_grind_count > 0:
-        grind_profit = (exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
-        grind_profit_stake = grind_1_current_grind_stake_profit
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="g1",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
-          grind_profit_stake=grind_1_current_grind_stake_profit,
-          grind_profit_pct=grind_profit,
-        )
-      )
-      log.info(
-        f"Grinding entry (g1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit} {stake_currency})"
-      )
-      order_tag = "g1"
-      return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_1_sub_grind_count > 0:
@@ -46404,32 +46370,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_2_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
-          grind_profit_stake = grind_2_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g2",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_2_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_2_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
+            grind_profit_stake = grind_2_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g2",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_2_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g2"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g2"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_2_sub_grind_count > 0:
@@ -46529,32 +46494,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_3_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
-          grind_profit_stake = grind_3_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g3",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_3_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_3_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
+            grind_profit_stake = grind_3_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g3",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_3_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g3"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g3"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_3_sub_grind_count > 0:
@@ -46654,32 +46618,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_4_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
-          grind_profit_stake = grind_4_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g4",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_4_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_4_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
+            grind_profit_stake = grind_4_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g4",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_4_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g4"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g4"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_4_sub_grind_count > 0:
@@ -46779,32 +46742,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_5_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
-          grind_profit_stake = grind_5_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g5",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_5_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_5_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
+            grind_profit_stake = grind_5_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g5",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_5_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g5"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g5"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_5_sub_grind_count > 0:
@@ -46904,32 +46866,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_6_sub_grind_count > 0:
-          grind_profit = (exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
-          grind_profit_stake = grind_6_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g6",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_6_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_6_sub_grind_count > 0:
+            grind_profit = (exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
+            grind_profit_stake = grind_6_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g6",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_6_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g6"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g6"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_6_sub_grind_count > 0:
@@ -47240,27 +47201,26 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        dp.send_msg(
-          self.notification_msg(
-            "rebuy",
-            tag="r",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=config["stake_currency"],
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          dp.send_msg(
+            self.notification_msg(
+              "rebuy",
+              tag="r",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=config["stake_currency"],
+            )
           )
-        )
-        log.info(
-          f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-        )
-        if has_order_tags:
-          return buy_amount, "r"
-        else:
-          return buy_amount
+          log.info(
+            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+          )
+          if has_order_tags:
+            return buy_amount, "r"
+          else:
+            return buy_amount
 
     if self.derisk_enable and (
       profit_stake
@@ -47433,28 +47393,27 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        if send_notifications:
-          dp.send_msg(
-            self.notification_msg(
-              "rebuy",
-              tag="r",
-              pair=trade_pair,
-              rate=current_rate,
-              stake_amount=buy_amount,
-              profit_stake=profit_stake,
-              profit_ratio=profit_ratio,
-              stake_currency=stake_currency,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          if send_notifications:
+            dp.send_msg(
+              self.notification_msg(
+                "rebuy",
+                tag="r",
+                pair=trade_pair,
+                rate=current_rate,
+                stake_amount=buy_amount,
+                profit_stake=profit_stake,
+                profit_ratio=profit_ratio,
+                stake_currency=stake_currency,
+              )
             )
+          log.info(
+            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
           )
-        log.info(
-          f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-        )
-        if has_order_tags:
-          return buy_amount, "r"
-        else:
-          return buy_amount
+          if has_order_tags:
+            return buy_amount, "r"
+          else:
+            return buy_amount
 
     if self.derisk_enable and (
       profit_stake
@@ -47634,28 +47593,27 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] * dynamic_stake_buy_mult / trade_leverage
           if buy_amount < (min_stake * 1.5):
             buy_amount = min_stake * 1.5
-          if buy_amount > max_stake:
-            return None
-          if send_notifications:
-            dp.send_msg(
-              self.notification_msg(
-                "rebuy",
-                tag="r",
-                pair=trade_pair,
-                rate=current_rate,
-                stake_amount=buy_amount,
-                profit_stake=profit_stake,
-                profit_ratio=profit_ratio,
-                stake_currency=stake_currency,
+          if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+            if send_notifications:
+              dp.send_msg(
+                self.notification_msg(
+                  "rebuy",
+                  tag="r",
+                  pair=trade_pair,
+                  rate=current_rate,
+                  stake_amount=buy_amount,
+                  profit_stake=profit_stake,
+                  profit_ratio=profit_ratio,
+                  stake_currency=stake_currency,
+                )
               )
+            log.info(
+              f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
             )
-          log.info(
-            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-          )
-          if has_order_tags:
-            return buy_amount, "r"
-          else:
-            return buy_amount
+            if has_order_tags:
+              return buy_amount, "r"
+            else:
+              return buy_amount
 
     if self.derisk_enable and (
       profit_stake
@@ -51448,28 +51406,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_1_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_1_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_1_sub_grind_count > 0:
       grind_profit = -(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
@@ -51571,28 +51528,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_2_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_2_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_2_sub_grind_count > 0:
       grind_profit = -(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
@@ -51694,28 +51650,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_3_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_3_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_3_sub_grind_count > 0:
       grind_profit = -(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
@@ -51832,28 +51787,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_4_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_4_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_4_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_4_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_4_sub_grind_count > 0:
       grind_profit = -(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
@@ -51970,28 +51924,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_5_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_5_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "grind_5_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "grind_5_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_5_sub_grind_count > 0:
       grind_profit = -(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
@@ -52104,28 +52057,27 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "buyback-entry",
-          tag="buyback_1_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "buyback-entry",
+            tag="buyback_1_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Buyback entry (buyback_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "buyback_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if buyback_1_sub_grind_count > 0:
       grind_profit = -(exit_rate - buyback_1_current_open_rate) / buyback_1_current_open_rate
@@ -52256,28 +52208,27 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "buyback-entry",
-          tag="buyback_2_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "buyback-entry",
+            tag="buyback_2_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Buyback entry (buyback_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Buyback entry (buyback_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "buyback_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if buyback_2_sub_grind_count > 0:
       grind_profit = -(exit_rate - buyback_2_current_open_rate) / buyback_2_current_open_rate
@@ -52408,28 +52359,27 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "buyback-entry",
-          tag="buyback_3_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "buyback-entry",
+            tag="buyback_3_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Buyback entry (buyback_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      order_tag = "buyback_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Buyback entry (buyback_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        order_tag = "buyback_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if buyback_3_sub_grind_count > 0:
       grind_profit = -(exit_rate - buyback_3_current_open_rate) / buyback_3_current_open_rate
@@ -53894,28 +53844,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_1_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_1_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
+        )
+        order_tag = "grind_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_1_sub_grind_count > 0:
       ft_exit_amount, tag = self.short_grind_exit_v3(
@@ -54007,28 +53956,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_2_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_2_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
+        )
+        order_tag = "grind_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_2_sub_grind_count > 0:
       ft_exit_amount, tag = self.short_grind_exit_v3(
@@ -54120,28 +54068,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_3_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_3_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
+        )
+        order_tag = "grind_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_3_sub_grind_count > 0:
       ft_exit_amount, tag = self.short_grind_exit_v3(
@@ -54249,28 +54196,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_4_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_4_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_4_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
+        )
+        order_tag = "grind_4_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_4_sub_grind_count > 0:
       ft_exit_amount, tag = self.short_grind_exit_v3(
@@ -54381,28 +54327,27 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="grind_5_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "grinding-entry",
+            tag="grind_5_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_5_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        log.info(
+          f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
+        )
+        order_tag = "grind_5_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_5_sub_grind_count > 0:
       ft_exit_amount, tag = self.short_grind_exit_v3(
@@ -54494,27 +54439,26 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * rebuy_stakes[rebuy_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      send_msg(
-        notification_msg(
-          "rebuy",
-          tag="rebuy_entry",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        send_msg(
+          notification_msg(
+            "rebuy",
+            tag="rebuy_entry",
+            pair=trade_pair,
+            rate=current_rate,
+            stake_amount=buy_amount,
+            profit_stake=profit_stake,
+            profit_ratio=profit_ratio,
+            stake_currency=stake_currency,
+          )
         )
-      )
-      log.info(
-        f"Rebuy (rebuy_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-      )
-      if has_order_tags:
-        return buy_amount, "rebuy_entry"
-      else:
-        return buy_amount
+        log.info(
+          f"Rebuy (rebuy_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
+        )
+        if has_order_tags:
+          return buy_amount, "rebuy_entry"
+        else:
+          return buy_amount
 
     return None
 
@@ -56048,29 +55992,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_1_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_1_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_1_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_1_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_1_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_1_sub_grind_count > 0 and not (
       -grind_1_current_grind_profit_rate < (grind_1_profit_threshold + fee_open_rate + fee_close_rate)
@@ -56166,29 +56109,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_2_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_2_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_2_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_2_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_2_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_2_sub_grind_count > 0 and not (
       -grind_2_current_grind_profit_rate < (grind_2_profit_threshold + fee_open_rate + fee_close_rate)
@@ -56284,29 +56226,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_3_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_3_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_3_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_3_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_3_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_3_sub_grind_count > 0 and not (
       -grind_3_current_grind_profit_rate < (grind_3_profit_threshold + fee_open_rate + fee_close_rate)
@@ -56403,29 +56344,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_4_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_4_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_4_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_4_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_4_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_4_sub_grind_count > 0 and not (
       -grind_4_current_grind_profit_rate < (grind_4_profit_threshold + fee_open_rate + fee_close_rate)
@@ -56522,29 +56462,28 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      if send_notifications:
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="grind_5_entry",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        if send_notifications:
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="grind_5_entry",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
+        log.info(
+          f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
         )
-      log.info(
-        f"Grinding entry (grind_5_entry) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Tag: {self._grind_entry_tag}"
-      )
-      order_tag = "grind_5_entry"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
+        order_tag = "grind_5_entry"
+        if has_order_tags:
+          return buy_amount, order_tag
+        else:
+          return buy_amount
 
     if grind_5_sub_grind_count > 0 and not (
       -grind_5_current_grind_profit_rate < (grind_5_profit_threshold + fee_open_rate + fee_close_rate)
@@ -58312,35 +58251,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_derisk_1_stakes[grind_1_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_1_derisk_1_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_1_derisk_1_current_open_rate) / grind_1_derisk_1_current_open_rate
-          grind_profit_stake = grind_1_derisk_1_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="dl1",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_1_derisk_1_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_1_derisk_1_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_1_derisk_1_current_open_rate) / grind_1_derisk_1_current_open_rate
+            grind_profit_stake = grind_1_derisk_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="dl1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_1_derisk_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (dl1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "dl1"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (dl1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "dl1"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_1_derisk_1_sub_grind_count > 0:
@@ -58457,35 +58395,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_derisk_1_stakes[grind_2_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_2_derisk_1_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_2_derisk_1_current_open_rate) / grind_2_derisk_1_current_open_rate
-          grind_profit_stake = grind_2_derisk_1_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="dl2",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_2_derisk_1_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_2_derisk_1_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_2_derisk_1_current_open_rate) / grind_2_derisk_1_current_open_rate
+            grind_profit_stake = grind_2_derisk_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="dl2",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_2_derisk_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (dl2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "dl2"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (dl2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "dl2"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_2_derisk_1_sub_grind_count > 0:
@@ -58594,8 +58531,47 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_1_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
+            grind_profit_stake = grind_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
+          )
+          log.info(
+            f"Grinding entry (gd1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd1"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
+
+    if (
+      is_futures
+      and has_order_tags
+      and (not partial_sell)
+      and slice_profit > (0.65 / trade_leverage)
+      and (is_derisk or is_derisk_calc or is_grind_mode)
+      and (grind_1_sub_grind_count < grind_1_max_sub_grinds)
+    ):
+      buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
+      if buy_amount < (min_stake * 1.5):
+        buy_amount = min_stake * 1.5
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -58623,47 +58599,6 @@ class NostalgiaForInfinityX8(IStrategy):
           return buy_amount, order_tag
         else:
           return buy_amount
-
-    if (
-      is_futures
-      and has_order_tags
-      and (not partial_sell)
-      and slice_profit > (0.65 / trade_leverage)
-      and (is_derisk or is_derisk_calc or is_grind_mode)
-      and (grind_1_sub_grind_count < grind_1_max_sub_grinds)
-    ):
-      buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
-      if buy_amount < (min_stake * 1.5):
-        buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None
-      grind_profit = 0.0
-      grind_profit_stake = 0.0
-      if grind_1_sub_grind_count > 0:
-        grind_profit = -(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
-        grind_profit_stake = grind_1_current_grind_stake_profit
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="gd1",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
-          grind_profit_stake=grind_1_current_grind_stake_profit,
-          grind_profit_pct=grind_profit,
-        )
-      )
-      log.info(
-        f"Grinding entry (gd1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-      )
-      order_tag = "gd1"
-      if has_order_tags:
-        return buy_amount, order_tag
-      else:
-        return buy_amount
 
     # Sell
     if grind_1_sub_grind_count > 0:
@@ -58771,35 +58706,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_2_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
-          grind_profit_stake = grind_2_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd2",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_2_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_2_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
+            grind_profit_stake = grind_2_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd2",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_2_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd2"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd2"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_2_sub_grind_count > 0:
@@ -58907,35 +58841,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_3_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
-          grind_profit_stake = grind_3_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd3",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_3_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_3_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
+            grind_profit_stake = grind_3_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd3",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_3_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd3"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd3"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_3_sub_grind_count > 0:
@@ -59043,35 +58976,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_4_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
-          grind_profit_stake = grind_4_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd4",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_4_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_4_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
+            grind_profit_stake = grind_4_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd4",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_4_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd4"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd4"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_4_sub_grind_count > 0:
@@ -59190,35 +59122,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_5_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
-          grind_profit_stake = grind_5_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd5",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_5_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_5_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
+            grind_profit_stake = grind_5_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd5",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_5_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd5"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd5"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_5_sub_grind_count > 0:
@@ -59326,35 +59257,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_6_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
-          grind_profit_stake = grind_6_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="gd6",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_6_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_6_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
+            grind_profit_stake = grind_6_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="gd6",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_6_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (gd6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "gd6"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Grinding entry (gd6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "gd6"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # Sell
     if grind_6_sub_grind_count > 0:
@@ -59469,35 +59399,34 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = derisk_1_order.safe_filled * derisk_1_order.safe_price
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if derisk_1_sub_grind_count > 0:
-          grind_profit = -(exit_rate - derisk_1_current_open_rate) / derisk_1_current_open_rate
-          grind_profit_stake = derisk_1_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "re-entry",
-            tag="d1",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=derisk_1_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if derisk_1_sub_grind_count > 0:
+            grind_profit = -(exit_rate - derisk_1_current_open_rate) / derisk_1_current_open_rate
+            grind_profit_stake = derisk_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "re-entry",
+              tag="d1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=derisk_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Re-entry (d1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
-        )
-        order_tag = "d1"
-        if has_order_tags:
-          return buy_amount, order_tag
-        else:
-          return buy_amount
+          log.info(
+            f"Re-entry (d1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({derisk_1_current_grind_stake_profit:{stake_fmt}} {stake_currency})"
+          )
+          order_tag = "d1"
+          if has_order_tags:
+            return buy_amount, order_tag
+          else:
+            return buy_amount
 
     # De-risk level 1
     if (
@@ -60187,25 +60116,24 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = max_stake
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        send_msg(
-          notification_msg(
-            "rebuy",
-            tag="r",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          send_msg(
+            notification_msg(
+              "rebuy",
+              tag="r",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+            )
           )
-        )
-        log.info(
-          f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-        )
-        order_tag = "r"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+          )
+          order_tag = "r"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding g1
     # Grinding entry
@@ -60228,8 +60156,43 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_1_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
+            grind_profit_stake = grind_1_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g1",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_1_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
+          )
+          log.info(
+            f"Grinding entry (g1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g1"
+          return buy_amount, order_tag, is_derisk
+
+    if (
+      is_futures
+      and has_order_tags
+      and (not partial_sell)
+      and slice_profit > (0.65 / trade_leverage)
+      and (grind_1_sub_grind_count < max_grind_1_sub_grinds)
+    ):
+      buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
+      if buy_amount < (min_stake * 1.5):
+        buy_amount = min_stake * 1.5
+      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -60254,43 +60217,6 @@ class NostalgiaForInfinityX8(IStrategy):
         )
         order_tag = "g1"
         return buy_amount, order_tag, is_derisk
-
-    if (
-      is_futures
-      and has_order_tags
-      and (not partial_sell)
-      and slice_profit > (0.65 / trade_leverage)
-      and (grind_1_sub_grind_count < max_grind_1_sub_grinds)
-    ):
-      buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
-      if buy_amount < (min_stake * 1.5):
-        buy_amount = min_stake * 1.5
-      if buy_amount > max_stake:
-        return None, "", is_derisk
-      grind_profit = 0.0
-      grind_profit_stake = 0.0
-      if grind_1_sub_grind_count > 0:
-        grind_profit = -(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate
-        grind_profit_stake = grind_1_current_grind_stake_profit
-      send_msg(
-        notification_msg(
-          "grinding-entry",
-          tag="g1",
-          pair=trade_pair,
-          rate=current_rate,
-          stake_amount=buy_amount,
-          profit_stake=profit_stake,
-          profit_ratio=profit_ratio,
-          stake_currency=stake_currency,
-          grind_profit_stake=grind_1_current_grind_stake_profit,
-          grind_profit_pct=grind_profit,
-        )
-      )
-      log.info(
-        f"Grinding entry (g1) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_1_current_grind_stake_profit} {stake_currency})"
-      )
-      order_tag = "g1"
-      return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_1_sub_grind_count > 0:
@@ -60390,32 +60316,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_2_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
-          grind_profit_stake = grind_2_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g2",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_2_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_2_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate
+            grind_profit_stake = grind_2_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g2",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_2_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g2"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g2) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_2_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g2"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_2_sub_grind_count > 0:
@@ -60515,32 +60440,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_3_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
-          grind_profit_stake = grind_3_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g3",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_3_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_3_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate
+            grind_profit_stake = grind_3_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g3",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_3_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g3"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g3) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_3_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g3"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_3_sub_grind_count > 0:
@@ -60640,32 +60564,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_4_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
-          grind_profit_stake = grind_4_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g4",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_4_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_4_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate
+            grind_profit_stake = grind_4_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g4",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_4_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g4"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g4) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_4_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g4"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_4_sub_grind_count > 0:
@@ -60765,32 +60688,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_5_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
-          grind_profit_stake = grind_5_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g5",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_5_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_5_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate
+            grind_profit_stake = grind_5_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g5",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_5_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g5"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g5) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_5_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g5"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_5_sub_grind_count > 0:
@@ -60890,32 +60812,31 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None, "", is_derisk
-        grind_profit = 0.0
-        grind_profit_stake = 0.0
-        if grind_6_sub_grind_count > 0:
-          grind_profit = -(exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
-          grind_profit_stake = grind_6_current_grind_stake_profit
-        send_msg(
-          notification_msg(
-            "grinding-entry",
-            tag="g6",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=stake_currency,
-            grind_profit_stake=grind_6_current_grind_stake_profit,
-            grind_profit_pct=grind_profit,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          grind_profit = 0.0
+          grind_profit_stake = 0.0
+          if grind_6_sub_grind_count > 0:
+            grind_profit = -(exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate
+            grind_profit_stake = grind_6_current_grind_stake_profit
+          send_msg(
+            notification_msg(
+              "grinding-entry",
+              tag="g6",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=stake_currency,
+              grind_profit_stake=grind_6_current_grind_stake_profit,
+              grind_profit_pct=grind_profit,
+            )
           )
-        )
-        log.info(
-          f"Grinding entry (g6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit} {stake_currency})"
-        )
-        order_tag = "g6"
-        return buy_amount, order_tag, is_derisk
+          log.info(
+            f"Grinding entry (g6) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}% | Grind profit: {(grind_profit * 100.0):.2f}% ({grind_6_current_grind_stake_profit} {stake_currency})"
+          )
+          order_tag = "g6"
+          return buy_amount, order_tag, is_derisk
 
     # Grinding Exit
     if has_order_tags and grind_6_sub_grind_count > 0:
@@ -61216,27 +61137,26 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        dp.send_msg(
-          self.notification_msg(
-            "rebuy",
-            tag="r",
-            pair=trade_pair,
-            rate=current_rate,
-            stake_amount=buy_amount,
-            profit_stake=profit_stake,
-            profit_ratio=profit_ratio,
-            stake_currency=config["stake_currency"],
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          dp.send_msg(
+            self.notification_msg(
+              "rebuy",
+              tag="r",
+              pair=trade_pair,
+              rate=current_rate,
+              stake_amount=buy_amount,
+              profit_stake=profit_stake,
+              profit_ratio=profit_ratio,
+              stake_currency=config["stake_currency"],
+            )
           )
-        )
-        log.info(
-          f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
-        )
-        if has_order_tags:
-          return buy_amount, "r"
-        else:
-          return buy_amount
+          log.info(
+            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount} | Profit (stake): {profit_stake} | Profit: {(profit_ratio * 100.0):.2f}%"
+          )
+          if has_order_tags:
+            return buy_amount, "r"
+          else:
+            return buy_amount
 
     if self.derisk_enable and (
       profit_stake
@@ -61406,31 +61326,30 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount > max_stake:
-          return None
-        stake_currency = config["stake_currency"]
-        stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
-        send_notifications = not self.is_backtest_mode()
-        if send_notifications:
-          dp.send_msg(
-            self.notification_msg(
-              "rebuy",
-              tag="r",
-              pair=trade_pair,
-              rate=current_rate,
-              stake_amount=buy_amount,
-              profit_stake=profit_stake,
-              profit_ratio=profit_ratio,
-              stake_currency=stake_currency,
+        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          stake_currency = config["stake_currency"]
+          stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
+          send_notifications = not self.is_backtest_mode()
+          if send_notifications:
+            dp.send_msg(
+              self.notification_msg(
+                "rebuy",
+                tag="r",
+                pair=trade_pair,
+                rate=current_rate,
+                stake_amount=buy_amount,
+                profit_stake=profit_stake,
+                profit_ratio=profit_ratio,
+                stake_currency=stake_currency,
+              )
             )
+          log.info(
+            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
           )
-        log.info(
-          f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-        )
-        if has_order_tags:
-          return buy_amount, "r"
-        else:
-          return buy_amount
+          if has_order_tags:
+            return buy_amount, "r"
+          else:
+            return buy_amount
 
     if self.derisk_enable and (
       profit_stake
@@ -61606,31 +61525,30 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] * dynamic_stake_buy_mult / trade_leverage
           if buy_amount < (min_stake * 1.5):
             buy_amount = min_stake * 1.5
-          if buy_amount > max_stake:
-            return None
-          stake_currency = config["stake_currency"]
-          stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
-          send_notifications = not self.is_backtest_mode()
-          if send_notifications:
-            dp.send_msg(
-              self.notification_msg(
-                "rebuy",
-                tag="r",
-                pair=trade_pair,
-                rate=current_rate,
-                stake_amount=buy_amount,
-                profit_stake=profit_stake,
-                profit_ratio=profit_ratio,
-                stake_currency=stake_currency,
+          if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+            stake_currency = config["stake_currency"]
+            stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
+            send_notifications = not self.is_backtest_mode()
+            if send_notifications:
+              dp.send_msg(
+                self.notification_msg(
+                  "rebuy",
+                  tag="r",
+                  pair=trade_pair,
+                  rate=current_rate,
+                  stake_amount=buy_amount,
+                  profit_stake=profit_stake,
+                  profit_ratio=profit_ratio,
+                  stake_currency=stake_currency,
+                )
               )
+            log.info(
+              f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
             )
-          log.info(
-            f"Rebuy (r) [{current_time}] [{trade_pair}] | Rate: {current_rate} | Stake amount: {buy_amount:{stake_fmt}} | Profit (stake): {profit_stake:{stake_fmt}} | Profit: {(profit_ratio * 100.0):.2f}%"
-          )
-          if has_order_tags:
-            return buy_amount, "r"
-          else:
-            return buy_amount
+            if has_order_tags:
+              return buy_amount, "r"
+            else:
+              return buy_amount
 
     if self.derisk_enable and (
       profit_stake
