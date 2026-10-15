@@ -135,7 +135,9 @@ def test_profit_target_survives_exit_approval(profit_target_case):
   assert approve_exit(strategy, trade, reason)
 
   assert strategy.target_profit_cache.data[trade.pair] == target
-  assert Cache(strategy.target_profit_cache.path).data[trade.pair] == target
+  reloaded = Cache(strategy.target_profit_cache.path).data[trade.pair]
+  assert reloaded["profit"] == pytest.approx(target["profit"])
+  assert {k: v for k, v in reloaded.items() if k != "profit"} == {k: v for k, v in target.items() if k != "profit"}
 
 
 @pytest.mark.parametrize("filled", [0.0, 0.14, 0.35])

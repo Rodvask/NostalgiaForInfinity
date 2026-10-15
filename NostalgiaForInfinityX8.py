@@ -1468,7 +1468,7 @@ class NostalgiaForInfinityX8(IStrategy):
       elif profit_ratio < (previous_profit - (0.04 / trade_leverage)):
         return True, previous_sell_reason
     elif previous_sell_reason == f"exit_profit_{mode_name}_max":
-      if profit_init_ratio < -0.08:
+      if profit_ratio < -0.08:
         # profit is under the threshold, cancel it
         remove_profit_target(pair)
         return False, None
@@ -1489,166 +1489,166 @@ class NostalgiaForInfinityX8(IStrategy):
       if trade.is_short:
         is_scalp_mode = all(c in self.short_scalp_mode_tags for c in enter_tags)
         if is_scalp_mode:
-          if 0.001 <= profit_init_ratio < 0.01:
-            if profit_init_ratio < (previous_profit - 0.008):
+          if 0.001 <= profit_ratio < 0.01:
+            if profit_ratio < (previous_profit - 0.008):
               return True, f"exit_profit_{mode_name}_t_0_1"
-          elif 0.01 <= profit_init_ratio < 0.02:
-            if profit_init_ratio < (previous_profit - 0.01):
+          elif 0.01 <= profit_ratio < 0.02:
+            if profit_ratio < (previous_profit - 0.01):
               return True, f"exit_profit_{mode_name}_t_1_1"
-          elif 0.02 <= profit_init_ratio < 0.03:
-            if profit_init_ratio < (previous_profit - 0.01):
+          elif 0.02 <= profit_ratio < 0.03:
+            if profit_ratio < (previous_profit - 0.01):
               return True, f"exit_profit_{mode_name}_t_2_1"
-          elif 0.03 <= profit_init_ratio < 0.04:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.03 <= profit_ratio < 0.04:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_3_1"
-          elif 0.04 <= profit_init_ratio < 0.05:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.04 <= profit_ratio < 0.05:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_4_1"
-          elif 0.05 <= profit_init_ratio < 0.06:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.05 <= profit_ratio < 0.06:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_5_1"
-          elif 0.06 <= profit_init_ratio < 0.07:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.06 <= profit_ratio < 0.07:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_6_1"
-          elif 0.07 <= profit_init_ratio < 0.08:
-            if profit_init_ratio < (previous_profit - 0.02):
+          elif 0.07 <= profit_ratio < 0.08:
+            if profit_ratio < (previous_profit - 0.02):
               return True, f"exit_profit_{mode_name}_t_7_1"
-          elif 0.08 <= profit_init_ratio < 0.09:
-            if profit_init_ratio < (previous_profit - 0.02):
+          elif 0.08 <= profit_ratio < 0.09:
+            if profit_ratio < (previous_profit - 0.02):
               return True, f"exit_profit_{mode_name}_t_8_1"
-          elif 0.09 <= profit_init_ratio < 0.10:
-            if profit_init_ratio < (previous_profit - 0.02):
+          elif 0.09 <= profit_ratio < 0.10:
+            if profit_ratio < (previous_profit - 0.02):
               return True, f"exit_profit_{mode_name}_t_9_1"
-          elif 0.10 <= profit_init_ratio < 0.11:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.10 <= profit_ratio < 0.11:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_10_1"
-          elif 0.11 <= profit_init_ratio < 0.12:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.11 <= profit_ratio < 0.12:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_11_1"
-          elif 0.12 <= profit_init_ratio:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.12 <= profit_ratio:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_12_1"
         else:
-          if 0.001 <= profit_init_ratio < 0.01:
-            if profit_init_ratio < (previous_profit - 0.020):
+          if 0.001 <= profit_ratio < 0.01:
+            if profit_ratio < (previous_profit - 0.020):
               return True, f"exit_profit_{mode_name}_t_0_1"
-          elif 0.01 <= profit_init_ratio < 0.02:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.01 <= profit_ratio < 0.02:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_1_1"
-          elif 0.02 <= profit_init_ratio < 0.03:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.02 <= profit_ratio < 0.03:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_2_1"
-          elif 0.03 <= profit_init_ratio < 0.04:
-            if profit_init_ratio < (previous_profit - 0.030):
+          elif 0.03 <= profit_ratio < 0.04:
+            if profit_ratio < (previous_profit - 0.030):
               return True, f"exit_profit_{mode_name}_t_3_1"
-          elif 0.04 <= profit_init_ratio < 0.05:
-            if profit_init_ratio < (previous_profit - 0.035):
+          elif 0.04 <= profit_ratio < 0.05:
+            if profit_ratio < (previous_profit - 0.035):
               return True, f"exit_profit_{mode_name}_t_4_1"
-          elif 0.05 <= profit_init_ratio < 0.06:
-            if profit_init_ratio < (previous_profit - 0.040):
+          elif 0.05 <= profit_ratio < 0.06:
+            if profit_ratio < (previous_profit - 0.040):
               return True, f"exit_profit_{mode_name}_t_5_1"
-          elif 0.06 <= profit_init_ratio < 0.07:
-            if profit_init_ratio < (previous_profit - 0.045):
+          elif 0.06 <= profit_ratio < 0.07:
+            if profit_ratio < (previous_profit - 0.045):
               return True, f"exit_profit_{mode_name}_t_6_1"
-          elif 0.07 <= profit_init_ratio < 0.08:
-            if profit_init_ratio < (previous_profit - 0.050):
+          elif 0.07 <= profit_ratio < 0.08:
+            if profit_ratio < (previous_profit - 0.050):
               return True, f"exit_profit_{mode_name}_t_7_1"
-          elif 0.08 <= profit_init_ratio < 0.09:
-            if profit_init_ratio < (previous_profit - 0.055):
+          elif 0.08 <= profit_ratio < 0.09:
+            if profit_ratio < (previous_profit - 0.055):
               return True, f"exit_profit_{mode_name}_t_8_1"
-          elif 0.09 <= profit_init_ratio < 0.10:
-            if profit_init_ratio < (previous_profit - 0.060):
+          elif 0.09 <= profit_ratio < 0.10:
+            if profit_ratio < (previous_profit - 0.060):
               return True, f"exit_profit_{mode_name}_t_9_1"
-          elif 0.10 <= profit_init_ratio < 0.11:
-            if profit_init_ratio < (previous_profit - 0.065):
+          elif 0.10 <= profit_ratio < 0.11:
+            if profit_ratio < (previous_profit - 0.065):
               return True, f"exit_profit_{mode_name}_t_10_1"
-          elif 0.11 <= profit_init_ratio < 0.12:
-            if profit_init_ratio < (previous_profit - 0.070):
+          elif 0.11 <= profit_ratio < 0.12:
+            if profit_ratio < (previous_profit - 0.070):
               return True, f"exit_profit_{mode_name}_t_11_1"
-          elif 0.12 <= profit_init_ratio:
-            if profit_init_ratio < (previous_profit - 0.075):
+          elif 0.12 <= profit_ratio:
+            if profit_ratio < (previous_profit - 0.075):
               return True, f"exit_profit_{mode_name}_t_12_1"
       else:
         is_scalp_mode = all(c in long_scalp_mode_tags for c in enter_tags)
         if is_scalp_mode:
-          if 0.001 <= profit_init_ratio < 0.01:
-            if profit_init_ratio < (previous_profit - 0.008):
+          if 0.001 <= profit_ratio < 0.01:
+            if profit_ratio < (previous_profit - 0.008):
               return True, f"exit_profit_{mode_name}_t_0_1"
-          elif 0.01 <= profit_init_ratio < 0.02:
-            if profit_init_ratio < (previous_profit - 0.01):
+          elif 0.01 <= profit_ratio < 0.02:
+            if profit_ratio < (previous_profit - 0.01):
               return True, f"exit_profit_{mode_name}_t_1_1"
-          elif 0.02 <= profit_init_ratio < 0.03:
-            if profit_init_ratio < (previous_profit - 0.01):
+          elif 0.02 <= profit_ratio < 0.03:
+            if profit_ratio < (previous_profit - 0.01):
               return True, f"exit_profit_{mode_name}_t_2_1"
-          elif 0.03 <= profit_init_ratio < 0.04:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.03 <= profit_ratio < 0.04:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_3_1"
-          elif 0.04 <= profit_init_ratio < 0.05:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.04 <= profit_ratio < 0.05:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_4_1"
-          elif 0.05 <= profit_init_ratio < 0.06:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.05 <= profit_ratio < 0.06:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_5_1"
-          elif 0.06 <= profit_init_ratio < 0.07:
-            if profit_init_ratio < (previous_profit - 0.015):
+          elif 0.06 <= profit_ratio < 0.07:
+            if profit_ratio < (previous_profit - 0.015):
               return True, f"exit_profit_{mode_name}_t_6_1"
-          elif 0.07 <= profit_init_ratio < 0.08:
-            if profit_init_ratio < (previous_profit - 0.02):
+          elif 0.07 <= profit_ratio < 0.08:
+            if profit_ratio < (previous_profit - 0.02):
               return True, f"exit_profit_{mode_name}_t_7_1"
-          elif 0.08 <= profit_init_ratio < 0.09:
-            if profit_init_ratio < (previous_profit - 0.02):
+          elif 0.08 <= profit_ratio < 0.09:
+            if profit_ratio < (previous_profit - 0.02):
               return True, f"exit_profit_{mode_name}_t_8_1"
-          elif 0.09 <= profit_init_ratio < 0.10:
-            if profit_init_ratio < (previous_profit - 0.02):
+          elif 0.09 <= profit_ratio < 0.10:
+            if profit_ratio < (previous_profit - 0.02):
               return True, f"exit_profit_{mode_name}_t_9_1"
-          elif 0.10 <= profit_init_ratio < 0.11:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.10 <= profit_ratio < 0.11:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_10_1"
-          elif 0.11 <= profit_init_ratio < 0.12:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.11 <= profit_ratio < 0.12:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_11_1"
-          elif 0.12 <= profit_init_ratio:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.12 <= profit_ratio:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_12_1"
         else:
-          if 0.001 <= profit_init_ratio < 0.01:
-            if profit_init_ratio < (previous_profit - 0.020):
+          if 0.001 <= profit_ratio < 0.01:
+            if profit_ratio < (previous_profit - 0.020):
               return True, f"exit_profit_{mode_name}_t_0_1"
-          elif 0.01 <= profit_init_ratio < 0.02:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.01 <= profit_ratio < 0.02:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_1_1"
-          elif 0.02 <= profit_init_ratio < 0.03:
-            if profit_init_ratio < (previous_profit - 0.025):
+          elif 0.02 <= profit_ratio < 0.03:
+            if profit_ratio < (previous_profit - 0.025):
               return True, f"exit_profit_{mode_name}_t_2_1"
-          elif 0.03 <= profit_init_ratio < 0.04:
-            if profit_init_ratio < (previous_profit - 0.030):
+          elif 0.03 <= profit_ratio < 0.04:
+            if profit_ratio < (previous_profit - 0.030):
               return True, f"exit_profit_{mode_name}_t_3_1"
-          elif 0.04 <= profit_init_ratio < 0.05:
-            if profit_init_ratio < (previous_profit - 0.035):
+          elif 0.04 <= profit_ratio < 0.05:
+            if profit_ratio < (previous_profit - 0.035):
               return True, f"exit_profit_{mode_name}_t_4_1"
-          elif 0.05 <= profit_init_ratio < 0.06:
-            if profit_init_ratio < (previous_profit - 0.040):
+          elif 0.05 <= profit_ratio < 0.06:
+            if profit_ratio < (previous_profit - 0.040):
               return True, f"exit_profit_{mode_name}_t_5_1"
-          elif 0.06 <= profit_init_ratio < 0.07:
-            if profit_init_ratio < (previous_profit - 0.045):
+          elif 0.06 <= profit_ratio < 0.07:
+            if profit_ratio < (previous_profit - 0.045):
               return True, f"exit_profit_{mode_name}_t_6_1"
-          elif 0.07 <= profit_init_ratio < 0.08:
-            if profit_init_ratio < (previous_profit - 0.050):
+          elif 0.07 <= profit_ratio < 0.08:
+            if profit_ratio < (previous_profit - 0.050):
               return True, f"exit_profit_{mode_name}_t_7_1"
-          elif 0.08 <= profit_init_ratio < 0.09:
-            if profit_init_ratio < (previous_profit - 0.055):
+          elif 0.08 <= profit_ratio < 0.09:
+            if profit_ratio < (previous_profit - 0.055):
               return True, f"exit_profit_{mode_name}_t_8_1"
-          elif 0.09 <= profit_init_ratio < 0.10:
-            if profit_init_ratio < (previous_profit - 0.060):
+          elif 0.09 <= profit_ratio < 0.10:
+            if profit_ratio < (previous_profit - 0.060):
               return True, f"exit_profit_{mode_name}_t_9_1"
-          elif 0.10 <= profit_init_ratio < 0.11:
-            if profit_init_ratio < (previous_profit - 0.065):
+          elif 0.10 <= profit_ratio < 0.11:
+            if profit_ratio < (previous_profit - 0.065):
               return True, f"exit_profit_{mode_name}_t_10_1"
-          elif 0.11 <= profit_init_ratio < 0.12:
-            if profit_init_ratio < (previous_profit - 0.070):
+          elif 0.11 <= profit_ratio < 0.12:
+            if profit_ratio < (previous_profit - 0.070):
               return True, f"exit_profit_{mode_name}_t_11_1"
-          elif 0.12 <= profit_init_ratio:
-            if profit_init_ratio < (previous_profit - 0.075):
+          elif 0.12 <= profit_ratio:
+            if profit_ratio < (previous_profit - 0.075):
               return True, f"exit_profit_{mode_name}_t_12_1"
     else:
       return False, None
@@ -33332,9 +33332,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -33349,7 +33347,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -33386,7 +33384,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -33400,19 +33398,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -33571,7 +33569,7 @@ class NostalgiaForInfinityX8(IStrategy):
               current_time,
             )
 
-      elif profit_init_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
+      elif profit_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -33590,7 +33588,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -33622,7 +33620,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return True, signal_name
 
-      elif previous_profit is None or previous_profit < profit_init_ratio:
+      elif previous_profit is None or previous_profit < profit_ratio:
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -33641,7 +33639,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -33649,13 +33647,13 @@ class NostalgiaForInfinityX8(IStrategy):
           return True, signal_name
 
     # Update cached max profit
-    elif profit_init_ratio >= 0.005:
-      if previous_profit is None or previous_profit < profit_init_ratio:
+    elif profit_ratio >= 0.005:
+      if previous_profit is None or previous_profit < profit_ratio:
         set_profit_target(
           pair,
           max_signal,
           current_rate,
-          profit_init_ratio,
+          profit_ratio,
           current_time,
         )
 
@@ -33850,7 +33848,7 @@ class NostalgiaForInfinityX8(IStrategy):
               current_time,
             )
 
-      elif profit_init_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
+      elif profit_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -33869,7 +33867,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -33906,7 +33904,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return True, signal_name
 
-      elif previous_profit is None or previous_profit < profit_init_ratio:
+      elif previous_profit is None or previous_profit < profit_ratio:
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -33925,7 +33923,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -33935,13 +33933,13 @@ class NostalgiaForInfinityX8(IStrategy):
     # -------------------------------------------------------------------------
     # Update max cached profit
     # -------------------------------------------------------------------------
-    elif profit_init_ratio >= 0.005:
-      if previous_profit is None or previous_profit < profit_init_ratio:
+    elif profit_ratio >= 0.005:
+      if previous_profit is None or previous_profit < profit_ratio:
         set_profit_target(
           pair,
           profit_max_signal,
           current_rate,
-          profit_init_ratio,
+          profit_ratio,
           current_time,
         )
 
@@ -34130,7 +34128,7 @@ class NostalgiaForInfinityX8(IStrategy):
               current_time,
             )
 
-      elif profit_init_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
+      elif profit_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -34149,7 +34147,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -34180,7 +34178,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return True, signal_name
 
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -34199,20 +34197,20 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
         else:
           return True, signal_name
 
     else:
-      if profit_init_ratio >= 0.005:
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+      if profit_ratio >= 0.005:
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           set_profit_target(
             pair,
             profit_max,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -34370,7 +34368,7 @@ class NostalgiaForInfinityX8(IStrategy):
               current_time,
             )
 
-      elif profit_init_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
+      elif profit_ratio > (previous_profit + 0.001) and previous_sell_reason != stoploss_doom:
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -34389,7 +34387,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -34420,7 +34418,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return True, signal_name
 
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -34439,7 +34437,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
         else:
@@ -34447,12 +34445,12 @@ class NostalgiaForInfinityX8(IStrategy):
 
     else:
       if profit_init_ratio >= 0.03:
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           set_profit_target(
             pair,
             profit_max,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -34665,7 +34663,7 @@ class NostalgiaForInfinityX8(IStrategy):
               current_time,
             )
 
-      elif profit_init_ratio > (previous_profit + 0.001) and previous_sell_reason != f"exit_{mode}_stoploss_doom":
+      elif profit_ratio > (previous_profit + 0.001) and previous_sell_reason != f"exit_{mode}_stoploss_doom":
         mark_pair, mark_signal = mark_profit_target(
           mode,
           pair,
@@ -34684,7 +34682,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -34725,7 +34723,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return True, signal_name
 
-      elif previous_profit is None or previous_profit < profit_init_ratio:
+      elif previous_profit is None or previous_profit < profit_ratio:
         mark_pair, mark_signal = mark_profit_target(
           mode,
           pair,
@@ -34744,19 +34742,19 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
         else:
           return True, signal_name
 
-    elif profit_init_ratio >= 0.005:
-      if previous_profit is None or previous_profit < profit_init_ratio:
+    elif profit_ratio >= 0.005:
+      if previous_profit is None or previous_profit < profit_ratio:
         set_profit_target(
           pair,
           f"exit_profit_{mode}_max",
           current_rate,
-          profit_init_ratio,
+          profit_ratio,
           current_time,
         )
 
@@ -34957,7 +34955,7 @@ class NostalgiaForInfinityX8(IStrategy):
               current_time,
             )
 
-      elif profit_init_ratio > (previous_profit + 0.001) and previous_sell_reason != f"exit_{mode}_stoploss_doom":
+      elif profit_ratio > (previous_profit + 0.001) and previous_sell_reason != f"exit_{mode}_stoploss_doom":
         mark_pair, mark_signal = mark_profit_target(
           mode,
           pair,
@@ -34976,7 +34974,7 @@ class NostalgiaForInfinityX8(IStrategy):
             pair,
             mark_signal,
             current_rate,
-            profit_init_ratio,
+            profit_ratio,
             current_time,
           )
 
@@ -34992,10 +34990,10 @@ class NostalgiaForInfinityX8(IStrategy):
         f"exit_profit_{mode}_stoploss_u_e",
       }
 
-      target_profit = profit_ratio if signal_name in protected_signals else profit_init_ratio
+      target_profit = profit_ratio if signal_name in protected_signals else profit_ratio
 
       should_mark = (signal_name in protected_signals and previous_sell_reason not in blocked_previous_signals) or (
-        signal_name not in protected_signals and (previous_profit is None or previous_profit < profit_init_ratio)
+        signal_name not in protected_signals and (previous_profit is None or previous_profit < profit_ratio)
       )
 
       if should_mark:
@@ -35023,13 +35021,13 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return True, signal_name
 
-    elif profit_init_ratio >= 0.005:
-      if previous_profit is None or previous_profit < profit_init_ratio:
+    elif profit_ratio >= 0.005:
+      if previous_profit is None or previous_profit < profit_ratio:
         set_profit_target(
           pair,
           f"exit_profit_{mode}_max",
           current_rate,
-          profit_init_ratio,
+          profit_ratio,
           current_time,
         )
 
@@ -35202,7 +35200,7 @@ class NostalgiaForInfinityX8(IStrategy):
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
-      elif profit_init_ratio > (previous_profit + 0.001) and previous_sell_reason != f"exit_{mode}_stoploss_doom":
+      elif profit_ratio > (previous_profit + 0.001) and previous_sell_reason != f"exit_{mode}_stoploss_doom":
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode,
@@ -35218,7 +35216,7 @@ class NostalgiaForInfinityX8(IStrategy):
         )
 
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -35245,7 +35243,7 @@ class NostalgiaForInfinityX8(IStrategy):
           # Just sell it, without maximize
           return True, f"{signal_name}"
 
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode,
           pair,
@@ -35260,16 +35258,16 @@ class NostalgiaForInfinityX8(IStrategy):
         )
 
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
 
     else:
-      if profit_init_ratio >= 0.005:
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+      if profit_ratio >= 0.005:
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in {
       f"exit_profit_{mode}_max",
@@ -47789,9 +47787,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -47806,7 +47802,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -47843,7 +47839,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -47857,19 +47853,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -48039,9 +48035,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -48056,7 +48050,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -48085,7 +48079,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -48099,19 +48093,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -48316,9 +48310,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -48333,7 +48325,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -48370,7 +48362,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -48384,19 +48376,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -48608,9 +48600,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -48625,7 +48615,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -48654,7 +48644,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -48668,19 +48658,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -48833,9 +48823,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -48850,7 +48838,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -48879,7 +48867,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -48893,7 +48881,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
@@ -48903,9 +48891,9 @@ class NostalgiaForInfinityX8(IStrategy):
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -49172,9 +49160,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -49189,7 +49175,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -49226,7 +49212,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -49240,19 +49226,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -49447,9 +49433,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -49464,7 +49448,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -49501,7 +49485,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -49515,19 +49499,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
@@ -49744,9 +49728,7 @@ class NostalgiaForInfinityX8(IStrategy):
           )
           if mark_pair:
             set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
-      elif (profit_init_ratio > (previous_profit + 0.001)) and (
-        previous_sell_reason != f"exit_{mode_name}_stoploss_doom"
-      ):
+      elif (profit_ratio > (previous_profit + 0.001)) and (previous_sell_reason != f"exit_{mode_name}_stoploss_doom"):
         # Update the target, raise it.
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
@@ -49761,7 +49743,7 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     # Add the pair to the list, if a sell triggered and conditions met
     if sell and signal_name is not None:
@@ -49790,7 +49772,7 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
-      elif (previous_profit is None) or (previous_profit < profit_init_ratio):
+      elif (previous_profit is None) or (previous_profit < profit_ratio):
         mark_pair, mark_signal = mark_profit_target(
           mode_name,
           pair,
@@ -49804,19 +49786,19 @@ class NostalgiaForInfinityX8(IStrategy):
           previous_candle_1,
         )
         if mark_pair:
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
         else:
           # Just sell it, without maximize
           return True, f"{signal_name}"
     else:
-      if profit_init_ratio >= 0.005:
+      if profit_ratio >= 0.005:
         previous_profit = None
         target_data = profit_target_get(pair) if profit_target_get is not None else None
         if target_data is not None:
           previous_profit = target_data["profit"]
-        if (previous_profit is None) or (previous_profit < profit_init_ratio):
+        if (previous_profit is None) or (previous_profit < profit_ratio):
           mark_signal = f"exit_profit_{mode_name}_max"
-          set_profit_target(pair, mark_signal, current_rate, profit_init_ratio, current_time)
+          set_profit_target(pair, mark_signal, current_rate, profit_ratio, current_time)
 
     if signal_name not in [
       f"exit_profit_{mode_name}_max",
