@@ -732,6 +732,8 @@ class NostalgiaForInfinityX8(IStrategy):
   dynamic_stake_boost_after_hours = 24.0
   dynamic_stake_boost_below = -0.01
   dynamic_stake_boost_amount = 1000.0
+  # BUDGET (spec): block new buys while a derisk exit is the trade's latest exit. Default off.
+  dynamic_budget_block_after_derisk = False
 
   # Bad-trade exits. Enable for new v4 trades without changing older open trades.
   system_v4_bad_trade_exit_enable = True
@@ -5616,7 +5618,7 @@ class NostalgiaForInfinityX8(IStrategy):
     except Exception:
       return 1.0
 
-  def trade_wallet_ratio(self, trade: Trade) -> float:
+  def trade_wallet_ratio(self, trade: Trade, floored: bool = True) -> float:
     """Wallet growth vs wallet at this trade's open (per-trade anchor, persists via custom_data)."""
     if self.dynamic_stake_mode == "off" or self.wallets is None:
       return 1.0
@@ -5632,9 +5634,38 @@ class NostalgiaForInfinityX8(IStrategy):
       total_at_open = float(total_at_open)
       if total_at_open <= 0:
         return 1.0
-      return max(1.0, total_now / total_at_open)
+      raw = total_now / total_at_open
+      return max(1.0, raw) if floored else raw
     except Exception:
       return 1.0
+
+  def _trade_derisk_active(self, trade: Trade) -> bool:
+    """True if the trade's latest filled exit carries a derisk tag (spec: buys wait)."""
+    try:
+      last_exit_tag = None
+      for o in trade.orders:
+        if not getattr(o, 'ft_is_entry', True):
+          last_exit_tag = getattr(o, 'ft_order_tag', None)
+      return isinstance(last_exit_tag, str) and last_exit_tag.startswith("derisk")
+    except Exception:
+      return False
+
+  def dynamic_budget_size(self, trade: Trade, buy_amount: float, slice_amount: float, cap_ratio: float) -> float:
+    """Spec budget: remaining = max(0, slice*cap*ratio_now - assigned); new buy fills at most remaining.
+    Returns 0.0 when the budget is exhausted (caller gates on > 0 and falls through to protection).
+    Shared pool: grind+rebuy both consume trade.stake_amount, so no double-spend. Stops untouched."""
+    if self.dynamic_stake_mode == "off":
+      return buy_amount
+    try:
+      if self.dynamic_budget_block_after_derisk and self._trade_derisk_active(trade):
+        return 0.0
+      ratio = self.trade_wallet_ratio(trade, floored=False)
+      remaining = slice_amount * cap_ratio * ratio - trade.stake_amount
+      if remaining <= 0:
+        return 0.0
+      return min(buy_amount, remaining)
+    except Exception:
+      return buy_amount
 
   def midtrade_boost_stake(self, trade: Trade, current_time: datetime, current_profit: float, trade_leverage: float):
     """One-shot mid-trade capital injection to average down. Returns (stake, tag) or None."""
@@ -41813,7 +41844,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -41930,7 +41962,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -42047,7 +42080,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -42165,7 +42199,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -42283,7 +42318,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -42393,7 +42429,8 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -44225,7 +44262,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_derisk_1_stakes[grind_1_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_1_derisk_1_sub_grind_count > 0:
@@ -44371,7 +44409,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_derisk_1_stakes[grind_2_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_2_derisk_1_sub_grind_count > 0:
@@ -44509,7 +44548,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_1_sub_grind_count > 0:
@@ -44549,7 +44589,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -44686,7 +44727,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_2_sub_grind_count > 0:
@@ -44823,7 +44865,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_3_sub_grind_count > 0:
@@ -44960,7 +45003,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_4_sub_grind_count > 0:
@@ -45108,7 +45152,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_5_sub_grind_count > 0:
@@ -45245,7 +45290,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_6_sub_grind_count > 0:
@@ -45389,7 +45435,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = derisk_1_order.safe_filled * derisk_1_order.safe_price
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if derisk_1_sub_grind_count > 0:
@@ -46170,7 +46217,8 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = max_stake
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           send_msg(
             notification_msg(
               "rebuy",
@@ -46210,7 +46258,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_1_sub_grind_count > 0:
@@ -46246,7 +46295,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -46370,7 +46420,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_2_sub_grind_count > 0:
@@ -46494,7 +46545,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_3_sub_grind_count > 0:
@@ -46618,7 +46670,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_4_sub_grind_count > 0:
@@ -46742,7 +46795,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_5_sub_grind_count > 0:
@@ -46866,7 +46920,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_6_sub_grind_count > 0:
@@ -47201,7 +47256,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           dp.send_msg(
             self.notification_msg(
               "rebuy",
@@ -47393,7 +47449,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           if send_notifications:
             dp.send_msg(
               self.notification_msg(
@@ -47593,7 +47650,8 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] * dynamic_stake_buy_mult / trade_leverage
           if buy_amount < (min_stake * 1.5):
             buy_amount = min_stake * 1.5
-          if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+          if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
             if send_notifications:
               dp.send_msg(
                 self.notification_msg(
@@ -51406,7 +51464,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -51528,7 +51587,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -51650,7 +51710,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -51787,7 +51848,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -51924,7 +51986,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -52057,7 +52120,8 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "buyback-entry",
@@ -52208,7 +52272,8 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "buyback-entry",
@@ -52359,7 +52424,8 @@ class NostalgiaForInfinityX8(IStrategy):
       )
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "buyback-entry",
@@ -53844,7 +53910,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -53956,7 +54023,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -54068,7 +54136,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -54196,7 +54265,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -54327,7 +54397,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "grinding-entry",
@@ -54439,7 +54510,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * rebuy_stakes[rebuy_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         send_msg(
           notification_msg(
             "rebuy",
@@ -56021,7 +56093,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -56138,7 +56211,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -56255,7 +56329,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -56373,7 +56448,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -56491,7 +56567,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / trade_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         if send_notifications:
           send_msg(
             notification_msg(
@@ -58251,7 +58328,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_derisk_1_stakes[grind_1_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_1_derisk_1_sub_grind_count > 0:
@@ -58395,7 +58473,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_derisk_1_stakes[grind_2_derisk_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_2_derisk_1_sub_grind_count > 0:
@@ -58531,7 +58610,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_1_sub_grind_count > 0:
@@ -58571,7 +58651,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -58706,7 +58787,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_2_sub_grind_count > 0:
@@ -58841,7 +58923,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_3_sub_grind_count > 0:
@@ -58976,7 +59059,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_4_sub_grind_count > 0:
@@ -59122,7 +59206,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_5_sub_grind_count > 0:
@@ -59257,7 +59342,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_6_sub_grind_count > 0:
@@ -59399,7 +59485,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = derisk_1_order.safe_filled * derisk_1_order.safe_price
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if derisk_1_sub_grind_count > 0:
@@ -60116,7 +60203,8 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = max_stake
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           send_msg(
             notification_msg(
               "rebuy",
@@ -60156,7 +60244,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_1_sub_grind_count > 0:
@@ -60192,7 +60281,8 @@ class NostalgiaForInfinityX8(IStrategy):
       buy_amount = slice_amount * regular_mode_grind_1_stakes[grind_1_sub_grind_count] / stake_scale_leverage
       if buy_amount < (min_stake * 1.5):
         buy_amount = min_stake * 1.5
-      if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+      buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+      if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
         grind_profit = 0.0
         grind_profit_stake = 0.0
         if grind_1_sub_grind_count > 0:
@@ -60316,7 +60406,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_2_stakes[grind_2_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_2_sub_grind_count > 0:
@@ -60440,7 +60531,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_3_stakes[grind_3_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_3_sub_grind_count > 0:
@@ -60564,7 +60656,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_4_stakes[grind_4_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_4_sub_grind_count > 0:
@@ -60688,7 +60781,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_5_stakes[grind_5_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_5_sub_grind_count > 0:
@@ -60812,7 +60906,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * regular_mode_grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           grind_profit = 0.0
           grind_profit_stake = 0.0
           if grind_6_sub_grind_count > 0:
@@ -61137,7 +61232,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           dp.send_msg(
             self.notification_msg(
               "rebuy",
@@ -61326,7 +61422,8 @@ class NostalgiaForInfinityX8(IStrategy):
         buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] / trade_leverage
         if buy_amount < (min_stake * 1.5):
           buy_amount = min_stake * 1.5
-        if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+        buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 1.0)  # BUDGET (spec): fill at most remaining
+        if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
           stake_currency = config["stake_currency"]
           stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
           send_notifications = not self.is_backtest_mode()
@@ -61525,7 +61622,8 @@ class NostalgiaForInfinityX8(IStrategy):
           buy_amount = slice_amount * rebuy_mode_stakes[sub_grind_count] * dynamic_stake_buy_mult / trade_leverage
           if buy_amount < (min_stake * 1.5):
             buy_amount = min_stake * 1.5
-          if buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
+          buy_amount = self.dynamic_budget_size(trade, buy_amount, slice_amount, 3.0)  # BUDGET (spec): fill at most remaining
+          if 0 < buy_amount <= max_stake:  # veto fallthrough: skip oversized buy, keep protection below
             stake_currency = config["stake_currency"]
             stake_fmt = ".8f" if stake_currency in ("BTC", "ETH", "BNB", "SOL") else ".3f"
             send_notifications = not self.is_backtest_mode()
