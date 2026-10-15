@@ -41772,6 +41772,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 1
 
+    if grind_1_sub_grind_count > 0 and not (
+      grind_1_current_grind_profit_rate < (grind_1_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.long_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_1_exit",
+        "grind_1_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_1_cluster_max_profit_stake,
+        grind_1_cluster_max_profit_rate,
+        grind_1_current_grind_profit_stake,
+        grind_1_current_grind_profit_rate,
+        grind_1_total_amount,
+        grind_1_profit_threshold,
+        grind_1_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_1_enable)
       # and is_derisk_1_found
@@ -41807,35 +41836,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_1_sub_grind_count > 0 and not (
-      grind_1_current_grind_profit_rate < (grind_1_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.long_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_1_exit",
-        "grind_1_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_1_cluster_max_profit_stake,
-        grind_1_cluster_max_profit_rate,
-        grind_1_current_grind_profit_stake,
-        grind_1_current_grind_profit_rate,
-        grind_1_total_amount,
-        grind_1_profit_threshold,
-        grind_1_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_1_use_derisk
@@ -41889,6 +41889,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 2
 
+    if grind_2_sub_grind_count > 0 and not (
+      grind_2_current_grind_profit_rate < (grind_2_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.long_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_2_exit",
+        "grind_2_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_2_cluster_max_profit_stake,
+        grind_2_cluster_max_profit_rate,
+        grind_2_current_grind_profit_stake,
+        grind_2_current_grind_profit_rate,
+        grind_2_total_amount,
+        grind_2_profit_threshold,
+        grind_2_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_2_enable)
       # and is_derisk_1_found
@@ -41924,35 +41953,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_2_sub_grind_count > 0 and not (
-      grind_2_current_grind_profit_rate < (grind_2_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.long_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_2_exit",
-        "grind_2_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_2_cluster_max_profit_stake,
-        grind_2_cluster_max_profit_rate,
-        grind_2_current_grind_profit_stake,
-        grind_2_current_grind_profit_rate,
-        grind_2_total_amount,
-        grind_2_profit_threshold,
-        grind_2_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_2_use_derisk
@@ -42006,6 +42006,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 3
 
+    if grind_3_sub_grind_count > 0 and not (
+      grind_3_current_grind_profit_rate < (grind_3_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.long_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_3_exit",
+        "grind_3_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_3_cluster_max_profit_stake,
+        grind_3_cluster_max_profit_rate,
+        grind_3_current_grind_profit_stake,
+        grind_3_current_grind_profit_rate,
+        grind_3_total_amount,
+        grind_3_profit_threshold,
+        grind_3_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_3_enable)
       # and is_derisk_1_found
@@ -42041,35 +42070,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_3_sub_grind_count > 0 and not (
-      grind_3_current_grind_profit_rate < (grind_3_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.long_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_3_exit",
-        "grind_3_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_3_cluster_max_profit_stake,
-        grind_3_cluster_max_profit_rate,
-        grind_3_current_grind_profit_stake,
-        grind_3_current_grind_profit_rate,
-        grind_3_total_amount,
-        grind_3_profit_threshold,
-        grind_3_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_3_use_derisk
@@ -42123,6 +42123,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 4
 
+    if grind_4_sub_grind_count > 0 and not (
+      grind_4_current_grind_profit_rate < (grind_4_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.long_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_4_exit",
+        "grind_4_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_4_cluster_max_profit_stake,
+        grind_4_cluster_max_profit_rate,
+        grind_4_current_grind_profit_stake,
+        grind_4_current_grind_profit_rate,
+        grind_4_total_amount,
+        grind_4_profit_threshold,
+        grind_4_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_4_enable)
       # and is_derisk_1_found
@@ -42159,35 +42188,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_4_sub_grind_count > 0 and not (
-      grind_4_current_grind_profit_rate < (grind_4_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.long_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_4_exit",
-        "grind_4_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_4_cluster_max_profit_stake,
-        grind_4_cluster_max_profit_rate,
-        grind_4_current_grind_profit_stake,
-        grind_4_current_grind_profit_rate,
-        grind_4_total_amount,
-        grind_4_profit_threshold,
-        grind_4_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_4_use_derisk
@@ -42241,6 +42241,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 5
 
+    if grind_5_sub_grind_count > 0 and not (
+      grind_5_current_grind_profit_rate < (grind_5_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.long_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_5_exit",
+        "grind_5_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_5_cluster_max_profit_stake,
+        grind_5_cluster_max_profit_rate,
+        grind_5_current_grind_profit_stake,
+        grind_5_current_grind_profit_rate,
+        grind_5_total_amount,
+        grind_5_profit_threshold,
+        grind_5_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_5_enable)
       # and is_derisk_1_found
@@ -42277,35 +42306,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_5_sub_grind_count > 0 and not (
-      grind_5_current_grind_profit_rate < (grind_5_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.long_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_5_exit",
-        "grind_5_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_5_cluster_max_profit_stake,
-        grind_5_cluster_max_profit_rate,
-        grind_5_current_grind_profit_stake,
-        grind_5_current_grind_profit_rate,
-        grind_5_total_amount,
-        grind_5_profit_threshold,
-        grind_5_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_5_use_derisk
@@ -55980,6 +55980,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 1
 
+    if grind_1_sub_grind_count > 0 and not (
+      -grind_1_current_grind_profit_rate < (grind_1_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.short_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_1_exit",
+        "grind_1_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_1_cluster_max_profit_stake,
+        grind_1_cluster_max_profit_rate,
+        grind_1_current_grind_profit_stake,
+        grind_1_current_grind_profit_rate,
+        grind_1_total_amount,
+        grind_1_profit_threshold,
+        grind_1_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_1_enable)
       # and is_derisk_1_found
@@ -56015,35 +56044,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_1_sub_grind_count > 0 and not (
-      -grind_1_current_grind_profit_rate < (grind_1_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.short_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_1_exit",
-        "grind_1_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_1_cluster_max_profit_stake,
-        grind_1_cluster_max_profit_rate,
-        grind_1_current_grind_profit_stake,
-        grind_1_current_grind_profit_rate,
-        grind_1_total_amount,
-        grind_1_profit_threshold,
-        grind_1_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_1_use_derisk
@@ -56097,6 +56097,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 2
 
+    if grind_2_sub_grind_count > 0 and not (
+      -grind_2_current_grind_profit_rate < (grind_2_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.short_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_2_exit",
+        "grind_2_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_2_cluster_max_profit_stake,
+        grind_2_cluster_max_profit_rate,
+        grind_2_current_grind_profit_stake,
+        grind_2_current_grind_profit_rate,
+        grind_2_total_amount,
+        grind_2_profit_threshold,
+        grind_2_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_2_enable)
       # and is_derisk_1_found
@@ -56132,35 +56161,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_2_sub_grind_count > 0 and not (
-      -grind_2_current_grind_profit_rate < (grind_2_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.short_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_2_exit",
-        "grind_2_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_2_cluster_max_profit_stake,
-        grind_2_cluster_max_profit_rate,
-        grind_2_current_grind_profit_stake,
-        grind_2_current_grind_profit_rate,
-        grind_2_total_amount,
-        grind_2_profit_threshold,
-        grind_2_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_2_use_derisk
@@ -56214,6 +56214,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 3
 
+    if grind_3_sub_grind_count > 0 and not (
+      -grind_3_current_grind_profit_rate < (grind_3_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.short_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_3_exit",
+        "grind_3_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_3_cluster_max_profit_stake,
+        grind_3_cluster_max_profit_rate,
+        grind_3_current_grind_profit_stake,
+        grind_3_current_grind_profit_rate,
+        grind_3_total_amount,
+        grind_3_profit_threshold,
+        grind_3_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_3_enable)
       # and is_derisk_1_found
@@ -56249,35 +56278,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_3_sub_grind_count > 0 and not (
-      -grind_3_current_grind_profit_rate < (grind_3_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.short_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_3_exit",
-        "grind_3_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_3_cluster_max_profit_stake,
-        grind_3_cluster_max_profit_rate,
-        grind_3_current_grind_profit_stake,
-        grind_3_current_grind_profit_rate,
-        grind_3_total_amount,
-        grind_3_profit_threshold,
-        grind_3_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_3_use_derisk
@@ -56331,6 +56331,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 4
 
+    if grind_4_sub_grind_count > 0 and not (
+      -grind_4_current_grind_profit_rate < (grind_4_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.short_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_4_exit",
+        "grind_4_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_4_cluster_max_profit_stake,
+        grind_4_cluster_max_profit_rate,
+        grind_4_current_grind_profit_stake,
+        grind_4_current_grind_profit_rate,
+        grind_4_total_amount,
+        grind_4_profit_threshold,
+        grind_4_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_4_enable)
       # and is_derisk_1_found
@@ -56367,35 +56396,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_4_sub_grind_count > 0 and not (
-      -grind_4_current_grind_profit_rate < (grind_4_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.short_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_4_exit",
-        "grind_4_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_4_cluster_max_profit_stake,
-        grind_4_cluster_max_profit_rate,
-        grind_4_current_grind_profit_stake,
-        grind_4_current_grind_profit_rate,
-        grind_4_total_amount,
-        grind_4_profit_threshold,
-        grind_4_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_4_use_derisk
@@ -56449,6 +56449,35 @@ class NostalgiaForInfinityX8(IStrategy):
 
     # Grinding 5
 
+    if grind_5_sub_grind_count > 0 and not (
+      -grind_5_current_grind_profit_rate < (grind_5_profit_threshold + fee_open_rate + fee_close_rate)
+    ):
+      load_candles()
+      ft_exit_amount, tag = self.short_grind_exit_v4(
+        last_candle,
+        previous_candle,
+        slice_profit,
+        current_time,
+        min_stake,
+        current_stake_amount,
+        exit_rate,
+        profit_stake,
+        profit_ratio,
+        "grind_5_exit",
+        "grind_5_exit",
+        fee_open_rate,
+        fee_close_rate,
+        grind_5_cluster_max_profit_stake,
+        grind_5_cluster_max_profit_rate,
+        grind_5_current_grind_profit_stake,
+        grind_5_current_grind_profit_rate,
+        grind_5_total_amount,
+        grind_5_profit_threshold,
+        grind_5_orders,
+        trade,
+      )
+      if ft_exit_amount is not None and tag is not None:
+        return ft_exit_amount, tag
     if (
       (self.system_v4_grind_5_enable)
       # and is_derisk_1_found
@@ -56485,35 +56514,6 @@ class NostalgiaForInfinityX8(IStrategy):
         else:
           return buy_amount
 
-    if grind_5_sub_grind_count > 0 and not (
-      -grind_5_current_grind_profit_rate < (grind_5_profit_threshold + fee_open_rate + fee_close_rate)
-    ):
-      load_candles()
-      ft_exit_amount, tag = self.short_grind_exit_v4(
-        last_candle,
-        previous_candle,
-        slice_profit,
-        current_time,
-        min_stake,
-        current_stake_amount,
-        exit_rate,
-        profit_stake,
-        profit_ratio,
-        "grind_5_exit",
-        "grind_5_exit",
-        fee_open_rate,
-        fee_close_rate,
-        grind_5_cluster_max_profit_stake,
-        grind_5_cluster_max_profit_rate,
-        grind_5_current_grind_profit_stake,
-        grind_5_current_grind_profit_rate,
-        grind_5_total_amount,
-        grind_5_profit_threshold,
-        grind_5_orders,
-        trade,
-      )
-      if ft_exit_amount is not None and tag is not None:
-        return ft_exit_amount, tag
 
     if (
       self.system_v4_grind_5_use_derisk
