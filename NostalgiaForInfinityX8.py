@@ -5662,17 +5662,21 @@ class NostalgiaForInfinityX8(IStrategy):
   def dynamic_budget_size(self, trade: Trade, buy_amount: float, slice_amount: float, cap_ratio: float) -> float:
     """Spec budget: remaining = max(0, slice*cap*ratio_now - assigned); new buy fills at most remaining.
     Returns 0.0 when the budget is exhausted (caller gates on > 0 and falls through to protection).
-    Shared pool: grind+rebuy both consume trade.stake_amount, so no double-spend. Stops untouched."""
+    Shared pool: grind+rebuy both consume trade.stake_amount, so no double-spend. Stops untouched.
+    Numerario: slice/current are NOTIONAL (amount*price); buy_amount/trade.stake_amount are
+    COLLATERAL, so the remaining is converted by leverage before the min()."""
     if self.dynamic_stake_mode == "off":
       return buy_amount
     try:
       if self.dynamic_budget_block_after_derisk and self._trade_derisk_active(trade):
         return 0.0
       ratio = self.dynamic_budget_mult(trade)
-      remaining = slice_amount * cap_ratio * ratio - trade.stake_amount
-      if remaining <= 0:
+      lev = getattr(trade, 'leverage', None) or 1.0
+      assigned_notional = trade.stake_amount * lev
+      remaining_notional = slice_amount * cap_ratio * ratio - assigned_notional
+      if remaining_notional <= 0:
         return 0.0
-      return min(buy_amount, remaining)
+      return min(buy_amount, remaining_notional / lev)
     except Exception:
       return buy_amount
 
