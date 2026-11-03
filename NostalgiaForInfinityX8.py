@@ -29589,6 +29589,8 @@ class NostalgiaForInfinityX8(IStrategy):
           short_entry_logic.append(rsi_14_4h < 48.0)
           short_entry_logic.append(rsi_14_1d < 50.0)
           short_entry_logic.append(rsi_14_1d > 25.0)
+          # Block late 4h flushes; wait for the bounce.
+          short_entry_logic.append((stochk_14_3_3_4h > 36.0) | (aroonu_14_4h < 14.0))
 
           short_entry_logic.append(
             # Downtrend confirmation (higher TF)
