@@ -31,10 +31,12 @@ npm install
 npm run dev
 ```
 
-Use `web/.env.example` to point the server-side proxy at a local Freqtrade REST
-API. With no API configured, the dashboard runs on a deterministic demo dataset.
-The optional `web` Compose profile starts only the dashboard and does not start
-or touch the bot:
+Use `web/.env.example` to set the login password and session secret, then point
+the server-side proxy at a local Freqtrade REST API. The dashboard fails closed
+unless `DASHBOARD_PASSWORD` and `DASHBOARD_SECRET` are set; use
+`DASHBOARD_AUTH_DISABLED=1` only for local development. With no API configured,
+it runs on a deterministic demo dataset after login. The optional `web` Compose
+profile starts only the dashboard and does not start or touch the bot:
 
 ```bash
 docker compose --profile web up -d --build web

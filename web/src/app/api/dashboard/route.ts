@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { AUTH_COOKIE, verifySession } from "@/lib/auth";
 import { makeDemoData } from "@/lib/demo";
 import type {
   ClosedTrade,
@@ -118,7 +119,25 @@ function buildEquity(
   return points.length > 0 ? points : [{ date: "", equity: equityNow, pnl: 0 }];
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  if (process.env.DASHBOARD_AUTH_DISABLED !== "1") {
+    const password = process.env.DASHBOARD_PASSWORD;
+    const secret = process.env.DASHBOARD_SECRET;
+    if (!password || !secret) {
+      return NextResponse.json(
+        { error: "Dashboard authentication is not configured" },
+        { status: 503 },
+      );
+    }
+    const authenticated = await verifySession(
+      request.cookies.get(AUTH_COOKIE)?.value,
+      secret,
+    );
+    if (!authenticated) {
+      return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    }
+  }
+
   if (!BASE_URL) {
     return NextResponse.json(makeDemoData(), {
       headers: { "Cache-Control": "no-store" },

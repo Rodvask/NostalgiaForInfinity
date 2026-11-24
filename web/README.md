@@ -29,6 +29,22 @@ npm run dev
 
 Open <http://localhost:3000>.
 
+The dashboard is protected by a password login. For local-only development, add
+this line to `.env.local` to skip the login:
+
+```env
+DASHBOARD_AUTH_DISABLED=1
+```
+
+For any shared or public deployment, set both values instead:
+
+```env
+DASHBOARD_PASSWORD=change-me
+DASHBOARD_SECRET=replace-with-a-long-random-secret
+```
+
+Generate the secret with `openssl rand -hex 32`.
+
 With no `FREQTRADE_API_URL`, the dashboard serves a deterministic demo dataset.
 The template keeps the live settings commented out so the first run works
 without a bot. To use a running bot, uncomment them in `.env.local`:
@@ -59,6 +75,8 @@ docker run --rm -p 127.0.0.1:3000:3000 \
   -e FREQTRADE_API_URL=http://host.docker.internal:8080 \
   -e FREQTRADE_USERNAME=freqtrader \
   -e FREQTRADE_PASSWORD=change-me \
+  -e DASHBOARD_PASSWORD=change-me \
+  -e DASHBOARD_SECRET="$(openssl rand -hex 32)" \
   nfi-x9-web
 ```
 
@@ -69,16 +87,19 @@ dashboard; it does not start the `freqtrade` service:
 docker compose --profile web up -d --build web
 ```
 
-With no `FREQTRADE_API_URL`, the container runs in demo mode. To proxy a bot on
-the host, set `FREQTRADE_API_URL=http://host.docker.internal:8989` plus the API
-credentials. The Compose file maps `host.docker.internal` to the host gateway,
-so this works on Linux as well.
+With no `FREQTRADE_API_URL`, the container runs in demo mode after login. To
+proxy a bot on the host, set `FREQTRADE_API_URL=http://host.docker.internal:8989`
+plus the API credentials. The Compose file maps `host.docker.internal` to the
+host gateway, so this works on Linux as well.
+
+Set `DASHBOARD_PASSWORD` and `DASHBOARD_SECRET` in the environment or a root
+`.env` file before starting the container. Without both, protected routes return
+`503` instead of exposing account data.
 
 `WEB_PORT` changes the published port (default `3000`). Both `npm run dev` and
 `npm start` bind to `127.0.0.1`, and Compose publishes the container only on
-loopback. The dashboard has no login of its own and proxies live account data;
-do not expose it on a public interface without putting authentication in front
-of it.
+loopback. The built-in login sets an HttpOnly, signed session cookie; keep the
+deployment behind HTTPS and use a strong password.
 
 ## API surface
 

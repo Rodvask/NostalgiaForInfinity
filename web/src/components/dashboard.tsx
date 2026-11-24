@@ -1029,8 +1029,15 @@ export default function Dashboard() {
           </section>
 
           <footer className="mt-10 flex flex-wrap items-center justify-between gap-2 border-t border-line py-5 text-[11px] text-muted">
-            <span>
+            <span className="flex items-center gap-2">
               NFI X9 · {config.strategy} · {config.version}
+              <span className="text-line">·</span>
+              <a
+                href="/api/auth/logout"
+                className="transition-colors hover:text-ink"
+              >
+                Sign out
+              </a>
             </span>
             <span className="flex items-center gap-2">
               <span
