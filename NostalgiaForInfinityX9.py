@@ -1298,7 +1298,7 @@ class NostalgiaForInfinityX9(IStrategy):
     # If the cached data hasn't changed, it's a no-op
     self.target_profit_cache.save()
 
-    # Parameter settings. Backward compatibility with the old configuration style.
+    # Entry/exit signal parameters from the old configuration style.
     self.update_signals_from_config(strategy_config)
 
   # Plot configuration for FreqUI
