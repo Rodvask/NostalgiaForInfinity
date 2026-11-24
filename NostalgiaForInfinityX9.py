@@ -39627,7 +39627,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (((last_ema_200 - last_close) / last_close) < 0.010)
       and (last_rsi_14 > previous_rsi_14)
       and (last_rsi_14 > (last_rsi_14_1h + 24.0))
-      # and (current_time - timedelta(minutes=720) > trade.open_date_utc)
       # temporary
       and (is_backtest or trade_open_date >= datetime(2025, 4, 3))
     ):
@@ -40221,8 +40220,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (slice_profit < -0.03)
         and (last_rsi_3 > 10.0)
         and (last_rsi_3_15m > 20.0)
-        # and (last_candle["RSI_3_1h"] > 20.0)
-        # and (last_candle["RSI_3_1h"] > 20.0)
         and (last_aroonu_14 < 50.0)
         and (last_aroonu_14_15m < 50.0)
       )
@@ -40603,12 +40600,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_1_use_derisk
-    #   and (grind_1_sub_grind_count > 0)
-    #   and (((exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_derisk_grinds)
-    #   and (grind_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_1_use_derisk
       and (grind_1_sub_grind_count > 0)
@@ -40657,7 +40648,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (self.grinding_v2_grind_2_enable)
-      # and (is_derisk_1_found or is_derisk_2_found or is_derisk_3_found)
       and is_long_grind_entry
       and is_long_extra_checks_entry
       and (grind_2_sub_grind_count < grind_2_max_sub_grinds)
@@ -40725,12 +40715,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_2_use_derisk
-    #   and (grind_2_sub_grind_count > 0)
-    #   and (((exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_derisk_grinds)
-    #   and (grind_2_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_2_use_derisk
       and (grind_2_sub_grind_count > 0)
@@ -40779,7 +40763,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (self.grinding_v2_grind_3_enable)
-      # and (is_derisk_1_found or is_derisk_2_found or is_derisk_3_found)
       and is_long_grind_entry
       and is_long_extra_checks_entry
       and (grind_3_sub_grind_count < grind_3_max_sub_grinds)
@@ -40847,12 +40830,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_3_use_derisk
-    #   and (grind_3_sub_grind_count > 0)
-    #   and (((exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_derisk_grinds)
-    #   and (grind_3_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_3_use_derisk
       and (grind_3_sub_grind_count > 0)
@@ -40901,7 +40878,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (self.grinding_v2_grind_4_enable)
-      # and (is_derisk_1_found or is_derisk_2_found or is_derisk_3_found)
       and (
         is_long_grind_entry
       )
@@ -40971,12 +40947,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_4_use_derisk
-    #   and (grind_4_sub_grind_count > 0)
-    #   and (((exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_derisk_grinds)
-    #   and (grind_4_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_4_use_derisk
       and (grind_4_sub_grind_count > 0)
@@ -41101,12 +41071,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_5_use_derisk
-    #   and (grind_5_sub_grind_count > 0)
-    #   and (((exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_derisk_grinds)
-    #   and (grind_5_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_5_use_derisk
       and (grind_5_sub_grind_count > 0)
@@ -41641,23 +41605,14 @@ class NostalgiaForInfinityX9(IStrategy):
         (last_rsi_14_lt_36)
         and (last_rsi_3 > 20.0)
         and (last_rsi_3_15m > 20.0)
-        # and (last_candle["RSI_3_1h"] > 20.0)
-        # and (last_candle["RSI_3_4h"] > 20.0)
         and (last_aroonu_14 < 25.0)
         and (last_roc_2_1h_gt_neg_5)
         and (last_roc_2_4h_gt_neg_5)
-        # and (last_candle["ROC_9_4h"] > -20.0)
-        # and (last_candle["ROC_9_4h"] < 40.0)
-        # and (last_candle["ROC_9_1d"] > -20.0)
-        # and (last_candle["ROC_9_1d"] < 50.0)
         and (last_stochrsi_k < 20.0)
         and (last_stochrsi_k_15m < 20.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_1h"] < 30.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_4h"] < 30.0)
         and (last_close > (last_close_max_48 * 0.90))
         and (last_close > (last_high_max_6_1h * 0.85))
         and (last_close > (last_high_max_12_1h * 0.80))
-        # and (last_candle["close"] < (last_candle["low_min_24_4h"] * 1.20))
         and (last_close < (last_ema_16 * 0.980))
       )
       or (
@@ -41668,9 +41623,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_rsi_3_4h > 15.0)
         and (last_roc_2_1h_gt_neg_5)
         and (last_roc_2_4h_gt_neg_5)
-        # and (last_candle["ROC_2_1d"] > -10.0)
-        # and (last_candle["ROC_9_1h"] > -10.0)
-        # and (last_candle["ROC_9_4h"] > -10.0)
         and (last_roc_9_1d_gt_neg_5)
         and (last_ema_26 > last_ema_12)
         and ((last_ema_26 - last_ema_12) > (last_open * 0.020))
@@ -41689,13 +41641,10 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_roc_9_1h_gt_neg_5)
         and (last_roc_9_4h_gt_neg_5)
         and (last_roc_9_1d > -10.0)
-        # and (last_candle["ROC_9_4h"] < 40.0)
-        # and (last_candle["ROC_9_1d"] < 50.0)
         and (last_aroonu_14_15m < 25.0)
         and (last_close > (last_close_max_48 * 0.90))
         and (last_close > (last_high_max_6_1h * 0.85))
         and (last_close > (last_high_max_12_1h * 0.80))
-        # and (last_candle["close"] < (last_candle["low_min_24_4h"] * 1.20))
         and (last_close < (last_ema_12 * 0.980))
       )
       or (
@@ -41706,15 +41655,11 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_rsi_3_1d_gt_10)
         and (last_roc_2_1h_gt_neg_5)
         and (last_roc_2_4h_gt_neg_5)
-        # and (last_candle["ROC_2_1d"] > -5.0)
         and (last_roc_9_1h_gt_neg_5)
         and (last_roc_9_4h_gt_neg_5)
         and (last_roc_9_1d_gt_neg_5)
         and (last_stochrsi_k_1h < 80.0)
         and (last_stochrsi_k_4h < 70.0)
-        # and (last_candle["close"] > (last_candle["close_max_48"] * 0.90))
-        # and (last_candle["close"] > (last_candle["high_max_6_1h"] * 0.85))
-        # and (last_candle["close"] > (last_candle["high_max_12_1h"] * 0.80))
         and (last_close < (last_ema_26 * 0.960))
         and (last_close < (last_bbl_20 * 0.999))
       )
@@ -42225,7 +42170,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     is_long_extra_checks_entry = (
       grind_entry_retry_time > filled_entries[-1].order_filled_utc
-      # and ((current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc) or (slice_profit < -0.02))
       and (
         (current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc)
         or (slice_profit < -0.06)
@@ -42507,12 +42451,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_1_sub_grind_count > 0)
       and (((exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_1_use_derisk
-      #   and (grind_1_sub_grind_count > 0)
-      #   and (grind_1_current_grind_profit_stake < (slice_amount * grind_1_derisk_grinds))
-      #   and (grind_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_1_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -42621,12 +42559,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_2_sub_grind_count > 0)
       and (((exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_2_use_derisk
-      #   and (grind_2_sub_grind_count > 0)
-      #   and (grind_2_current_grind_profit_stake < (slice_amount * grind_2_derisk_grinds))
-      #   and (grind_2_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_2_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -42735,12 +42667,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_3_sub_grind_count > 0)
       and (((exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_3_use_derisk
-      #   and (grind_3_sub_grind_count > 0)
-      #   and (grind_3_current_grind_profit_stake < (slice_amount * grind_3_derisk_grinds))
-      #   and (grind_3_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_3_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -42865,12 +42791,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_4_sub_grind_count > 0)
       and (((exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_4_use_derisk
-      #   and (grind_4_sub_grind_count > 0)
-      #   and (grind_4_current_grind_profit_stake < (slice_amount * grind_4_derisk_grinds))
-      #   and (grind_4_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_4_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -42998,12 +42918,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_5_sub_grind_count > 0)
       and (((exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_5_use_derisk
-      #   and (grind_5_sub_grind_count > 0)
-      #   and (grind_5_current_grind_profit_stake < (slice_amount * grind_5_derisk_grinds))
-      #   and (grind_5_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_5_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -43334,7 +43248,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_aroonu_14 < 25.0)
       and (last_roc_9_1h > -20.0)
       and (last_roc_9_4h > -20.0)
-      # and (last_close > (last_close_max_48 * 0.90))
       and (last_close < (last_ema_26 * 0.970))
       and (last_close < (last_bbl_20 * 0.999))
     ):
@@ -43400,7 +43313,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_rsi_3_4h > 10.0)
       and (last_roc_9_1h > -10.0)
       and (last_roc_9_4h > -25.0)
-      # and (last_close < (last_candle["low_min_24_1h"] * 1.30))
       and (last_ema_26 > last_ema_12)
       and ((last_ema_26 - last_ema_12) > (last_open * 0.030))
       and ((prev_ema_26 - prev_ema_12) > (last_open / 100.0))
@@ -44635,7 +44547,6 @@ class NostalgiaForInfinityX9(IStrategy):
         or is_derisk_3_found
       )
       and grind_entry_retry_time > filled_entries[-1].order_filled_utc
-      # and ((current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc) or (slice_profit < -0.02))
       and (
         (current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc)
         or (slice_profit < -0.06)
@@ -45007,12 +44918,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_1_sub_grind_count > 0)
       and (((exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_1_use_derisk
-      #   and (grind_1_sub_grind_count > 0)
-      #   and (grind_1_current_grind_profit_stake < (slice_amount * grind_1_derisk_grinds))
-      #   and (grind_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       grind_orders = grind_1_orders
       grind_amount = grind_1_total_amount
       if self.system_v4_grind_derisk_mode == "oldest":
@@ -45145,12 +45050,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_2_sub_grind_count > 0)
       and (((exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_2_use_derisk
-      #   and (grind_2_sub_grind_count > 0)
-      #   and (grind_2_current_grind_profit_stake < (slice_amount * grind_2_derisk_grinds))
-      #   and (grind_2_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       grind_orders = grind_2_orders
       grind_amount = grind_2_total_amount
       if self.system_v4_grind_derisk_mode == "oldest":
@@ -45283,12 +45182,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_3_sub_grind_count > 0)
       and (((exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_3_use_derisk
-      #   and (grind_3_sub_grind_count > 0)
-      #   and (grind_3_current_grind_profit_stake < (slice_amount * grind_3_derisk_grinds))
-      #   and (grind_3_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       grind_orders = grind_3_orders
       grind_amount = grind_3_total_amount
       if self.system_v4_grind_derisk_mode == "oldest":
@@ -45423,12 +45316,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_4_sub_grind_count > 0)
       and (((exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_4_use_derisk
-      #   and (grind_4_sub_grind_count > 0)
-      #   and (grind_4_current_grind_profit_stake < (slice_amount * grind_4_derisk_grinds))
-      #   and (grind_4_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       grind_orders = grind_4_orders
       grind_amount = grind_4_total_amount
       if self.system_v4_grind_derisk_mode == "oldest":
@@ -45565,12 +45452,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_5_sub_grind_count > 0)
       and (((exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_5_use_derisk
-      #   and (grind_5_sub_grind_count > 0)
-      #   and (grind_5_current_grind_profit_stake < (slice_amount * grind_5_derisk_grinds))
-      #   and (grind_5_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       grind_orders = grind_5_orders
       grind_amount = grind_5_total_amount
       if self.system_v4_grind_derisk_mode == "oldest":
@@ -45877,7 +45758,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_aroonu_14 < 25.0)
       and (last_roc_9_1h > -20.0)
       and (last_roc_9_4h > -20.0)
-      # and (last_close > (last_close_max_48 * 0.90))
       and (last_close < (last_ema_26 * 0.970))
       and (last_close < (last_bbl_20 * 0.999))
     ):
@@ -45943,7 +45823,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_rsi_3_4h > 10.0)
       and (last_roc_9_1h > -10.0)
       and (last_roc_9_4h > -25.0)
-      # and (last_close < (last_candle["low_min_24_1h"] * 1.30))
       and (last_ema_26 > last_ema_12)
       and ((last_ema_26 - last_ema_12) > (last_open * 0.030))
       and ((prev_ema_26 - prev_ema_12) > (last_open / 100.0))
@@ -47356,7 +47235,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and is_long_grind_entry
         and buy_amount <= max_stake
       ):
@@ -47497,7 +47375,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and is_long_grind_entry
         and buy_amount <= max_stake
       ):
@@ -47629,7 +47506,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and is_long_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -47738,7 +47614,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_1_sub_grind_count > 0)
-        # and (((exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_stop_grinds)
         and (grind_1_current_grind_stake_profit < (slice_amount * grind_1_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -47803,7 +47678,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and is_long_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -47874,7 +47748,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_2_sub_grind_count > 0)
-        # and (((exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_stop_grinds)
         and (grind_2_current_grind_stake_profit < (slice_amount * grind_2_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -47939,7 +47812,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and is_long_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -48010,7 +47882,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_3_sub_grind_count > 0)
-        # and (((exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_stop_grinds)
         and (grind_3_current_grind_stake_profit < (slice_amount * grind_3_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -48075,7 +47946,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and is_long_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -48146,7 +48016,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_4_sub_grind_count > 0)
-        # and (((exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_stop_grinds)
         and (grind_4_current_grind_stake_profit < (slice_amount * grind_4_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -48219,7 +48088,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and (is_long_grind_entry or gd5_liquidation_rescue_eligible)
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -48293,7 +48161,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_5_sub_grind_count > 0)
-        # and (((exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_stop_grinds)
         and (grind_5_current_grind_stake_profit < (slice_amount * grind_5_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -48358,7 +48225,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and is_long_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -48429,7 +48295,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_6_sub_grind_count > 0)
-        # and (((exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate) < grind_6_stop_grinds)
         and (grind_6_current_grind_stake_profit < (slice_amount * grind_6_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -48496,7 +48361,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit < -0.03))
         and (
           (last_candle["global_protections_long_pump"] == True)
           and (last_candle["global_protections_long_dump"] == True)
@@ -48536,7 +48400,6 @@ class NostalgiaForInfinityX9(IStrategy):
       # and not is_derisk_1
       and derisk_1_reentry_found
       and derisk_1_reentry_order is not None
-      # and (trade.open_date_utc.replace(tzinfo=None) >= datetime(2024, 4, 5) or is_backtest)
       and derisk_1_distance_ratio
       < (
         (self.regular_mode_derisk_1_reentry_futures if is_futures else self.regular_mode_derisk_1_reentry_spot)
@@ -49909,7 +49772,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (current_time - timedelta(hours=6) > last_filled_order.order_filled_utc)
           or (slice_profit_lt_neg_0_06)
         )
-        # and ((num_open_grinds == 0) or (slice_profit_lt_neg_0_03))
         and (is_long_grind_entry)
       ):
         buy_amount = slice_amount * regular_mode_grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
@@ -50214,8 +50076,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           (last_candle["RSI_3"] > 10.0)
           and (last_candle["RSI_3_15m"] > 10.0)
-          # and (last_candle["RSI_3_1h"] > 10.0)
-          # and (last_candle["RSI_3_4h"] > 10.0)
           and (last_candle["RSI_14"] < 40.0)
           and (last_candle["ROC_2"] > -0.0)
           and (last_candle["close"] < (last_candle["EMA_26"] * 0.988))
@@ -50392,9 +50252,6 @@ class NostalgiaForInfinityX9(IStrategy):
             and (last_candle["RSI_3_15m"] > 10.0)
             and (last_candle["AROONU_14"] < 30.0)
             and (last_candle["AROONU_14_15m"] < 30.0)
-            # and (last_candle["ROC_9"] > -5.0)
-            # and (last_candle["ROC_9_15m"] > -5.0)
-            # and (last_candle["close"] > (last_candle["close_max_12"] * 0.99))
             and (last_candle["close"] < (last_candle["EMA_26"] * 0.988))
           )
         ):
@@ -50574,9 +50431,6 @@ class NostalgiaForInfinityX9(IStrategy):
             and (last_candle["RSI_3_15m"] > 10.0)
             and (last_candle["AROONU_14"] < 30.0)
             and (last_candle["AROONU_14_15m"] < 30.0)
-            # and (last_candle["ROC_9"] > -5.0)
-            # and (last_candle["ROC_9_15m"] > -5.0)
-            # and (last_candle["close"] > (last_candle["close_max_12"] * 0.99))
             and (last_candle["close"] < (last_candle["EMA_26"] * 0.988))
           ):
             stake_currency = config["stake_currency"]
@@ -53441,7 +53295,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (((last_close - last_ema_200) / last_ema_200) < 0.010)
       and (last_rsi_14 < previous_rsi_14)
       and (last_rsi_14 < (last_rsi_14_1h - 24.0))
-      # and (current_time - timedelta(minutes=720) > trade.open_date_utc)
       # temporary
       and (is_backtest or trade_open_date >= datetime(2025, 4, 3))
     ):
@@ -54028,8 +53881,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (slice_profit > 0.03)
         and (last_rsi_3 < 90.0)
         and (last_rsi_3_15m < 80.0)
-        # and (last_candle["RSI_3_1h"] < 80.0)
-        # and (last_candle["RSI_3_1h"] < 80.0)
         and (last_aroond_14 < 50.0)
         and (last_aroond_14_15m < 50.0)
       )
@@ -54402,12 +54253,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_1_use_derisk
-    #   and (grind_1_sub_grind_count > 0)
-    #   and ((-(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_derisk_grinds)
-    #   and (grind_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_1_use_derisk
       and (grind_1_sub_grind_count > 0)
@@ -54456,7 +54301,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (self.grinding_v2_grind_2_enable)
-      # and (is_derisk_1_found or is_derisk_2_found or is_derisk_3_found)
       and is_short_grind_entry
       and is_short_extra_checks_entry
       and (grind_2_sub_grind_count < grind_2_max_sub_grinds)
@@ -54524,12 +54368,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_2_use_derisk
-    #   and (grind_2_sub_grind_count > 0)
-    #   and ((-(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_derisk_grinds)
-    #   and (grind_2_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_2_use_derisk
       and (grind_2_sub_grind_count > 0)
@@ -54578,7 +54416,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (self.grinding_v2_grind_3_enable)
-      # and (is_derisk_1_found or is_derisk_2_found or is_derisk_3_found)
       and is_short_grind_entry
       and is_short_extra_checks_entry
       and (grind_3_sub_grind_count < grind_3_max_sub_grinds)
@@ -54646,12 +54483,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_3_use_derisk
-    #   and (grind_3_sub_grind_count > 0)
-    #   and ((-(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_derisk_grinds)
-    #   and (grind_3_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_3_use_derisk
       and (grind_3_sub_grind_count > 0)
@@ -54700,7 +54531,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (self.grinding_v2_grind_4_enable)
-      # and (is_derisk_1_found or is_derisk_2_found or is_derisk_3_found)
       and (
         is_short_grind_entry
       )
@@ -54770,12 +54600,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_4_use_derisk
-    #   and (grind_4_sub_grind_count > 0)
-    #   and ((-(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_derisk_grinds)
-    #   and (grind_4_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_4_use_derisk
       and (grind_4_sub_grind_count > 0)
@@ -54900,12 +54724,6 @@ class NostalgiaForInfinityX9(IStrategy):
           else:
             return -ft_sell_amount
 
-    # if (
-    #   self.grinding_v2_grind_5_use_derisk
-    #   and (grind_5_sub_grind_count > 0)
-    #   and ((-(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_derisk_grinds)
-    #   and (grind_5_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-    # ):
     if (
       self.grinding_v2_grind_5_use_derisk
       and (grind_5_sub_grind_count > 0)
@@ -55434,18 +55252,11 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_aroond_14 < 25.0)
         and (last_roc_2_1h_lt_5)
         and (last_roc_2_4h_lt_5)
-        # and (last_candle["ROC_9_4h"] > -20.0)
-        # and (last_candle["ROC_9_4h"] < 40.0)
-        # and (last_candle["ROC_9_1d"] > -20.0)
-        # and (last_candle["ROC_9_1d"] < 50.0)
         and (last_stochrsi_k > 80.0)
         and (last_stochrsi_k_15m > 80.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_1h"] < 30.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_4h"] < 30.0)
         and (last_close < (last_close_min_48 * 1.10))
         and (last_close < (last_low_min_6_1h * 1.18))
         and (last_close < (last_low_min_12_1h * 1.25))
-        # and (last_candle["close"] < (last_candle["low_min_24_4h"] * 1.20))
         and (last_close > (last_ema_16 * 1.120))
       )
       or (
@@ -55456,9 +55267,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_rsi_3_4h < 85.0)
         and (last_roc_2_1h_lt_5)
         and (last_roc_2_4h_lt_5)
-        # and (last_candle["ROC_2_1d"] > -10.0)
-        # and (last_candle["ROC_9_1h"] > -10.0)
-        # and (last_candle["ROC_9_4h"] > -10.0)
         and (last_roc_9_1d_lt_5)
         and (last_ema_12 > last_ema_26)
         and ((last_ema_12 - last_ema_26) > (last_open * 0.020))
@@ -55477,13 +55285,10 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_roc_9_1h_lt_5)
         and (last_roc_9_4h_lt_5)
         and (last_roc_9_1d < 10.0)
-        # and (last_candle["ROC_9_4h"] < 40.0)
-        # and (last_candle["ROC_9_1d"] < 50.0)
         and (last_aroond_14_15m < 25.0)
         and (last_close < (last_close_min_48 * 1.10))
         and (last_close < (last_low_min_6_1h * 1.18))
         and (last_close < (last_low_min_12_1h * 1.25))
-        # and (last_candle["close"] < (last_candle["low_min_24_4h"] * 1.20))
         and (last_close > (last_ema_12 * 1.020))
       )
       or (
@@ -55494,15 +55299,11 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_rsi_3_1d_lt_90)
         and (last_roc_2_1h_lt_5)
         and (last_roc_2_4h_lt_5)
-        # and (last_candle["ROC_2_1d"] > -5.0)
         and (last_roc_9_1h_lt_5)
         and (last_roc_9_4h_lt_5)
         and (last_roc_9_1d_lt_5)
         and (last_stochrsi_k_1h > 20.0)
         and (last_stochrsi_k_4h > 30.0)
-        # and (last_candle["close"] > (last_candle["close_max_48"] * 0.90))
-        # and (last_candle["close"] < (last_candle["low_min_6_1h"] * 1.18))
-        # and (last_candle["close"] < (last_candle["low_min_12_1h"] * 1.25))
         and (last_close > (last_ema_26 * 1.040))
         and (last_close > (last_bbu_20 * 1.001))
       )
@@ -55588,12 +55389,7 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_roc_9_1h < 25.0)
         and (last_roc_9_4h < 25.0)
         and (last_roc_9_1d < 25.0)
-        # and (last_candle["ROC_9_1d"] < 40.0)
         and (last_aroond_14_lt_25)
-        # and (last_candle["STOCHRSIk_14_14_3_3"] < 20.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_15m"] < 20.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_1h"] < 30.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_4h"] < 30.0)
         and (last_close < (last_close_min_48 * 1.10))
         and (last_close < (last_low_min_6_1h * 1.18))
         and (last_close < (last_low_min_12_1h * 1.25))
@@ -55606,10 +55402,8 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_rsi_3_15m_lt_85)
         and (last_rsi_3_1h_lt_85)
         and (last_rsi_3_4h_lt_85)
-        # and (last_candle["RSI_3_1d"] > 15.0)
         and (last_roc_2_1h_lt_10)
         and (last_roc_2_4h_lt_10)
-        # and (last_candle["ROC_2_1d"] > -10.0)
         and (last_roc_9_1h_lt_10)
         and (last_roc_9_4h_lt_10)
         and (last_roc_9_1d_lt_30)
@@ -55631,13 +55425,10 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_roc_9_1h_lt_10)
         and (last_roc_9_4h_lt_10)
         and (last_roc_9_1d < 10.0)
-        # and (last_roc_9_4h < 40.0)
-        # and (last_candle["ROC_9_1d"] < 50.0)
         and (last_aroond_14_15m < 25.0)
         and (last_close < (last_close_min_48 * 1.10))
         and (last_close < (last_low_min_6_1h * 1.18))
         and (last_close < (last_low_min_12_1h * 1.25))
-        # and (last_close < (last_candle["low_min_24_4h"] * 1.20))
         and (last_close > (last_ema_12 * 1.020))
       )
       or (
@@ -55650,9 +55441,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_roc_2_1h_lt_10)
         and (last_roc_2_4h_lt_10)
         and (last_roc_2_1d_lt_10)
-        # and (last_roc_9_1h > -10.0)
-        # and (last_roc_9_4h > -10.0)
-        # and (last_candle["ROC_9_1d"] > -10.0)
         and (last_aroond_14_lt_25)
         and (last_close < (last_close_min_48 * 1.10))
         and (last_close < (last_low_min_6_1h * 1.18))
@@ -55666,20 +55454,12 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_rsi_3_15m_lt_90)
         and (last_rsi_3_1h_lt_90)
         and (last_rsi_3_4h_lt_90)
-        # and (last_candle["RSI_3_1d"] > 10.0)
         and (last_roc_2_1h_lt_10)
         and (last_roc_2_4h_lt_10)
         and (last_roc_2_1d_lt_10)
         and (last_roc_9_1h_lt_10)
         and (last_roc_9_4h_lt_10)
-        # and (last_candle["ROC_9_1d"] > -10.0)
         and (last_aroond_14_lt_25)
-        # and (last_candle["AROONU_14_15m"] < 25.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3"] < 20.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_15m"] < 20.0)
-        # and (last_close > (last_candle["close_max_48"] * 0.90))
-        # and (last_close < (last_candle["low_min_6_1h"] * 1.18))
-        # and (last_close < (last_candle["low_min_12_1h"] * 1.25))
         and (last_close > (last_high_max_12_4h * 0.80))
         and (last_close > (last_candle["EMA_9"] * 1.032))
         and (last_close > (last_candle["EMA_20"] * 1.020))
@@ -55688,29 +55468,14 @@ class NostalgiaForInfinityX9(IStrategy):
         (last_rsi_14_gt_65)
         and (last_rsi_3_lt_90)
         and (last_rsi_3 > 60.0)
-        # and (last_candle["RSI_4"] < 40.0)
         and (last_rsi_3_15m_lt_85)
-        # and (last_rsi_3_1h > 20.0)
-        # and (last_rsi_3_4h > 20.0)
-        # and (last_candle["RSI_3_1d"] > 20.0)
         and (last_roc_2_1h_lt_5)
         and (last_roc_2_4h_lt_5)
-        # and (last_candle["ROC_2_1d"] > -5.0)
         and (last_roc_9_1h_lt_10)
         and (last_roc_9_4h_lt_10)
-        # and (last_candle["ROC_9_1d"] > -10.0)
         and (last_aroond_14_lt_25)
-        # and (last_candle["AROONU_14_15m"] < 25.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3"] < 20.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_15m"] < 20.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_1h"] < 50.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_4h"] < 50.0)
-        # and (last_close > (last_candle["close_max_48"] * 0.90))
-        # and (last_close < (last_candle["low_min_6_1h"] * 1.18))
-        # and (last_close < (last_candle["low_min_12_1h"] * 1.25))
         and (last_candle["RSI_20"] > previous_candle["RSI_20"])
         and (last_close > (last_candle["SMA_16"] * 1.045))
-        # and (last_close < (last_candle["EMA_20"] * 0.980))
       )
       or (
         (last_rsi_3_lt_95)
@@ -55722,10 +55487,8 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_roc_9_1h < 5.0)
         and (last_roc_9_4h < 5.0)
         and (last_candle["WILLR_14"] > -50.0)
-        # and (last_candle["AROONU_14"] < 25.0)
         and (last_stochrsik_14_14_3_3_gt_80)
         and (last_candle["WILLR_84_1h"] > -30.0)
-        # and (last_candle["STOCHRSIk_14_14_3_3_1h"] < 40.0)
         and (last_close < (last_high_max_24_4h * 0.77))
         and (last_candle["BBB_20_2.0_1h"] > 12.0)
         and (last_close_min_48 <= (last_close * 0.90))
@@ -55736,13 +55499,7 @@ class NostalgiaForInfinityX9(IStrategy):
         and (last_rsi_3_15m_lt_95)
         and (last_rsi_3_1h_lt_90)
         and (last_rsi_3_4h_lt_90)
-        # and (last_roc_2_1h > -5.0)
-        # and (last_roc_2_4h > -5.0)
-        # and (last_roc_9_1h > -5.0)
-        # and (last_roc_9_4h > -5.0)
         and (last_roc_9_1d_lt_30)
-        # and (last_candle["STOCHRSIk_14_14_3_3"] < 20.0)
-        # and (last_close < (last_candle["low_min_24_4h"] * 1.50))
         and (last_ema_12 > last_ema_26)
         and ((last_ema_12 - last_ema_26) > (last_open * 0.034))
         and ((previous_ema_12 - previous_ema_26) > (last_open / 100.0))
@@ -56379,7 +56136,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     is_short_extra_checks_entry = (
       grind_entry_retry_time > filled_entries[-1].order_filled_utc
-      # and ((current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc) or (slice_profit > 0.02))
       and (
         (current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc)
         or (slice_profit > 0.06)
@@ -56666,12 +56422,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_1_sub_grind_count > 0)
       and ((-(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_1_use_derisk
-      #   and (grind_1_sub_grind_count > 0)
-      #   and (grind_1_current_grind_profit_stake < (slice_amount * grind_1_derisk_grinds))
-      #   and (grind_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_1_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -56778,12 +56528,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_2_sub_grind_count > 0)
       and ((-(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_2_use_derisk
-      #   and (grind_2_sub_grind_count > 0)
-      #   and (grind_2_current_grind_profit_stake < (slice_amount * grind_2_derisk_grinds))
-      #   and (grind_2_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_2_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -56890,12 +56634,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_3_sub_grind_count > 0)
       and ((-(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_3_use_derisk
-      #   and (grind_3_sub_grind_count > 0)
-      #   and (grind_3_current_grind_profit_stake < (slice_amount * grind_3_derisk_grinds))
-      #   and (grind_3_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_3_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -57018,12 +56756,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_4_sub_grind_count > 0)
       and ((-(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_4_use_derisk
-      #   and (grind_4_sub_grind_count > 0)
-      #   and (grind_4_current_grind_profit_stake < (slice_amount * grind_4_derisk_grinds))
-      #   and (grind_4_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_4_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -57149,12 +56881,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_5_sub_grind_count > 0)
       and ((-(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_derisk_grinds)
     ):
-      # if (
-      #   self.system_v3_grind_5_use_derisk
-      #   and (grind_5_sub_grind_count > 0)
-      #   and (grind_5_current_grind_profit_stake < (slice_amount * grind_5_derisk_grinds))
-      #   and (grind_5_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_5_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -57365,7 +57091,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_aroonu_14 > 75.0)
       and (last_roc_9_1h < 20.0)
       and (last_roc_9_4h < 20.0)
-      # and (last_close < (last_close_min_48 * 1.10))
       and (last_close > (last_ema_26 * 1.030))
       and (last_close > (last_bbu * 1.001))
     ):
@@ -57431,7 +57156,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_rsi_3_4h < 90.0)
       and (last_roc_9_1h < 10.0)
       and (last_roc_9_4h < 25.0)
-      # and (last_close > (last_candle["high_max_24_1h"] * 0.70))
       and (last_ema_12 > last_ema_26)
       and ((last_ema_12 - last_ema_26) > (last_open * 0.030))
       and ((prev_ema_12 - prev_ema_26) > (last_open / 100.0))
@@ -58451,7 +58175,6 @@ class NostalgiaForInfinityX9(IStrategy):
         or is_derisk_3_found
       )
       and grind_entry_retry_time > filled_entries[-1].order_filled_utc
-      # and ((current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc) or (slice_profit > 0.02))
       and (
         (current_time - timedelta(hours=6) > filled_orders[-1].order_filled_utc)
         or (slice_profit > 0.06)
@@ -58790,12 +58513,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_1_sub_grind_count > 0)
       and ((-(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_1_use_derisk
-      #   and (grind_1_sub_grind_count > 0)
-      #   and (grind_1_current_grind_profit_stake < (slice_amount * grind_1_derisk_grinds))
-      #   and (grind_1_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_1_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -58918,12 +58635,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_2_sub_grind_count > 0)
       and ((-(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_2_use_derisk
-      #   and (grind_2_sub_grind_count > 0)
-      #   and (grind_2_current_grind_profit_stake < (slice_amount * grind_2_derisk_grinds))
-      #   and (grind_2_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_2_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -59046,12 +58757,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_3_sub_grind_count > 0)
       and ((-(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_3_use_derisk
-      #   and (grind_3_sub_grind_count > 0)
-      #   and (grind_3_current_grind_profit_stake < (slice_amount * grind_3_derisk_grinds))
-      #   and (grind_3_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_3_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -59176,12 +58881,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_4_sub_grind_count > 0)
       and ((-(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_4_use_derisk
-      #   and (grind_4_sub_grind_count > 0)
-      #   and (grind_4_current_grind_profit_stake < (slice_amount * grind_4_derisk_grinds))
-      #   and (grind_4_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_4_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -59308,12 +59007,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (grind_5_sub_grind_count > 0)
       and ((-(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_derisk_grinds)
     ):
-      # if (
-      #   self.system_v4_grind_5_use_derisk
-      #   and (grind_5_sub_grind_count > 0)
-      #   and (grind_5_current_grind_profit_stake < (slice_amount * grind_5_derisk_grinds))
-      #   and (grind_5_orders[-1].order_date_utc.replace(tzinfo=None) >= datetime(2025, 8, 3) or is_backtest)
-      # ):
       sell_amount = grind_5_total_amount * exit_rate / trade_leverage
       if ((current_stake_amount / trade_leverage) - sell_amount) < (min_stake * 1.55):
         sell_amount = (trade_amount * exit_rate / trade_leverage) - (min_stake * 1.55)
@@ -59492,7 +59185,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_aroonu_14 > 75.0)
       and (last_roc_9_1h < 20.0)
       and (last_roc_9_4h < 20.0)
-      # and (last_close < (last_close_min_48 * 1.10))
       and (last_close > (last_ema_26 * 1.030))
       and (last_close > (last_bbu * 1.001))
     ):
@@ -59558,7 +59250,6 @@ class NostalgiaForInfinityX9(IStrategy):
       and (last_rsi_3_4h < 90.0)
       and (last_roc_9_1h < 10.0)
       and (last_roc_9_4h < 25.0)
-      # and (last_close > (last_candle["high_max_24_1h"] * 0.70))
       and (last_ema_12 > last_ema_26)
       and ((last_ema_12 - last_ema_26) > (last_open * 0.030))
       and ((prev_ema_12 - prev_ema_26) > (last_open / 100.0))
@@ -60942,7 +60633,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and is_short_grind_entry
         and buy_amount <= max_stake
       ):
@@ -61081,7 +60771,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and is_short_grind_entry
         and buy_amount <= max_stake
       ):
@@ -61211,7 +60900,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and is_short_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -61320,7 +61008,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_1_sub_grind_count > 0)
-        # and ((-(exit_rate - grind_1_current_open_rate) / grind_1_current_open_rate) < grind_1_stop_grinds)
         and (grind_1_current_grind_stake_profit < (slice_amount * grind_1_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -61383,7 +61070,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and is_short_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -61454,7 +61140,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_2_sub_grind_count > 0)
-        # and ((-(exit_rate - grind_2_current_open_rate) / grind_2_current_open_rate) < grind_2_stop_grinds)
         and (grind_2_current_grind_stake_profit < (slice_amount * grind_2_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -61517,7 +61202,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and is_short_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -61588,7 +61272,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_3_sub_grind_count > 0)
-        # and ((-(exit_rate - grind_3_current_open_rate) / grind_3_current_open_rate) < grind_3_stop_grinds)
         and (grind_3_current_grind_stake_profit < (slice_amount * grind_3_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -61651,7 +61334,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and is_short_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -61722,7 +61404,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_4_sub_grind_count > 0)
-        # and ((-(exit_rate - grind_4_current_open_rate) / grind_4_current_open_rate) < grind_4_stop_grinds)
         and (grind_4_current_grind_stake_profit < (slice_amount * grind_4_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -61793,7 +61474,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and (is_short_grind_entry or gd5_liquidation_rescue_eligible)
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -61867,7 +61547,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_5_sub_grind_count > 0)
-        # and ((-(exit_rate - grind_5_current_open_rate) / grind_5_current_open_rate) < grind_5_stop_grinds)
         and (grind_5_current_grind_stake_profit < (slice_amount * grind_5_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -61930,7 +61609,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and is_short_grind_entry
         and is_not_trade_max_stake
         and buy_amount <= max_stake
@@ -62001,7 +61679,6 @@ class NostalgiaForInfinityX9(IStrategy):
       derisk_use_grind_stops
       and (
         (grind_6_sub_grind_count > 0)
-        # and ((-(exit_rate - grind_6_current_open_rate) / grind_6_current_open_rate) < grind_6_stop_grinds)
         and (grind_6_current_grind_stake_profit < (slice_amount * grind_6_stop_grinds))
         and (is_derisk or is_derisk_calc or is_grind_mode)
       )
@@ -62066,7 +61743,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        # and ((num_open_grinds == 0) or (slice_profit > 0.03))
         and (
           (last_candle["global_protections_short_pump"] == True)
           and (last_candle["global_protections_short_dump"] == True)
@@ -62106,7 +61782,6 @@ class NostalgiaForInfinityX9(IStrategy):
       # and not is_derisk_1
       and derisk_1_reentry_found
       and derisk_1_reentry_order is not None
-      # and (trade.open_date_utc.replace(tzinfo=None) >= datetime(2024, 4, 5) or is_backtest)
       and -derisk_1_distance_ratio
       < (
         (self.regular_mode_derisk_1_reentry_futures if is_futures else self.regular_mode_derisk_1_reentry_spot)
@@ -63466,7 +63141,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (current_time - timedelta(hours=6) > last_filled_order.order_filled_utc)
           or (slice_profit_gt_0_06)
         )
-        # and ((num_open_grinds == 0) or (slice_profit_gt_0_03))
         and (is_short_grind_entry)
       ):
         buy_amount = slice_amount * regular_mode_grind_6_stakes[grind_6_sub_grind_count] / stake_scale_leverage
@@ -63771,8 +63445,6 @@ class NostalgiaForInfinityX9(IStrategy):
       ) and (
         (last_candle["RSI_3"] < 90.0)
         and (last_candle["RSI_3_15m"] < 90.0)
-        # and (last_candle["RSI_3_1h"] < 90.0)
-        # and (last_candle["RSI_3_4h"] < 90.0)
         and (last_candle["RSI_14"] > 60.0)
         and (last_candle["ROC_2"] < 0.0)
         and (last_candle["close"] > (last_candle["EMA_26"] * 1.012))
