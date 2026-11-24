@@ -273,7 +273,7 @@ class NostalgiaForInfinityX9(IStrategy):
   futures_max_open_trades_long = 0
   futures_max_open_trades_short = 0
 
-  # Based on the the first entry (regardless of rebuys)
+  # Based on the first entry (regardless of rebuys)
   stop_threshold_spot = 0.10
   stop_threshold_futures = 0.10
   stop_threshold_doom_spot = 0.20
@@ -4197,7 +4197,7 @@ class NostalgiaForInfinityX9(IStrategy):
     # =========================================================================
     # GLOBAL PROTECTIONS
     # =========================================================================
-    if not self.config["runmode"].value in ("live", "dry_run"):
+    if self.config["runmode"].value not in ("live", "dry_run"):
       df["bt_agefilter_ok"] = False
       df.loc[df.index > (12 * 24 * self.bt_min_age_days), "bt_agefilter_ok"] = True
     else:
@@ -4766,7 +4766,6 @@ class NostalgiaForInfinityX9(IStrategy):
       return last_candle["enter_long"] or self.long_grind_entry(last_candle, previous_candle, slice_profit, False)
     else:
       return last_candle["enter_short"] or self.short_grind_entry(last_candle, previous_candle, slice_profit, False)
-    return False
 
   # Update signals (enable/disable) from config
   # ---------------------------------------------------------------------------------------------
@@ -7006,7 +7005,6 @@ class NostalgiaForInfinityX9(IStrategy):
           long_entry_logic.append(
             (aroonu_14_lt_30)
             & (stochrsi_k_lt_30)
-            # & (rsi_3_15m > 5.0)
             & (aroonu_14_15m_lt_50)
             & (close < (ema_20 * 0.948))
           )
@@ -14892,7 +14890,6 @@ class NostalgiaForInfinityX9(IStrategy):
             & ((rsi_3_1h_gt_10) | (rsi_3_4h_gt_15) | (aroonu_14_15m_lt_30))
             # 1h & 4h down move, 1h still not low enough
             & ((rsi_3_1h_gt_10) | (rsi_3_4h_gt_15) | (stochrsi_k_1h_lt_20))
-            # & ((rsi_3_1h_gt_10) | (rsi_3_4h_gt_20) | (rsi_3_1d_gt_25) | (stochrsi_k_15m_lt_50))
             # 1h & 4h down move, 1d high
             & ((rsi_3_1h_gt_10) | (rsi_3_4h_gt_25) | (aroonu_14_1d_lt_80))
             # 1h & 4h down move, 1d downtrend
@@ -15714,7 +15711,6 @@ class NostalgiaForInfinityX9(IStrategy):
           long_entry_logic.append(
             (rsi_3_gt_10)
             & (rsi_3_15m_gt_20)
-            # & (rsi_3_1h_gt_20)
             & (rsi_14 < 45.0)
             & (willr_14 < -70.0)
             & (stochrsi_k_lt_30)
@@ -18678,7 +18674,6 @@ class NostalgiaForInfinityX9(IStrategy):
           long_entry_logic.append(
             (rsi_3_gt_5)
             & (rsi_4 < 46.0)
-            # & (stochrsi_k < 20.0)
             & (rsi_20 < rsi_20_shift_1)
             & (close < sma_16 * 0.960)
           )
@@ -19346,7 +19341,6 @@ class NostalgiaForInfinityX9(IStrategy):
           long_entry_logic.append(
             (willr_14 < -50.0)
             & (stochrsi_k_lt_30)
-            # & (df["STOCHRSIk_14_14_3_3_15m"] < 40.0)
             & (stochrsi_k_1h_lt_40)
             & (bbb_20_2_0_1h > 12.0)
             & (close_max_48 >= (close * 1.10))
@@ -30627,7 +30621,6 @@ class NostalgiaForInfinityX9(IStrategy):
             (roc_9_1d < 0.0)
             & (rsi_3 < 90.0)
             & (rsi_3_15m_lt_80)
-            # & (rsi_3_1h < 80.0)
             & (rsi_14 > 55.0)
             & (willr_14 > -30.0)
             & (willr_14 < -15.0)
@@ -39211,7 +39204,7 @@ class NostalgiaForInfinityX9(IStrategy):
           < -(entry_cost * (self.stop_threshold_doom_futures if is_futures_mode else self.stop_threshold_doom_spot))
         )
         and (
-          self.has_valid_entry_conditions(trade, current_rate, last_candle, previous_candle_1, filled_orders) == False
+          not self.has_valid_entry_conditions(trade, current_rate, last_candle, previous_candle_1, filled_orders)
         )
         # Date gate: backtest always; older live trades keep legacy behavior.
         and (is_backtest or trade_open_date >= datetime(2024, 9, 13))
@@ -52879,7 +52872,7 @@ class NostalgiaForInfinityX9(IStrategy):
           < -(entry_cost * (self.stop_threshold_doom_futures if is_futures_mode else self.stop_threshold_doom_spot))
         )
         and (
-          self.has_valid_entry_conditions(trade, current_rate, last_candle, previous_candle_1, filled_orders) == False
+          not self.has_valid_entry_conditions(trade, current_rate, last_candle, previous_candle_1, filled_orders)
         )
         # Date gate: backtest always; older live trades keep legacy behavior.
         and (is_backtest or trade_open_date >= datetime(2024, 9, 13))
