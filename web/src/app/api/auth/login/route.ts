@@ -21,6 +21,12 @@ function requestOrigin(request: NextRequest): string {
   return `${proto}://${host}`;
 }
 
+function destination(request: NextRequest, path: string): URL {
+  const origin = requestOrigin(request);
+  const target = new URL(path, origin);
+  return target.origin === origin ? target : new URL("/", origin);
+}
+
 export async function POST(request: NextRequest) {
   const password = process.env.DASHBOARD_PASSWORD;
   const secret = process.env.DASHBOARD_SECRET;
@@ -46,10 +52,7 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const response = NextResponse.redirect(
-    new URL(next, requestOrigin(request)),
-    303,
-  );
+  const response = NextResponse.redirect(destination(request, next), 303);
   if (secret) {
     const token = await createSession(SESSION_MAX_AGE, secret);
     response.cookies.set(AUTH_COOKIE, token, {
