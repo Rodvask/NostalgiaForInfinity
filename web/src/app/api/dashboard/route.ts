@@ -18,12 +18,10 @@ type Json = Record<string, unknown>;
 
 async function freqtrade<T>(path: string): Promise<T> {
   if (!BASE_URL) throw new Error("FREQTRADE_API_URL is not configured");
-  const headers: HeadersInit = { Accept: "application/json" };
-  if (USERNAME || PASSWORD) {
-    headers.Authorization = `Basic ${Buffer.from(
-      `${USERNAME}:${PASSWORD}`,
-    ).toString("base64")}`;
-  }
+  const headers: Record<string, string> = { Accept: "application/json" };
+  headers.Authorization = `Basic ${Buffer.from(
+    `${USERNAME}:${PASSWORD}`,
+  ).toString("base64")}`;
   const response = await fetch(`${BASE_URL}${path}`, {
     headers,
     cache: "no-store",
@@ -193,6 +191,17 @@ export async function GET() {
       profit.closed_trade_count,
       recentTrades.length,
     );
+    const rawWinRate = number(
+      profit.winrate,
+      winners + losers > 0 ? winners / (winners + losers) : 0,
+    );
+    const winRate = rawWinRate <= 1 ? rawWinRate * 100 : rawWinRate;
+    const drawdownRatio = number(profit.max_drawdown, Number.NaN);
+    const maxDrawdown = Number.isFinite(drawdownRatio)
+      ? Math.abs(drawdownRatio <= 1 ? drawdownRatio * 100 : drawdownRatio)
+      : equityNow > 0
+        ? (Math.abs(number(profit.max_drawdown_abs)) / equityNow) * 100
+        : 0;
 
     const data: DashboardData = {
       mode: "live",
@@ -213,15 +222,12 @@ export async function GET() {
         netPnlPct: number(profit.profit_all_percent),
         realizedPnl,
         unrealizedPnl,
-        winRate: number(
-          profit.winrate,
-          winners + losers > 0 ? (winners / (winners + losers)) * 100 : 0,
-        ),
+        winRate,
         winners,
         losers,
         closedTrades,
         openTrades: openTrades.length,
-        maxDrawdown: Math.abs(number(profit.max_drawdown_abs)),
+        maxDrawdown,
         profitFactor:
           profit.profit_factor === undefined
             ? null

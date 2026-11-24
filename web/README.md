@@ -30,7 +30,8 @@ npm run dev
 Open <http://localhost:3000>.
 
 With no `FREQTRADE_API_URL`, the dashboard serves a deterministic demo dataset.
-To use a running bot:
+The template keeps the live settings commented out so the first run works
+without a bot. To use a running bot, uncomment them in `.env.local`:
 
 ```env
 FREQTRADE_API_URL=http://127.0.0.1:8080
@@ -39,7 +40,8 @@ FREQTRADE_PASSWORD=change-me
 ```
 
 The Freqtrade API must expose the standard `/api/v1/*` endpoints. The proxy only
-performs `GET` requests.
+performs `GET` requests and always sends Basic auth, including empty
+credentials, because Freqtrade guards every `/api/v1/*` route.
 
 ## Production
 
@@ -48,12 +50,12 @@ npm run build
 npm start
 ```
 
-The Next config uses `output: "standalone"`; the Docker image in this directory
-copies the standalone server and static assets into a non-root runtime.
+The Docker build enables standalone output and copies the server and static
+assets into a non-root runtime.
 
 ```bash
 docker build -t nfi-x9-web .
-docker run --rm -p 3000:3000 \
+docker run --rm -p 127.0.0.1:3000:3000 \
   -e FREQTRADE_API_URL=http://host.docker.internal:8080 \
   -e FREQTRADE_USERNAME=freqtrader \
   -e FREQTRADE_PASSWORD=change-me \
@@ -67,7 +69,11 @@ to the same network as the `freqtrade` service:
 docker compose --profile web up -d --build
 ```
 
-Set `WEB_PORT` to change the published port (default `3000`).
+`WEB_PORT` changes the published port (default `3000`). Both `npm run dev` and
+`npm start` bind to `127.0.0.1`, and Compose publishes the container only on
+loopback. The dashboard has no login of its own and proxies live account data;
+do not expose it on a public interface without putting authentication in front
+of it.
 
 ## API surface
 

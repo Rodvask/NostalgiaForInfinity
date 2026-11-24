@@ -46,7 +46,7 @@ services:
     container_name: nfi-x9-web
     restart: unless-stopped
     ports:
-      - "${WEB_PORT:-3000}:3000"
+      - "127.0.0.1:${WEB_PORT:-3000}:3000"
     environment:
       FREQTRADE_API_URL: ${FREQTRADE_API_URL:-http://freqtrade:8080}
       FREQTRADE_USERNAME: ${FREQTRADE__API_SERVER__USERNAME:-}

@@ -184,7 +184,7 @@ function ChartCard({
   );
 }
 
-function Sidebar({ data }: { data: DashboardData }) {
+function Sidebar({ data, stale }: { data: DashboardData; stale: boolean }) {
   const slots = Math.max(0, data.config.maxOpenTrades - data.summary.openTrades);
   return (
     <aside className="sticky top-0 hidden h-screen w-[248px] shrink-0 flex-col border-r border-line bg-canvas/80 px-4 py-5 backdrop-blur lg:flex">
@@ -247,11 +247,23 @@ function Sidebar({ data }: { data: DashboardData }) {
 
         <div className="flex items-center gap-2 rounded-xl border border-line bg-panel px-3 py-2.5 text-xs text-muted">
           <span className="relative flex size-2">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-positive opacity-50" />
-            <span className="relative inline-flex size-2 rounded-full bg-positive" />
+            <span
+              className={`absolute inline-flex size-full rounded-full ${
+                stale ? "bg-warning" : "animate-ping bg-positive opacity-50"
+              }`}
+            />
+            <span
+              className={`relative inline-flex size-2 rounded-full ${
+                stale ? "bg-warning" : "bg-positive"
+              }`}
+            />
           </span>
           <span className="truncate">
-            {data.mode === "live" ? "Connected to bot" : "Demo dataset"}
+            {stale
+              ? "Stale snapshot"
+              : data.mode === "live"
+                ? "Connected to bot"
+                : "Demo dataset"}
           </span>
           <Radio className="ml-auto size-3.5" />
         </div>
@@ -440,6 +452,7 @@ export default function Dashboard() {
   }
 
   const { summary, config } = data;
+  const stale = error !== null;
   const positive = summary.netPnl >= 0;
   const openStake = data.openTrades.reduce(
     (sum, trade) => sum + trade.stake_amount,
@@ -448,7 +461,7 @@ export default function Dashboard() {
 
   return (
     <div className="lg:grid lg:grid-cols-[248px_1fr]">
-      <Sidebar data={data} />
+      <Sidebar data={data} stale={stale} />
 
       <div className="min-w-0">
         <header className="sticky top-0 z-30 border-b border-line bg-canvas/80 px-5 py-3 backdrop-blur-xl lg:px-8">
@@ -465,15 +478,17 @@ export default function Dashboard() {
               <span className="text-ink">Command center</span>
             </div>
             <div className="ml-auto flex items-center gap-2">
-              <Badge tone={data.mode === "live" ? "positive" : "warning"}>
+              <Badge tone={stale ? "warning" : data.mode === "live" ? "positive" : "warning"}>
                 <span
                   className={`size-1.5 rounded-full ${
-                    data.mode === "live"
-                      ? "live-dot bg-positive"
-                      : "bg-warning"
+                    stale
+                      ? "bg-warning"
+                      : data.mode === "live"
+                        ? "live-dot bg-positive"
+                        : "bg-warning"
                   }`}
                 />
-                {data.mode === "live" ? "Live" : "Demo"}
+                {stale ? "Stale" : data.mode === "live" ? "Live" : "Demo"}
               </Badge>
               <span className="hidden text-[11px] text-muted sm:inline">
                 {timeAgo(data.generatedAt)}
@@ -504,6 +519,16 @@ export default function Dashboard() {
         </header>
 
         <main className="mx-auto max-w-[1440px] px-5 py-7 lg:px-8 lg:py-10">
+          {stale ? (
+            <div className="mb-5 flex items-start gap-2.5 rounded-xl border border-warning/25 bg-warning/5 px-3.5 py-3 text-xs text-warning">
+              <AlertTriangle className="mt-0.5 size-4 shrink-0" />
+              <span>
+                <span className="font-medium">Connection lost.</span> Showing
+                the last snapshot from {timeAgo(data.generatedAt)}.{" "}
+                <span className="text-warning/70">{error}</span>
+              </span>
+            </div>
+          ) : null}
           <section id="overview" className="scroll-mt-24">
             <div className="flex flex-wrap items-end justify-between gap-5">
               <div>
@@ -1010,12 +1035,18 @@ export default function Dashboard() {
             <span className="flex items-center gap-2">
               <span
                 className={`size-1.5 rounded-full ${
-                  data.mode === "live" ? "bg-positive" : "bg-warning"
+                  stale
+                    ? "bg-warning"
+                    : data.mode === "live"
+                      ? "bg-positive"
+                      : "bg-warning"
                 }`}
               />
-              {data.mode === "live"
-                ? "Streaming from the local Freqtrade API"
-                : "Demo data · configure FREQTRADE_API_URL for live mode"}
+              {stale
+                ? "Stale snapshot · retrying automatically"
+                : data.mode === "live"
+                  ? "Streaming from the local Freqtrade API"
+                  : "Demo data · configure FREQTRADE_API_URL for live mode"}
             </span>
           </footer>
         </main>
