@@ -154,7 +154,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
   long_rebuy_grind_mode_tags = long_rebuy_mode_tags + long_grind_mode_tags
   long_scalp_rebuy_grind_mode_tags = long_scalp_mode_tags + long_rebuy_mode_tags + long_grind_mode_tags
-  long_rapid_rebuy_grind_mode_tags = long_rapid_mode_tags + long_rebuy_mode_tags + long_grind_mode_tags
   long_rapid_rebuy_grind_scalp_mode_tags = (
     long_rapid_mode_tags + long_rebuy_mode_tags + long_grind_mode_tags + long_scalp_mode_tags
   )
@@ -214,7 +213,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
   short_rebuy_grind_mode_tags = short_rebuy_mode_tags + short_grind_mode_tags
   short_scalp_rebuy_grind_mode_tags = short_scalp_mode_tags + short_rebuy_mode_tags + short_grind_mode_tags
-  short_rapid_rebuy_grind_mode_tags = short_rapid_mode_tags + short_rebuy_mode_tags + short_grind_mode_tags
   short_adjust_mode_tags = (
     short_normal_mode_tags
     + short_pump_mode_tags
@@ -276,14 +274,6 @@ class NostalgiaForInfinityX9(IStrategy):
   # Based on the first entry (regardless of rebuys)
   stop_threshold_spot = 0.10
   stop_threshold_futures = 0.10
-  stop_threshold_doom_spot = 0.20
-  stop_threshold_doom_futures = 0.20
-  stop_threshold_spot_rebuy = 1.0
-  stop_threshold_futures_rebuy = 1.0
-  stop_threshold_rapid_spot = 0.20
-  stop_threshold_rapid_futures = 0.20
-  stop_threshold_scalp_spot = 0.20
-  stop_threshold_scalp_futures = 0.20
 
   # user specified fees to be used for profit calculations
   custom_fee_open_rate = None
@@ -295,7 +285,6 @@ class NostalgiaForInfinityX9(IStrategy):
   # Position management features
   derisk_enable = True
   stops_enable = True
-  doom_stops_enable = True
   u_e_stops_enable = False
 
   # Grinding
@@ -596,15 +585,6 @@ class NostalgiaForInfinityX9(IStrategy):
   system_v4_buyback_1_derisk_spot = -0.08
   system_v4_buyback_1_derisk_futures = -0.08
 
-  # Rebuy mode
-  rebuy_mode_stake_multiplier = 0.35
-  rebuy_mode_derisk_spot = -0.60
-  rebuy_mode_derisk_futures = -0.60
-  rebuy_mode_stakes_spot = [1.0, 1.0]
-  rebuy_mode_stakes_futures = [1.0, 1.0]
-  rebuy_mode_thresholds_spot = [-0.08, -0.10]
-  rebuy_mode_thresholds_futures = [-0.08, -0.10]
-
   # Rebuy mode v4
   system_v4_rebuy_mode_stake_multiplier = 0.25
   system_v4_rebuy_mode_derisk_spot = -0.48
@@ -613,10 +593,6 @@ class NostalgiaForInfinityX9(IStrategy):
   system_v4_rebuy_mode_stakes_futures = [1.0, 1.0, 1.0, 1.0]
   system_v4_rebuy_mode_thresholds_spot = [-0.08, -0.12, -0.16, -0.20]
   system_v4_rebuy_mode_thresholds_futures = [-0.08, -0.12, -0.16, -0.20]
-
-  # Rapid mode
-  rapid_mode_stake_multiplier_spot = [0.75]
-  rapid_mode_stake_multiplier_futures = [0.75]
 
   # Scalp mode
   min_free_slots_scalp_mode = 1
@@ -892,12 +868,6 @@ class NostalgiaForInfinityX9(IStrategy):
       "futures_mode_leverage_short_grind_mode",
       "futures_max_open_trades_long",
       "futures_max_open_trades_short",
-      "stop_threshold_doom_spot",
-      "stop_threshold_doom_futures",
-      "stop_threshold_rapid_spot",
-      "stop_threshold_rapid_futures",
-      "stop_threshold_scalp_spot",
-      "stop_threshold_scalp_futures",
       "derisk_enable",
       "stops_enable",
       "regular_mode_derisk_1_spot",
@@ -1086,13 +1056,7 @@ class NostalgiaForInfinityX9(IStrategy):
     enter_tags,
   ) -> tuple:
     remove_profit_target = self._remove_profit_target
-    derisk_enable = self.derisk_enable
-    is_futures_mode = self.is_futures_mode
-    long_rapid_mode_tags = self.long_rapid_mode_tags
-    long_rebuy_mode_tags = self.long_rebuy_mode_tags
-    long_rebuy_grind_mode_tags = self.long_rebuy_grind_mode_tags
     long_scalp_mode_tags = self.long_scalp_mode_tags
-    long_scalp_rebuy_grind_mode_tags = self.long_scalp_rebuy_grind_mode_tags
     trade_leverage = trade.leverage
     select_filled_orders = trade.select_filled_orders
 
@@ -4187,21 +4151,6 @@ class NostalgiaForInfinityX9(IStrategy):
   def is_backtest_mode(self) -> bool:
     """Check if the current run mode is backtest or hyperopt"""
     return self.dp.runmode.value in ["backtest", "hyperopt"]
-
-  def has_valid_entry_conditions(
-    self, trade: Trade, exit_rate: float, last_candle, previous_candle, filled_orders=None
-  ) -> bool:
-    """Check if there are valid entry conditions"""
-    if filled_orders is None:
-      filled_orders = trade.select_filled_orders()
-    if not filled_orders:
-      return False
-    last_filled_price = filled_orders[-1].safe_price
-    slice_profit = (exit_rate - last_filled_price) / last_filled_price
-    if not trade.is_short:
-      return last_candle["enter_long"] or self.long_grind_entry(last_candle, previous_candle, slice_profit, False)
-    else:
-      return last_candle["enter_short"] or self.short_grind_entry(last_candle, previous_candle, slice_profit, False)
 
   # Update signals (enable/disable) from config
   # ---------------------------------------------------------------------------------------------
@@ -37253,7 +37202,6 @@ class NostalgiaForInfinityX9(IStrategy):
     enter_tags,
   ) -> tuple:
     is_futures_mode = self.is_futures_mode
-    stops_enable = self.stops_enable
 
     mark_profit_target = self.mark_profit_target
     set_profit_target = self._set_profit_target
@@ -38443,7 +38391,6 @@ class NostalgiaForInfinityX9(IStrategy):
     buy_tag,
   ) -> tuple:
     is_futures_mode = self.is_futures_mode
-    doom_stops_enable = self.doom_stops_enable
     trade_leverage = trade.leverage
     stoploss_doom = f"exit_{mode_name}_stoploss_doom"
     stoploss_u_e = f"exit_{mode_name}_stoploss_u_e"
@@ -41009,733 +40956,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
   # Long Grinding Adjust Trade Position
   # ---------------------------------------------------------------------------------------------
-  def long_grind_entry_grind(
-    self,
-    last_candle: Series,
-    previous_candle: Series,
-    num_open_grinds_and_buybacks: int,
-    slice_profit: float,
-    slice_profit_entry: float,
-    slice_profit_exit: float,
-    is_derisk: bool,
-  ) -> float:
-    if last_candle["protections_long_global"] != True:
-      return False
-    # g0 — signal entry
-    if last_candle["enter_long"] == True:
-      self._grind_entry_tag = "g0"
-      return True
-
-    last_close = last_candle["close"]
-    last_open = last_candle["open"]
-    last_close_min_12 = last_candle["close_min_12"]
-    last_close_max_48 = last_candle["close_max_48"]
-    last_high_max_24_1h = last_candle["high_max_24_1h"]
-    last_low_min_12_4h = last_candle["low_min_12_4h"]
-    last_low_min_24_4h = last_candle["low_min_24_4h"]
-    last_rsi_3 = last_candle["RSI_3"]
-    last_rsi_3_15m = last_candle["RSI_3_15m"]
-    last_rsi_3_1h = last_candle["RSI_3_1h"]
-    last_rsi_3_4h = last_candle["RSI_3_4h"]
-    last_rsi_3_1d = last_candle["RSI_3_1d"]
-    last_rsi_14 = last_candle["RSI_14"]
-    last_rsi_14_1h = last_candle["RSI_14_1h"]
-    last_rsi_14_4h = last_candle["RSI_14_4h"]
-    last_rsi_20 = last_candle["RSI_20"]
-    last_sma_9 = last_candle["SMA_9"]
-    last_sma_16 = last_candle["SMA_16"]
-    last_sma_21 = last_candle["SMA_21"]
-    last_sma_30 = last_candle["SMA_30"]
-    last_ema_9 = last_candle["EMA_9"]
-    last_ema_12 = last_candle["EMA_12"]
-    last_ema_16 = last_candle["EMA_16"]
-    last_ema_20 = last_candle["EMA_20"]
-    last_ema_26 = last_candle["EMA_26"]
-    last_ema_100 = last_candle["EMA_100"]
-    last_ema_12_4h = last_candle["EMA_12_4h"]
-    last_ema_50_4h = last_candle["EMA_50_4h"]
-    last_ema_100_4h = last_candle["EMA_100_4h"]
-    last_ema_200_4h = last_candle["EMA_200_4h"]
-    last_aroonu_14 = last_candle["AROONU_14"]
-    last_aroonu_14_15m = last_candle["AROONU_14_15m"]
-    last_aroonu_14_1h = last_candle["AROONU_14_1h"]
-    last_aroonu_14_4h = last_candle["AROONU_14_4h"]
-    last_aroonu_14_1d = last_candle["AROONU_14_1d"]
-    last_roc_9_1h = last_candle["ROC_9_1h"]
-    last_roc_9_4h = last_candle["ROC_9_4h"]
-    last_roc_9_1d = last_candle["ROC_9_1d"]
-    last_stochrsi_k = last_candle["STOCHRSIk_14_14_3_3"]
-    last_stochrsi_k_15m = last_candle["STOCHRSIk_14_14_3_3_15m"]
-    last_stochrsi_k_1h = last_candle["STOCHRSIk_14_14_3_3_1h"]
-    last_stochrsi_k_4h = last_candle["STOCHRSIk_14_14_3_3_4h"]
-    last_stochrsi_k_1d = last_candle["STOCHRSIk_14_14_3_3_1d"]
-    last_willr_14 = last_candle["WILLR_14"]
-    last_willr_84_1h = last_candle["WILLR_84_1h"]
-    last_bbl_20 = last_candle["BBL_20_2.0"]
-    last_bbands_20_1h = last_candle["BBB_20_2.0_1h"]
-    last_cmf_20 = last_candle["CMF_20"]
-    prev_rsi_20 = previous_candle["RSI_20"]
-    prev_sma_9 = previous_candle["SMA_9"]
-    prev_sma_21 = previous_candle["SMA_21"]
-    prev_ema_12 = previous_candle["EMA_12"]
-    prev_ema_26 = previous_candle["EMA_26"]
-
-    # g1 — AROONU dip + EMA_16 drop
-    if (
-      (last_rsi_3 > 10.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_3_1h > 15.0)
-      and (last_rsi_3_4h > 15.0)
-      and (last_rsi_14 < 45.0)
-      and (last_aroonu_14 < 25.0)
-      and (last_aroonu_14_4h < 100.0)
-      and (last_roc_9_1h < 20.0)
-      and (last_close > (last_close_max_48 * 0.90))
-      and (last_close < (last_low_min_24_4h * 1.60))
-      and (last_close < (last_ema_16 * 0.975))
-      and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_aroonu_14_1d < 100.0) or (last_stochrsi_k_1h < 90.0))
-    ):
-      self._grind_entry_tag = "g1"
-      return True
-    # g2 — EMA_26 > EMA_12 divergence + BBL
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_3_1h > 15.0)
-      and (last_rsi_3_4h > 15.0)
-      and (last_rsi_14 < 30.0)
-      and (last_stochrsi_k < 30.0)
-      and (last_ema_26 > last_ema_12)
-      and ((last_ema_26 - last_ema_12) > (last_open * 0.020))
-      and ((prev_ema_26 - prev_ema_12) > (last_open / 100.0))
-      and (last_close < (last_bbl_20 * 1.010))
-    ):
-      self._grind_entry_tag = "g2"
-      return True
-    # g3 — AROONU_15m dip + EMA_12 drop
-    if (
-      (last_rsi_3 > 10.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_3_1h > 10.0)
-      and (last_rsi_3_4h > 15.0)
-      and (last_rsi_14 < 35.0)
-      and (last_aroonu_14_15m < 25.0)
-      and (last_stochrsi_k_15m < 70.0)
-      and (last_stochrsi_k_1h < 90.0)
-      and (last_roc_9_1h > -15.0)
-      and (last_roc_9_4h > -15.0)
-      and (last_close > (last_close_max_48 * 0.85))
-      and (last_close < (last_ema_12 * 0.980))
-      and ((last_rsi_3_1h > 20.0) or (last_rsi_3_1d > 20.0))
-      and ((last_rsi_3_1h > 20.0) or (last_stochrsi_k_1d < 70.0))
-      and ((last_rsi_3_1h > 25.0) or (last_stochrsi_k_1h < 70.0))
-      and ((last_rsi_3_4h > 30.0) or (last_stochrsi_k_4h < 60.0))
-    ):
-      self._grind_entry_tag = "g3"
-      return True
-    # g4 — multi-TF RSI + EMA_26 + BBL
-    if (
-      (last_rsi_3 > 10.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_3_1h > 10.0)
-      and (last_rsi_3_4h > 10.0)
-      and (last_rsi_3_1d > 10.0)
-      and (last_rsi_14 < 35.0)
-      and (last_aroonu_14 < 25.0)
-      and (last_roc_9_1h > -20.0)
-      and (last_roc_9_4h > -20.0)
-      and (last_close < (last_ema_26 * 0.970))
-      and (last_close < (last_bbl_20 * 0.999))
-    ):
-      self._grind_entry_tag = "g4"
-      return True
-    # g5 — deep dip + EMA_9/20
-    if (
-      (last_rsi_3 > 10.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_3_1h > 15.0)
-      and (last_rsi_3_4h > 15.0)
-      and (last_rsi_14 < 35.0)
-      and (last_aroonu_14 < 30.0)
-      and (last_roc_9_4h > -20.0)
-      and (last_close > (last_high_max_24_1h * 0.80))
-      and (last_close < (last_low_min_12_4h * 1.50))
-      and (last_close < (last_ema_9 * 0.975))
-      and (last_close < (last_ema_20 * 0.970))
-    ):
-      self._grind_entry_tag = "g5"
-      return True
-    # g6 — RSI_20 falling + SMA_16 drop
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3 < 40.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_14 > 35.0)
-      and (last_roc_9_1h > -20.0)
-      and (last_roc_9_4h > -20.0)
-      and (last_aroonu_14 < 25.0)
-      and (last_close < (last_low_min_12_4h * 1.60))
-      and (last_rsi_20 < prev_rsi_20)
-      and (last_close < (last_sma_16 * 0.960))
-      and ((last_aroonu_14_1d < 100.0) or (last_roc_9_1d < 50.0))
-    ):
-      self._grind_entry_tag = "g6"
-      return True
-    # g7 — WILLR deep + BBB wide
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 20.0)
-      and (last_rsi_3_1h > 20.0)
-      and (last_rsi_3_4h > 20.0)
-      and (last_willr_14 < -50.0)
-      and (last_willr_84_1h < -70.0)
-      and (last_stochrsi_k < 30.0)
-      and (last_stochrsi_k_1h < 90.0)
-      and (last_roc_9_1h > -10.0)
-      and (last_roc_9_1h < 20.0)
-      and (last_roc_9_4h > -10.0)
-      and (last_close < (last_low_min_24_4h * 1.50))
-      and (last_bbands_20_1h > 12.0)
-      and (last_close_max_48 >= (last_close * 1.10))
-    ):
-      self._grind_entry_tag = "g7"
-      return True
-    # g8 — EMA_26/12 gap wide + low_min_24_1h
-    if (
-      (last_rsi_3 < 30.0)
-      and (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_3_1h > 10.0)
-      and (last_rsi_3_4h > 10.0)
-      and (last_roc_9_1h > -10.0)
-      and (last_roc_9_4h > -25.0)
-      and (last_ema_26 > last_ema_12)
-      and ((last_ema_26 - last_ema_12) > (last_open * 0.030))
-      and ((prev_ema_26 - prev_ema_12) > (last_open / 100.0))
-    ):
-      self._grind_entry_tag = "g8"
-      return True
-    # g9 — pullback recovery
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_3_1h > 20.0)
-      and (last_rsi_3_4h > 20.0)
-      and (last_stochrsi_k < 50.0)
-      and (last_close < (last_close_max_48 * 0.90))
-      and (last_close > (last_close_min_12 * 1.03))
-    ):
-      self._grind_entry_tag = "g9"
-      return True
-    # g10 — RSI_14 divergence vs 1h
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 20.0)
-      and (last_stochrsi_k < 20.0)
-      and (last_rsi_14 < (last_rsi_14_1h - 45.0))
-    ):
-      self._grind_entry_tag = "g10"
-      return True
-    # g11 — multi-TF RSI + SMA_30 + BBL
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_3_1h > 10.0)
-      and (last_cmf_20 > 0.0)
-      and (last_close < (last_sma_30 * 0.965))
-      and (last_close < (last_bbl_20 * 1.000))
-    ):
-      self._grind_entry_tag = "g11"
-      return True
-    # g12 — EMA_26/12 divergence + close_max_48
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_3_1h > 10.0)
-      and (last_stochrsi_k < 30.0)
-      and (last_close > (last_close_max_48 * 0.90))
-      and (last_close < (last_low_min_12_4h * 1.60))
-      and (last_ema_26 > last_ema_12)
-      and ((last_ema_26 - last_ema_12) > (last_open * 0.025))
-      and ((prev_ema_26 - prev_ema_12) > (last_open / 100.0))
-    ):
-      self._grind_entry_tag = "g12"
-      return True
-    # g13 — SMA_9 cross SMA_21 + EMA_100 drop
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_rsi_3_1h > 20.0)
-      and (last_rsi_14_1h > 40.0)
-      and (last_stochrsi_k_15m < 80.0)
-      and (last_roc_9_1h > -15.0)
-      and (last_roc_9_4h > -15.0)
-      and (prev_sma_9 < prev_sma_21)
-      and (last_sma_9 > last_sma_21)
-      and (last_close < (last_ema_100 * 0.975))
-      and ((last_rsi_3_4h > 30.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_rsi_3_4h > 40.0) or (last_roc_9_4h < 30.0))
-    ):
-      self._grind_entry_tag = "g13"
-      return True
-    # g14 — SMA_9 cross SMA_21 + 4h uptrend (trend follower)
-    if (
-      (last_rsi_3 > 5.0)
-      and (last_aroonu_14_15m < 50.0)
-      and (last_stochrsi_k < 40.0)
-      and (last_stochrsi_k_15m < 70.0)
-      and (prev_sma_9 < prev_sma_21)
-      and (last_sma_9 > last_sma_21)
-      and (last_ema_12_4h > last_ema_200_4h)
-      and (last_close > (last_close_max_48 * 0.90))
-      and ((last_rsi_3_1h > 30.0) or (last_stochrsi_k_1h < 70.0))
-      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_1h < 80.0))
-      and ((last_rsi_3_1h > 55.0) or (last_stochrsi_k_1h < 70.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1d > 25.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_1d < 90.0))
-    ):
-      self._grind_entry_tag = "g14"
-      return True
-    # g15 — deep loss recovery (slice_profit < -0.16)
-    if (
-      (slice_profit < -0.16)
-      and (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_rsi_14 < 40.0)
-      and (last_aroonu_14 < 25.0)
-      and (last_aroonu_14_15m < 30.0)
-      and (last_stochrsi_k < 30.0)
-      and (last_stochrsi_k_15m < 30.0)
-      and ((last_rsi_3_1h > 30.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_rsi_3_4h > 30.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1d > 30.0) or (last_stochrsi_k_1d < 80.0))
-    ):
-      self._grind_entry_tag = "g15"
-      return True
-    # g16 — EMA_12 drop + BBL
-    if (
-      (last_rsi_3 > 8.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_3_1h > 15.0)
-      and (last_rsi_3_4h > 15.0)
-      and (last_rsi_14 < 35.0)
-      and (last_close < (last_ema_12 * 0.965))
-      and (last_close < (last_bbl_20 * 0.999))
-    ):
-      self._grind_entry_tag = "g16"
-      return True
-    # g17 — StochRSI + EMA_20 drop
-    if (
-      (last_rsi_3 > 15.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_3_1h > 15.0)
-      and (last_rsi_3_4h > 15.0)
-      and (last_rsi_14 < 30.0)
-      and (last_stochrsi_k < 30.0)
-      and (last_close < (last_ema_20 * 0.975))
-      and ((last_aroonu_14_4h < 100.0) or (last_aroonu_14_1d < 100.0))
-    ):
-      self._grind_entry_tag = "g17"
-      return True
-    # g18 — moderate loss recovery (slice_profit < -0.10)
-    if (
-      (slice_profit < -0.10)
-      and (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_3_1h > 20.0)
-      and (last_rsi_3_4h > 20.0)
-      and (last_rsi_14 < 40.0)
-      and (last_close < (last_ema_26 * 0.970))
-      and (last_close < (last_bbl_20 * 0.999))
-    ):
-      self._grind_entry_tag = "g18"
-      return True
-    # g19 — EMA_26/12 wide gap (slice_profit < -0.06)
-    if (
-      (slice_profit < -0.06)
-      and (last_rsi_3 < 30.0)
-      and (last_rsi_3 > 5.0)
-      and (last_rsi_3_15m > 10.0)
-      and (last_ema_26 > last_ema_12)
-      and ((last_ema_26 - last_ema_12) > (last_open * 0.035))
-      and ((prev_ema_26 - prev_ema_12) > (last_open / 100.0))
-    ):
-      self._grind_entry_tag = "g19"
-      return True
-    # AROONU 4h uptrend pullback recovery
-    if (
-      (last_rsi_3 > 10.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_3_1h > 20.0)
-      and (last_rsi_14 < 42.0)
-      and (last_rsi_14_4h > 50.0)
-      and (last_aroonu_14 < 30.0)
-      and (last_aroonu_14_4h > 50.0)
-      and (last_roc_9_1d > -15.0)
-      and (last_ema_50_4h > last_ema_100_4h)
-      and (last_close < (last_close_max_48 * 0.95))
-      and ((last_rsi_3_15m > 20.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1h > 30.0) or (last_roc_9_4h < 30.0) or (last_roc_9_1d < 30.0))
-      and ((last_rsi_3_1h > 50.0) or (last_roc_9_1d < 60.0))
-      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_4h < 90.0))
-      and ((last_rsi_3_4h > 45.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_rsi_3_4h > 60.0) or (last_roc_9_4h < 40.0))
-      and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_1d < 80.0))
-      and ((last_aroonu_14_4h < 100.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_stochrsi_k_4h < 90.0) or (last_roc_9_4h < 30.0))
-    ):
-      self._grind_entry_tag = "g20"
-      return True
-    if (
-      (slice_profit_entry < -0.02)
-      and (last_rsi_3 > 10.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_14 < 35.0)
-      and (last_aroonu_14_15m < 50.0)
-      and (last_close < (last_ema_20 * 0.955))
-    ):
-      self._grind_entry_tag = "g21"
-      return True
-    # g22 — early recovery rebuild: reclaiming off the low BEFORE the 4h trend confirms (g14 needs
-    #        EMA_12_4h > EMA_200_4h and fires too late for a deep-derisk bounce). Anti-fake-rise gating via
-    #        multi-TF RSI recovery + reclaim off the 4h low + not-extended. NOTE: slice_profit_entry gate
-    #        removed — it self-defeats in recovery (last grind buy is in profit); underwater-scope TBD.
-    if (
-      (last_rsi_3 > 30.0)
-      and (last_rsi_3_15m > 30.0)
-      and (last_rsi_14 > 45.0)
-      and (last_rsi_14_1h > 45.0)
-      and (last_roc_9_1h > 0.0)
-      and (last_roc_9_4h > -10.0)
-      # anti-parabolic: even at a formed bottom, a parabolic 4h overshoot reverses (dead-cat).
-      # cross-coin (SFP/CELR/DYDX/APE): cuts 17 severe at ~1% good cost within recovery-starts.
-      and (last_roc_9_4h < 25.0)
-      # recovery-started gate: only rebuild once the 4h bottom is IN (not still making new lows).
-      # g22's job is the recovery rebuild — NOT entering mid-dump (that's g1..g21). AROOND high =
-      # a fresh 4h low was just made = still dumping; require it low = bottom formed = recovery start.
-      and (last_aroonu_14_4h < 50.0)
-      # aggressive risk-free: g22 fires ONLY deep below the 4h 200-EMA (fresh recovery zone). The
-      # near/above-EMA overextended-bounce zone is where dead-cats live AND where g22's late-recovery
-      # adds sit — we sacrifice those wins on purpose, because g23 (extended-continuation, ~0.2% severe)
-      # backstops the real recoveries above. So g22 stays clean, g23 captures the continuation.
-      and (last_close < last_ema_200_4h)
-      and (last_close > (last_low_min_12_4h * 1.10))
-      and (last_close > (last_ema_20 * 0.97))
-      and (last_close < (last_ema_20 * 1.02))
-      and ((last_rsi_3_1h > 30.0) or (last_stochrsi_k_1d < 80.0))
-      and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_rsi_3_1d > 10.0) or (last_aroonu_14_1d < 70.0))
-      and ((last_rsi_3_1d > 10.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1d > 15.0) or (last_aroonu_14_1h < 70.0))
-      and ((last_rsi_3_1d > 40.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_rsi_3_1d > 40.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1d > 50.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1d > 65.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0))
-      and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 80.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_1h < 80.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_1d < 90.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
-      and ((last_stochrsi_k_1h < 50.0) or (last_roc_9_1d > -40.0))
-      and ((last_roc_9_1d > -20.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_roc_9_1d > -20.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_roc_9_1d > -30.0) or (last_stochrsi_k_1h < 90.0))
-    ):
-      self._grind_entry_tag = "g22"
-      return True
-    # g23 — pump-continuation scalp: extended zone ABOVE g22's EMA_20*1.02 cap. Only rides a CONFIRMED
-    # continuation (price already advancing past the reclaim), so dead-cats (which roll over before
-    # reaching the extended zone) are structurally avoided. Complements g22: g22 = early recovery-start
-    # (ambiguous zone, dead-cat risk trimmed by P1), g23 = confirmed continuation (clean, ~0.2% severe).
-    if (
-      (last_rsi_3 > 30.0)
-      and (last_rsi_3_15m > 30.0)
-      and (last_rsi_14 > 50.0)
-      and (last_rsi_14_1h > 50.0)
-      and (last_roc_9_1h > 0.0)
-      and (last_roc_9_4h > 0.0)
-      # anti-parabolic blow-off + anti-exhaustion top
-      and (last_roc_9_4h < 25.0)
-      and ((last_stochrsi_k < 97.0) or (last_rsi_14 < 80.0))
-      and (last_close > (last_low_min_12_4h * 1.10))
-      # extended zone: above g22's 1.02*EMA cap = continuation confirmed, not a reclaim
-      and (last_close >= (last_ema_20 * 1.02))
-      and (last_close < (last_ema_20 * 1.12))
-      and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_4h < 80.0))
-      and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_15m < 60.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 65.0) or (last_stochrsi_k_15m < 60.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_4h > 40.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_4h < 70.0))
-      and ((last_rsi_3_1d > 15.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_rsi_3_1d > 40.0) or (last_aroonu_14_15m < 80.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1d > 55.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1h < 100.0) or (last_roc_9_1d < 10.0))
-      and ((last_aroonu_14_15m < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1d < 90.0) or (last_roc_9_1d < 20.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_1d < 70.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 100.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_aroonu_14_4h < 70.0) or (last_aroonu_14_1d < 100.0) or (last_roc_9_4h < 10.0))
-      and ((last_aroonu_14_4h < 70.0) or (last_roc_9_1d < 50.0))
-      and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_1d < 100.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_stochrsi_k_15m < 80.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_stochrsi_k_15m < 90.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_stochrsi_k_1h < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_stochrsi_k_1h < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_stochrsi_k_1h < 90.0) or (last_stochrsi_k_1d < 90.0))
-    ):
-      self._grind_entry_tag = "g23"
-      return True
-    # g24 — trend-pullback continuation add: the zone ABOVE the 4h 200-EMA that g22 explicitly sacrifices.
-    if (
-      # momentum healthy on the pullback: RSI holds up (a real reversal cracks RSI hard)
-      (last_rsi_3 > 20.0)
-      and (last_rsi_3_15m > 20.0)
-      and (last_rsi_14 > 40.0)
-      # trend intact + this is a PULLBACK not a reversal: 4h still rising, 1h not in freefall
-      and (last_roc_9_1h > -10.0)
-      and (last_roc_9_4h > 0.0)
-      and (last_roc_9_4h < 25.0)  # anti-parabolic blow-off top
-      # bull scope-gate: confirmed 4h uptrend + price above the 200-EMA regime (complements g22's <200EMA)
-      and (last_ema_12_4h > last_ema_200_4h)
-      and (last_close > last_ema_200_4h)
-      # shallow pullback to the short EMA — buy the dip WITHIN the trend, never the top nor a deep dump
-      and (last_close < (last_ema_20 * 1.01))
-      and (last_close > (last_ema_20 * 0.94))
-      and ((last_rsi_3_15m > 40.0) or (last_stochrsi_k_15m < 70.0))
-      and ((last_rsi_3_1h > 10.0) or (last_rsi_3_4h > 30.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1h > 10.0) or (last_aroonu_14_1h < 60.0))
-      and ((last_rsi_3_1h > 15.0) or (last_aroonu_14_4h < 70.0))
-      and ((last_rsi_3_1h > 25.0) or (last_rsi_3_4h > 45.0) or (last_stochrsi_k_4h < 50.0))
-      and ((last_rsi_3_1h > 25.0) or (last_aroonu_14_1h < 70.0))
-      and ((last_rsi_3_1h > 25.0) or (last_rsi_3_1d > 45.0) or (last_aroonu_14_1d < 70.0))
-      and ((last_rsi_3_1h > 25.0) or (last_aroonu_14_1h < 80.0))
-      and ((last_rsi_3_1h > 30.0) or (last_rsi_3_4h > 60.0) or (last_aroonu_14_1d < 70.0))
-      and ((last_rsi_3_1h > 30.0) or (last_rsi_3_4h > 60.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1h > 30.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 10.0))
-      and ((last_rsi_3_1h > 35.0) or (last_rsi_3_4h > 45.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_1h < 60.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_3_1h > 35.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 20.0))
-      and ((last_rsi_3_1h > 40.0) or (last_rsi_3_4h > 40.0) or (last_aroonu_14_1d < 90.0))
-      and ((last_rsi_3_1h > 40.0) or (last_rsi_3_4h > 65.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 40.0) or (last_rsi_3_1d > 60.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_1d < 100.0) or (last_roc_9_1d < 20.0))
-      and ((last_rsi_3_1h > 40.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 50.0))
-      and ((last_rsi_3_1h > 35.0) or (last_rsi_3_4h > 50.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 40.0) or (last_rsi_3_4h > 55.0) or (last_aroonu_14_4h < 90.0))
-      and ((last_rsi_3_1h > 45.0) or (last_rsi_3_4h > 45.0) or (last_rsi_3_1d > 45.0) or (last_stochrsi_k_4h < 50.0))
-      and ((last_rsi_3_1h > 45.0) or (last_rsi_3_4h > 45.0) or (last_aroonu_14_4h < 60.0))
-      and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_4h < 80.0) or (last_roc_9_1d < 10.0))
-      and ((last_rsi_3_1h > 50.0) or (last_rsi_3_4h > 55.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_1h < 80.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 70.0))
-      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_4h < 80.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_4h < 80.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1h > 55.0) or (last_rsi_3_4h > 55.0) or (last_stochrsi_k_15m < 70.0))
-      and ((last_rsi_3_1h > 55.0) or (last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 80.0))
-      and ((last_rsi_3_1h > 55.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_1d < 10.0))
-      and ((last_rsi_3_1h > 60.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_4h < 80.0))
-      and ((last_rsi_3_1h > 60.0) or (last_stochrsi_k_1h < 60.0) or (last_stochrsi_k_1d < 90.0))
-      and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0))
-      and ((last_rsi_3_1h > 65.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_4h > 25.0) or (last_roc_9_1d < 30.0))
-      and ((last_rsi_3_4h > 40.0) or (last_rsi_3_1d > 60.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_1d < 90.0))
-      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_1d < 90.0) or (last_roc_9_1d < 10.0))
-      and ((last_rsi_3_4h > 40.0) or (last_stochrsi_k_15m < 60.0) or (last_aroonu_14_1d < 90.0))
-      and ((last_rsi_3_4h > 45.0) or (last_rsi_3_1d > 45.0) or (last_aroonu_14_15m < 60.0))
-      and ((last_rsi_3_4h > 45.0) or (last_rsi_3_1d > 45.0) or (last_stochrsi_k_15m < 60.0))
-      and ((last_rsi_3_4h > 45.0) or (last_rsi_3_1d > 45.0) or (last_stochrsi_k_1h < 60.0))
-      and ((last_rsi_3_4h > 45.0) or (last_rsi_3_1d > 45.0) or (last_stochrsi_k_4h < 60.0))
-      and ((last_rsi_3_4h > 45.0) or (last_aroonu_14_4h < 70.0))
-      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_4h < 70.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_3_4h > 50.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_4h > 55.0) or (last_aroonu_14_15m < 70.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_4h > 60.0) or (last_rsi_3_1d > 65.0) or (last_aroonu_14_15m < 70.0))
-      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_15m < 90.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 80.0))
-      and ((last_rsi_3_4h > 60.0) or (last_stochrsi_k_15m < 70.0) or (last_stochrsi_k_1h < 70.0))
-      and ((last_rsi_3_4h > 60.0) or (last_stochrsi_k_1h < 60.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_rsi_3_1d > 30.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1d > 35.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_rsi_3_1d > 35.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_rsi_3_1d > 35.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1d > 40.0) or (last_aroonu_14_1h < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_15m < 50.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_1h < 80.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_rsi_3_1d > 45.0) or (last_aroonu_14_1d < 70.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1d > 45.0) or (last_stochrsi_k_1h < 70.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1d > 50.0) or (last_aroonu_14_15m < 60.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_rsi_3_1d > 50.0) or (last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_15m < 90.0) or (last_roc_9_1d < 10.0))
-      and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1d > 60.0) or (last_aroonu_14_1h < 80.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_14_1h < 70.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 80.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 70.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 80.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_aroonu_14_15m < 90.0) or (last_aroonu_14_1h < 80.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_aroonu_14_15m < 90.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 10.0))
-      and ((last_aroonu_14_1h < 70.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_aroonu_14_1h < 70.0) or (last_aroonu_14_1d < 90.0) or (last_roc_9_1d < 10.0))
-      and ((last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_aroonu_14_1h < 90.0) or (last_stochrsi_k_1h < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_1h < 90.0) or (last_stochrsi_k_1h < 90.0) or (last_roc_9_1d < 10.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 90.0))
-      and ((last_aroonu_14_4h < 70.0) or (last_aroonu_14_1d < 100.0) or (last_roc_9_1d < 20.0))
-      and ((last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_1d < 10.0))
-      and ((last_aroonu_14_4h < 90.0) or (last_roc_9_1d < 30.0))
-      and ((last_aroonu_14_4h < 100.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_aroonu_14_4h < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_1d < 100.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_aroonu_14_1d < 100.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_aroonu_14_1d < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_1d < 100.0) or (last_roc_9_4h < 15.0) or (last_roc_9_1d < 50.0))
-      # do not buy an overbought top on the bounce
-      and ((last_stochrsi_k < 90.0) or (last_rsi_14 < 70.0))
-      and ((last_stochrsi_k_15m < 80.0) or (last_stochrsi_k_1h < 80.0) or (last_roc_9_1d < 10.0))
-      and ((last_stochrsi_k_15m < 80.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_stochrsi_k_15m < 80.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 20.0))
-      and ((last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_stochrsi_k_15m < 90.0) or (last_stochrsi_k_1d < 90.0))
-      and ((last_stochrsi_k_1h < 80.0) or (last_stochrsi_k_1d < 90.0))
-      and ((last_stochrsi_k_1h < 80.0) or (last_roc_9_1d > -20.0))
-      and ((last_stochrsi_k_1h < 90.0) or (last_roc_9_4h < 15.0))
-      and ((last_stochrsi_k_4h < 90.0) or (last_roc_9_4h < 15.0))
-      and ((last_stochrsi_k_4h < 90.0) or (last_roc_9_1d > -15.0))
-      and ((last_stochrsi_k_1d < 90.0) or (last_roc_9_4h < 20.0))
-    ):
-      self._grind_entry_tag = "g24"
-      return True
-    if (
-      (last_rsi_3 > 15.0)
-      and (last_rsi_3_15m > 15.0)
-      and (last_rsi_14 > 40.0)
-      and (last_rsi_14_1h > 40.0)
-      # the coil signature: 1h momentum negative-to-flat under a flat price
-      and (last_roc_9_1h > -15.0)
-      and (last_roc_9_1h < 2.0)
-      and (last_close > (last_ema_20 * 0.98))
-      and (last_close < (last_ema_20 * 1.02))
-      # squeeze integrity: regime still broken, 4h reclaim HELD, not dripping to new lows
-      and (last_close < last_ema_200_4h)
-      and (last_close > (last_low_min_12_4h * 1.10))
-      and (last_close > (last_close_min_12 * 1.005))
-      # general protections first
-      and ((last_rsi_3_15m > 20.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1h > 15.0) or (last_aroonu_14_4h < 70.0))
-      and ((last_rsi_3_1h > 20.0) or (last_rsi_3_4h > 20.0) or (last_aroonu_14_1d < 90.0))
-      and ((last_rsi_3_1h > 20.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_rsi_3_1h > 30.0) or (last_rsi_3_1d > 30.0) or (last_stochrsi_k_1h < 70.0))
-      and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_1h < 70.0))
-      and ((last_rsi_3_1h > 35.0) or (last_aroonu_14_4h < 70.0))
-      and ((last_rsi_3_1h > 40.0) or (last_aroonu_14_4h < 80.0))
-      and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_1h < 90.0) or (last_stochrsi_k_1h < 70.0))
-      and ((last_rsi_3_1h > 40.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 45.0) or (last_aroonu_14_1h < 90.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 45.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_1h < 70.0) or (last_aroonu_14_4h < 70.0))
-      and ((last_rsi_3_1h > 55.0) or (last_rsi_3_4h > 60.0) or (last_aroonu_14_4h < 60.0))
-      and ((last_rsi_3_1h > 50.0) or (last_aroonu_14_4h < 80.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 50.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 30.0))
-      and ((last_rsi_3_1h > 55.0) or (last_aroonu_14_4h < 80.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_rsi_3_1h > 55.0) or (last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_rsi_3_1h > 60.0) or (last_rsi_3_1d > 60.0) or (last_aroonu_14_1h < 80.0))
-      and ((last_rsi_3_1h > 60.0) or (last_stochrsi_k_4h < 70.0) or (last_stochrsi_k_1d < 80.0))
-      and ((last_rsi_3_1h > 60.0) or (last_stochrsi_k_4h < 80.0) or (last_roc_9_4h < 10.0))
-      and ((last_rsi_3_4h > 10.0) or (last_rsi_3_1d > 40.0) or (last_stochrsi_k_15m < 80.0))
-      and ((last_rsi_3_4h > 25.0) or (last_stochrsi_k_4h < 50.0) or (last_roc_9_4h < 10.0))
-      and ((last_rsi_3_4h > 35.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_4h > 40.0) or (last_rsi_3_1d > 40.0) or (last_aroonu_14_15m < 70.0))
-      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_15m < 100.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_1h < 90.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_rsi_3_4h > 40.0) or (last_aroonu_14_4h < 70.0))
-      and ((last_rsi_3_4h > 50.0) or (last_aroonu_14_15m < 80.0) or (last_aroonu_14_4h < 80.0))
-      and ((last_rsi_3_4h > 50.0) or (last_stochrsi_k_15m < 70.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_4h > 55.0) or (last_aroonu_14_1h < 100.0) or (last_aroonu_14_1d < 80.0))
-      and ((last_rsi_3_4h > 60.0) or (last_rsi_3_1d > 60.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 70.0))
-      and ((last_rsi_3_4h > 60.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
-      and ((last_rsi_3_4h > 60.0) or (last_stochrsi_k_4h < 70.0) or (last_roc_9_1d > -10.0))
-      and ((last_rsi_3_4h > 65.0) or (last_aroonu_14_1h < 70.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_4h > 65.0) or (last_aroonu_14_4h < 80.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_4h > 65.0) or (last_stochrsi_k_4h < 70.0) or (last_roc_9_1d > -10.0))
-      and ((last_rsi_3_4h > 65.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_4h < 10.0))
-      and ((last_rsi_3_1d > 10.0) or (last_stochrsi_k_4h < 70.0))
-      and ((last_rsi_3_1d > 20.0) or (last_aroonu_14_1d < 90.0))
-      and ((last_rsi_3_1d > 25.0) or (last_stochrsi_k_15m < 70.0))
-      and ((last_rsi_3_1d > 25.0) or (last_aroonu_14_1h < 70.0))
-      and ((last_rsi_3_1d > 25.0) or (last_stochrsi_k_1h < 90.0))
-      and ((last_rsi_3_1d > 30.0) or (last_aroonu_14_15m < 100.0))
-      and ((last_rsi_3_1d > 30.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_rsi_3_1d > 40.0) or (last_aroonu_14_1h < 90.0) or (last_aroonu_14_4h < 100.0))
-      and ((last_rsi_3_1d > 50.0) or (last_stochrsi_k_4h < 90.0) or (last_stochrsi_k_1d < 70.0))
-      and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 80.0))
-      and ((last_aroonu_14_15m < 70.0) or (last_aroonu_14_4h < 70.0) or (last_roc_9_4h < 10.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_stochrsi_k_15m < 70.0))
-      and ((last_aroonu_14_15m < 80.0) or (last_aroonu_14_1h < 100.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_aroonu_14_4h < 90.0))
-      and ((last_aroonu_14_15m < 100.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_1h < 80.0) or (last_aroonu_14_4h < 100.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_aroonu_14_1h < 80.0) or (last_stochrsi_k_4h < 100.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_aroonu_14_1h < 80.0) or (last_stochrsi_k_4h < 90.0) or (last_roc_9_4h < 10.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_aroonu_14_1d < 100.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_15m < 80.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_4h < 80.0) or (last_roc_9_4h < 10.0))
-      and ((last_aroonu_14_1h < 100.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 20.0))
-      and ((last_aroonu_14_4h < 70.0) or (last_roc_9_1d > -25.0))
-      and ((last_aroonu_14_4h < 70.0) or (last_roc_9_1d < 50.0))
-      and ((last_aroonu_14_4h < 80.0) or (last_stochrsi_k_4h < 80.0) or (last_roc_9_4h < 10.0))
-      and ((last_aroonu_14_4h < 80.0) or (last_stochrsi_k_1d < 80.0) or (last_roc_9_1d < 10.0))
-      and ((last_aroonu_14_4h < 90.0) or (last_stochrsi_k_4h < 90.0))
-      and ((last_aroonu_14_4h < 90.0) or (last_roc_9_4h < 10.0))
-      and ((last_stochrsi_k_15m < 60.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_stochrsi_k_1h < 70.0) or (last_stochrsi_k_4h < 80.0))
-      and ((last_stochrsi_k_1h < 90.0) or (last_roc_9_4h > -20.0))
-      and ((last_stochrsi_k_4h < 70.0) or (last_roc_9_1d > -25.0))
-      and ((last_stochrsi_k_4h < 80.0) or (last_stochrsi_k_1d < 90.0) or (last_roc_9_1d < 20.0))
-      and ((last_roc_9_1d > -40.0) or (last_aroonu_14_1h < 90.0))
-      and ((last_roc_9_1d > -40.0) or (last_stochrsi_k_1h < 80.0))
-      and ((last_roc_9_1d > -25.0) or (last_stochrsi_k_15m < 90.0))
-      and ((last_roc_9_1d > -25.0) or (last_aroonu_14_4h < 80.0))
-      and ((last_roc_9_1d > -15.0) or (last_stochrsi_k_4h < 80.0))
-    ):
-      self._grind_entry_tag = "g27"
-      return True
-
-    self._grind_entry_tag = ""
-    return False
-
   def long_grind_adjust_trade_position(
     self,
     trade: Trade,
@@ -41769,7 +40989,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     is_futures = self.is_futures_mode
     derisk_use_grind_stops = self.derisk_use_grind_stops
-    long_rebuy_mode_tags = self.long_rebuy_mode_tags
     long_grind_mode_tags = self.long_grind_mode_tags
     trade_leverage = trade.leverage
 
@@ -41823,10 +41042,6 @@ class NostalgiaForInfinityX9(IStrategy):
     current_stake_amount = trade_amount * current_rate
     is_derisk = trade_amount < (first_filled_entry.safe_filled * 0.95)
     is_derisk_calc = False
-    is_rebuy_mode = all(c in long_rebuy_mode_tags for c in enter_tags) or (
-      any(c in long_rebuy_mode_tags for c in enter_tags)
-      and all(c in (long_rebuy_mode_tags + long_grind_mode_tags) for c in enter_tags)
-    )
     is_grind_mode = all(c in long_grind_mode_tags for c in enter_tags)
 
     fee_open_rate = trade_fee_open if self.custom_fee_open_rate is None else self.custom_fee_open_rate
@@ -41842,11 +41057,8 @@ class NostalgiaForInfinityX9(IStrategy):
     grind_order_age_time = current_time - timedelta(hours=6)
     grind_force_order_age_time = current_time - timedelta(hours=24)
 
-    # Rebuy mode
-    if is_rebuy_mode:
-      slice_amount /= self.rebuy_mode_stake_multiplier
     # Grind mode
-    elif is_grind_mode:
+    if is_grind_mode:
       slice_amount /= grind_mode_stake_multipliers[0]
     elif not is_derisk:
       rebuy_stake, order_tag, is_derisk_calc = self.long_adjust_trade_position_no_derisk(
@@ -41887,7 +41099,7 @@ class NostalgiaForInfinityX9(IStrategy):
       elif not is_derisk_calc:
         return None
 
-    if not is_rebuy_mode and not is_grind_mode:
+    if not is_grind_mode:
       # First entry is lower now, therefore the grinds must adjust
       slice_amount /= regular_mode_stake_multipliers[0]
 
@@ -42477,7 +41689,7 @@ class NostalgiaForInfinityX9(IStrategy):
             else:
               return -ft_sell_amount
 
-    is_long_grind_entry = self.long_grind_entry_grind(
+    is_long_grind_entry = self.long_grind_entry_v4(
       last_candle, previous_candle, num_open_grinds, slice_profit, slice_profit_entry, slice_profit_exit, True
     )  # dedicated grind-mode entry set (g0..g27)
     slice_profit_lt_neg_0_06 = slice_profit < -0.06
@@ -46665,7 +45877,6 @@ class NostalgiaForInfinityX9(IStrategy):
     enter_tags,
   ) -> tuple:
     is_futures_mode = self.is_futures_mode
-    stops_enable = self.stops_enable
     trade_leverage = trade.leverage
 
     mark_profit_target = self.mark_profit_target
@@ -47874,7 +47085,6 @@ class NostalgiaForInfinityX9(IStrategy):
     buy_tag,
   ) -> tuple:
     is_futures_mode = self.is_futures_mode
-    doom_stops_enable = self.doom_stops_enable
     trade_leverage = trade.leverage
     stoploss_doom = f"exit_{mode_name}_stoploss_doom"
     stoploss_u_e = f"exit_{mode_name}_stoploss_u_e"
@@ -50132,7 +49342,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     is_futures = self.is_futures_mode
     derisk_use_grind_stops = self.derisk_use_grind_stops
-    short_rebuy_mode_tags = self.short_rebuy_mode_tags
     short_grind_mode_tags = self.short_grind_mode_tags
     trade_leverage = trade.leverage
 
@@ -50183,10 +49392,6 @@ class NostalgiaForInfinityX9(IStrategy):
     current_stake_amount = trade_amount * current_rate
     is_derisk = trade_amount < (first_filled_entry.safe_filled * 0.95)
     is_derisk_calc = False
-    is_rebuy_mode = all(c in short_rebuy_mode_tags for c in enter_tags) or (
-      any(c in short_rebuy_mode_tags for c in enter_tags)
-      and all(c in (short_rebuy_mode_tags + short_grind_mode_tags) for c in enter_tags)
-    )
     is_grind_mode = all(c in short_grind_mode_tags for c in enter_tags)
 
     fee_open_rate = trade_fee_open if self.custom_fee_open_rate is None else self.custom_fee_open_rate
@@ -50202,11 +49407,8 @@ class NostalgiaForInfinityX9(IStrategy):
     grind_order_age_time = current_time - timedelta(hours=6)
     grind_force_order_age_time = current_time - timedelta(hours=24)
 
-    # Rebuy mode
-    if is_rebuy_mode:
-      slice_amount /= self.rebuy_mode_stake_multiplier
     # Grind mode
-    elif is_grind_mode:
+    if is_grind_mode:
       slice_amount /= grind_mode_stake_multipliers[0]
     elif not is_derisk:
       rebuy_stake, order_tag, is_derisk_calc = self.short_adjust_trade_position_no_derisk(
@@ -50247,7 +49449,7 @@ class NostalgiaForInfinityX9(IStrategy):
       elif not is_derisk_calc:
         return None
 
-    if not is_rebuy_mode and not is_grind_mode:
+    if not is_grind_mode:
       # First entry is lower now, therefore the grinds must adjust
       slice_amount /= regular_mode_stake_multipliers[0]
 
