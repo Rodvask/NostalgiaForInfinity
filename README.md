@@ -33,11 +33,16 @@ npm run dev
 
 Use `web/.env.example` to point the server-side proxy at a local Freqtrade REST
 API. With no API configured, the dashboard runs on a deterministic demo dataset.
-The optional `web` Compose profile starts it alongside the bot:
+The optional `web` Compose profile starts only the dashboard and does not start
+or touch the bot:
 
 ```bash
-docker compose --profile web up -d --build
+docker compose --profile web up -d --build web
 ```
+
+With `FREQTRADE_API_URL` unset it runs in demo mode. To read the bot already
+running on the host, set `FREQTRADE_API_URL=http://host.docker.internal:8989`
+and the API credentials in `.env`.
 
 ## General Recommendations
 

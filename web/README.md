@@ -62,12 +62,17 @@ docker run --rm -p 127.0.0.1:3000:3000 \
   nfi-x9-web
 ```
 
-From the repository root, the optional Compose profile attaches the dashboard
-to the same network as the `freqtrade` service:
+From the repository root, the optional Compose profile starts only the
+dashboard; it does not start the `freqtrade` service:
 
 ```bash
-docker compose --profile web up -d --build
+docker compose --profile web up -d --build web
 ```
+
+With no `FREQTRADE_API_URL`, the container runs in demo mode. To proxy a bot on
+the host, set `FREQTRADE_API_URL=http://host.docker.internal:8989` plus the API
+credentials. The Compose file maps `host.docker.internal` to the host gateway,
+so this works on Linux as well.
 
 `WEB_PORT` changes the published port (default `3000`). Both `npm run dev` and
 `npm start` bind to `127.0.0.1`, and Compose publishes the container only on

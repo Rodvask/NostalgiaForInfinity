@@ -48,9 +48,8 @@ services:
     ports:
       - "127.0.0.1:${WEB_PORT:-3000}:3000"
     environment:
-      FREQTRADE_API_URL: ${FREQTRADE_API_URL:-http://freqtrade:8080}
+      FREQTRADE_API_URL: ${FREQTRADE_API_URL:-}
       FREQTRADE_USERNAME: ${FREQTRADE__API_SERVER__USERNAME:-}
       FREQTRADE_PASSWORD: ${FREQTRADE__API_SERVER__PASSWORD:-}
-    depends_on:
-      freqtrade:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
