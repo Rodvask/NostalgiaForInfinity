@@ -564,7 +564,6 @@ class NostalgiaForInfinityX9(IStrategy):
   system_v3_name = "system_v3"
   system_v3_1_name = "system_v3_1"
   system_v3_2_name = "system_v3_2"
-  system_name_use = system_v3_2_name
 
   system_v3_max_stake = 1.0  # ratio of first entry
   system_v3_1_max_stake = 3.0  # ratio of first entry
@@ -1364,8 +1363,7 @@ class NostalgiaForInfinityX9(IStrategy):
     trade_leverage = trade.leverage
     select_filled_orders = trade.select_filled_orders
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
     is_derisk = False
     if previous_sell_reason in [
       f"exit_{mode_name}_stoploss_doom",
@@ -2746,9 +2744,8 @@ class NostalgiaForInfinityX9(IStrategy):
     # =========================================================================
     # SYSTEM VERSION
     # =========================================================================
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
     is_system_v3_family = is_system_v3 or is_system_v3_1 or is_system_v3_2
-    is_system_v4 = self.is_system_v4(trade)
 
     # =========================================================================
     # ARGS
@@ -4703,29 +4700,18 @@ class NostalgiaForInfinityX9(IStrategy):
     """Check if the current run mode is backtest or hyperopt"""
     return self.dp.runmode.value in ["backtest", "hyperopt"]
 
-  def is_system_v3(self, trade: Trade) -> bool:
-    """Check if the current system is v3"""
-    return trade.get_custom_data(key="system_version") == self.system_v3_name
-
-  def is_system_v3_1(self, trade: Trade) -> bool:
-    """Check if the current system is v3_1"""
-    return trade.get_custom_data(key="system_version") == self.system_v3_1_name
-
-  def is_system_v3_2(self, trade: Trade) -> bool:
-    """Check if the current system is v3_2"""
-    return trade.get_custom_data(key="system_version") == self.system_v3_2_name
-
   def is_system_v4(self, trade: Trade) -> bool:
     """Check if the current system is v4"""
     return trade.get_custom_data(key="system_version") == self.system_v4_name
 
-  def get_system_version_flags(self, trade: Trade) -> tuple[bool, bool, bool]:
+  def get_system_version_flags(self, trade: Trade) -> tuple[bool, bool, bool, bool]:
     """Check the current system version flags with one custom-data lookup."""
     system_version = trade.get_custom_data(key="system_version")
     return (
       system_version == self.system_v3_name,
       system_version == self.system_v3_1_name,
       system_version == self.system_v3_2_name,
+      system_version == self.system_v4_name,
     )
 
   def has_valid_entry_conditions(
@@ -37369,8 +37355,7 @@ class NostalgiaForInfinityX9(IStrategy):
       leverage = trade.leverage
       entry_cost = filled_entries[0].safe_filled * filled_entries[0].safe_price
 
-      is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-      is_system_v4 = self.is_system_v4(trade)
+      is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
 
       if is_system_v4:
         threshold = (
@@ -37836,8 +37821,7 @@ class NostalgiaForInfinityX9(IStrategy):
     set_profit_target = self._set_profit_target
     exit_profit_target = self.exit_profit_target
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
 
     mode = self.long_rapid_mode_name
     cache = self.target_profit_cache
@@ -38412,8 +38396,7 @@ class NostalgiaForInfinityX9(IStrategy):
 
     mode = self.long_scalp_mode_name
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
 
     sell = False
     signal_name = None
@@ -39089,8 +39072,7 @@ class NostalgiaForInfinityX9(IStrategy):
     stoploss_doom = f"exit_{mode_name}_stoploss_doom"
     stoploss_u_e = f"exit_{mode_name}_stoploss_u_e"
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
     if not self.stops_enable:
       return False, None
 
@@ -41327,7 +41309,7 @@ class NostalgiaForInfinityX9(IStrategy):
     if is_rebuy_mode:
       slice_amount /= self.system_v3_rebuy_mode_stake_multiplier
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, _is_system_v4 = self.get_system_version_flags(trade)
 
     has_order_tags = hasattr(filled_orders[0], "ft_order_tag")
 
@@ -50835,8 +50817,7 @@ class NostalgiaForInfinityX9(IStrategy):
 
     mode_name = self.short_rebuy_mode_name
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
     sell = False
 
     # Original sell signals
@@ -51340,8 +51321,7 @@ class NostalgiaForInfinityX9(IStrategy):
 
     mode_name = self.short_rapid_mode_name
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
 
     sell = False
     signal_name = None
@@ -51654,33 +51634,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     return False, None
 
-  # Short Exit Grind
-  # ---------------------------------------------------------------------------------------------
-  def short_exit_grind(
-    self,
-    pair: str,
-    current_rate: float,
-    profit_stake: float,
-    profit_ratio: float,
-    profit_current_stake_ratio: float,
-    profit_init_ratio: float,
-    max_profit: float,
-    max_loss: float,
-    filled_entries,
-    filled_exits,
-    last_candle,
-    previous_candle_1,
-    trade: "Trade",
-    current_time: "datetime",
-    enter_tags,
-  ) -> tuple:
-    if profit_init_ratio > 0.25:
-      return True, f"exit_{self.short_grind_mode_name}_g"
-
-    #  Here ends exit signal conditions for short_exit_grind
-
-    return False, None
-
   # Short Exit Top Coins
   # ---------------------------------------------------------------------------------------------
   def short_exit_top_coins(
@@ -51958,8 +51911,7 @@ class NostalgiaForInfinityX9(IStrategy):
 
     mode_name = self.short_scalp_mode_name
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
 
     sell = False
 
@@ -52685,8 +52637,7 @@ class NostalgiaForInfinityX9(IStrategy):
     stoploss_doom = f"exit_{mode_name}_stoploss_doom"
     stoploss_u_e = f"exit_{mode_name}_stoploss_u_e"
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
-    is_system_v4 = self.is_system_v4(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, is_system_v4 = self.get_system_version_flags(trade)
     if not self.stops_enable:
       return False, None
 
@@ -55244,7 +55195,7 @@ class NostalgiaForInfinityX9(IStrategy):
     if is_rebuy_mode:
       slice_amount /= self.system_v3_rebuy_mode_stake_multiplier
 
-    is_system_v3, is_system_v3_1, is_system_v3_2 = self.get_system_version_flags(trade)
+    is_system_v3, is_system_v3_1, is_system_v3_2, _is_system_v4 = self.get_system_version_flags(trade)
 
     has_order_tags = hasattr(filled_orders[0], "ft_order_tag")
 
