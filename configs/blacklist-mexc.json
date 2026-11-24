@@ -115,7 +115,9 @@
       // with 67-129% single-day ranges and -30% to -99% off their highs (2026-09-07):
       // 龙虾 -41.9%/121% day, 我踏马来了 -80.7%/129% day, 牛来 -35.0%/70% day, 哈基米 -29.9%/67% day.
       // Spot-only siblings are further gone: 老子 -93.4%, 人生K线 -93.5%/855% day, 小股东 -98.9%, 旺财 -93.3%/1175% day.
-      "(龙虾|哈基米|牛来|我踏马来了|老子|人生K线|小股东|旺财)/.*",
+      // Bybit/KuCoin list the same tokens under pinyin names: NIULAI=牛来, LONGXIA=龙虾, HAJIMI=哈基米,
+      // WOTAMALAILE=我踏马来了, BNRENSHENG=币安人生 (KuCoin "name" field). 牛来 -51% in 40 days to 2026-11-19.
+      "(龙虾|哈基米|牛来|我踏马来了|老子|人生K线|小股东|旺财|BNRENSHENG|HAJIMI|LONGXIA|NIULAI|WOTAMALAILE)/.*",
       // Parabolic squeeze — 542 shorts liquidated on 4 accounts, 2026-08-07 (+801%/7d)
       "(TUT)/.*",
       // Operator winding down — Blur announced on 2026-10-12 that its frontend is deprecated on
@@ -185,6 +187,17 @@
       // The exploit day left the 3-day RangeStabilityFilter window on 11-17 (RoC 1.75 -> 0.51), so
       // the pair is selectable again. Perp on binance (~$56M/day), bybit and bitget; spot on binance.
       "(KAVA)/.*",
+      // Binance Monitoring Tag (iterativ, 2026-11-22) — tagged 2026-11-20 with BANK, INIT, MITO and
+      // ONE, which were already listed. THE -51.4% and ZIL -62.0% over thirty days; ZIL is also
+      // leaving its own L1 for an Ethereum L2 (announced 2026-11-04). Perps on binance, bybit, bitget.
+      "(THE|ZIL)/.*",
+      // Vault exploit (iterativ, 2026-11-22) — Chainflip lost ~$4.86M from its Ethereum vault on
+      // 2026-11-21 through a suspected signing-key compromise and paused the protocol; FLIP closed
+      // -28.5% that day on an 82% range. Spot on kucoin and gateio, no perp.
+      "(FLIP)/.*",
+      // Pump-and-dump (iterativ, 2026-11-22) — SkyAI, +31.4% on 2026-11-21 on a 51% range and a 26%
+      // range the day before; ~$98M/day on the binance perp. Bybit lists it as SKYAI1.
+      "(SKYAI|SKYAI1)/.*",
       // Stock perps not yet listed by name (Bitget isRwa: YES), found against a user's local
       // Bitget blacklist (iterativ, 2026-11-18).
       "(MSFT|MSTR|NVDA)/.*",
@@ -267,7 +280,10 @@
       // Tokenized stocks (X-suffix)
       "(AAPL|AMZN|COIN|CRCL|GOOGL|HOOD|MCD|META|NET|NVDA|OPEN|SPY|TSLA|WMT)X/.*",
       // Tokenized stocks (ON-suffix)
-      "(AAL|AAPL|ABBV|ABNB|ABT|ACHR|ACN|ADBE|ADI|AGG|ALB|AMAT|AMD|AMGN|AMZN|ANET|ARM|ASML|ASTS|AVGO|AXP|BABA|BAC|BBAI|BIDU|BILI|BLK|BMNR|CAT|CEG|CMG|COF|COHR|COIN|COP|COPX|COST|CPNG|CRCL|CRM|CRWD|CRWV|CSCO|CVNA|DIS|EEM|EFA|ENPH|EQIX|ETN|EWJ|EWY|FCX|FIG|FUTU|GEV|GLD|GME|GOOGL|HIMS|HOOD|IAU|IBM|IEFA|IEMG|IJH|INDA|INTC|INTU|IONQ|IREN|ISRG|ITA|ITOT|IVV|IWF|IWM|IWN|JNJ|JPM|KLAC|LIN|LLY|LMT|LRCX|LUNR|MARA|MCD|MELI|META|MRK|MRVL|MSFT|MSTR|NBIS|NEM|NFLX|NKE|NOC|NOW|NVDA|NVO|OKLO|ORCL|OXY|PALL|PANW|PBR|PDD|PEP|PFE|PLTR|PLUG|PPLT|PSQ|PYPL|QBTS|QCOM|QQQ|RDDT|RDW|REGN|RGTI|RIOT|RIVN|RKLB|RTX|SBET|SBUX|SCCO|SGOV|SHOP|SLV|SMCI|SNDK|SNOW|SOFI|SOUN|SOXX|SPGI|SPOT|SPY|STX|TLT|TMO|TMUS|TQQQ|TSLA|TSM|TXN|UBER|UNG|UNH|UNP|URA|USFR|VRT|VRTX|VST|WDC|WFC|WMT|XOM)ON/.*"
+      "(AAL|AAPL|ABBV|ABNB|ABT|ACHR|ACN|ADBE|ADI|AGG|ALB|AMAT|AMD|AMGN|AMZN|ANET|ARM|ASML|ASTS|AVGO|AXP|BABA|BAC|BBAI|BIDU|BILI|BLK|BMNR|CAT|CEG|CMG|COF|COHR|COIN|COP|COPX|COST|CPNG|CRCL|CRM|CRWD|CRWV|CSCO|CVNA|DIS|EEM|EFA|ENPH|EQIX|ETN|EWJ|EWY|FCX|FIG|FUTU|GEV|GLD|GME|GOOGL|HIMS|HOOD|IAU|IBM|IEFA|IEMG|IJH|INDA|INTC|INTU|IONQ|IREN|ISRG|ITA|ITOT|IVV|IWF|IWM|IWN|JNJ|JPM|KLAC|LIN|LLY|LMT|LRCX|LUNR|MARA|MCD|MELI|META|MRK|MRVL|MSFT|MSTR|NBIS|NEM|NFLX|NKE|NOC|NOW|NVDA|NVO|OKLO|ORCL|OXY|PALL|PANW|PBR|PDD|PEP|PFE|PLTR|PLUG|PPLT|PSQ|PYPL|QBTS|QCOM|QQQ|RDDT|RDW|REGN|RGTI|RIOT|RIVN|RKLB|RTX|SBET|SBUX|SCCO|SGOV|SHOP|SLV|SMCI|SNDK|SNOW|SOFI|SOUN|SOXX|SPGI|SPOT|SPY|STX|TLT|TMO|TMUS|TQQQ|TSLA|TSM|TXN|UBER|UNG|UNH|UNP|URA|USFR|VRT|VRTX|VST|WDC|WFC|WMT|XOM)ON/.*",
+      // MEXC stock tokens missing from the suffix groups (2026-11-23)
+      "(ANTX)/.*",
+      "(ANTON|AXTION|BAON|CIENON|CORZON|CVXON|DRAMON|FNON|GLWON|JDON|MAON|MPON|MXLON|NETON|NOKON|SKHYON|SMRON|TERON|TWSTON|USARON)/.*"
     ]
   }
 }
