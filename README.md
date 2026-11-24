@@ -17,6 +17,9 @@ Trading strategy for the [Freqtrade](https://www.freqtrade.io) crypto bot. For b
 keeps the X8 entry/exit engine and upgrades the version contract to
 `v19.0.0`.
 
+The initial snapshot is based on the X8 `v18.0.288` archive state, not upstream
+X8 `v18.0.303`; the later upstream guards still need a separate reconciliation.
+
 The [`web/`](web/) directory contains a read-only command center for X9 and
 Freqtrade, built with Next.js 16, React 19, TypeScript, Tailwind CSS 4 and
 Recharts. It shows equity, open risk, pair attribution and recent activity
