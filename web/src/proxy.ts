@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE, verifySession } from "@/lib/auth";
 
-const PUBLIC_PATHS: Record<string, true> = {
-  "/login": true,
-  "/api/auth/login": true,
-  "/api/auth/logout": true,
-};
+const PUBLIC_PATHS = new Set([
+  "/login",
+  "/api/auth/login",
+  "/api/auth/logout",
+]);
 
 export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
-  if (PUBLIC_PATHS[pathname]) return NextResponse.next();
+  if (PUBLIC_PATHS.has(pathname)) return NextResponse.next();
 
   if (process.env.DASHBOARD_AUTH_DISABLED === "1") {
     return NextResponse.next();
