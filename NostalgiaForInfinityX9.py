@@ -1314,11 +1314,6 @@ class NostalgiaForInfinityX9(IStrategy):
       "EMA_200": {"color": "DarkRed"},
     }
 
-    plot_config["subplots"] = {
-      "long_pump_protection": {"global_protections_long_pump": {"color": "green"}},
-      "long_dump_protection": {"global_protections_long_dump": {"color": "red"}},
-    }
-
     return plot_config
 
   # Mark Profit Target
@@ -4460,10 +4455,6 @@ class NostalgiaForInfinityX9(IStrategy):
       & ((rsi_3_1d_gt_20) | (stochrsi_k_15m_lt_90) | (roc_9_4h_gt_neg_40))
     )
 
-    df["global_protections_long_pump"] = True
-    df["global_protections_long_dump"] = True
-    df["protections_long_rebuy"] = True
-
     # Global protections Short
     df["protections_short_global"] = (
       # 1h & 4h & 1d down move, 1h low, 4h oversold
@@ -4477,11 +4468,6 @@ class NostalgiaForInfinityX9(IStrategy):
         (rsi_3_4h_lt_90) | (aroonu_14_1h_lt_100) | (aroonu_14_4h_lt_100) | (aroonu_14_1d_gt_10) | (roc_9_1d_gt_neg_15)
       )
     )
-
-    df["global_protections_short_pump"] = True
-    df["global_protections_short_dump"] = True
-    df["protections_short_rebuy"] = True
-
 
     return df
 
@@ -5096,8 +5082,6 @@ class NostalgiaForInfinityX9(IStrategy):
     num_empty_288 = np_view("num_empty_288")
     protections_long_global = np_view("protections_long_global")
     protections_short_global = np_view("protections_short_global")
-    global_protections_long_pump = np_view("global_protections_long_pump")
-    global_protections_long_dump = np_view("global_protections_long_dump")
 
     engulf_bull = np_view("ENGULF_BULL")
     engulf_bear = np_view("ENGULF_BEAR")
@@ -5121,8 +5105,6 @@ class NostalgiaForInfinityX9(IStrategy):
     minus_di_14_4h = np_view("MINUS_DI_14_4h")
     dc_high_7d = np_view("DC_HIGH_7D")
     dc_low_7d = np_view("DC_LOW_7D")
-    global_protections_short_pump = np_view("global_protections_short_pump")
-    global_protections_short_dump = np_view("global_protections_short_dump")
     roc_2 = np_view("ROC_2")
     roc_9 = np_view("ROC_9")
     rsi_14 = np_view("RSI_14")
@@ -9990,8 +9972,6 @@ class NostalgiaForInfinityX9(IStrategy):
           # Protections
           long_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           long_entry_logic.append(protections_long_global == True)
-          long_entry_logic.append(global_protections_long_pump == True)
-          long_entry_logic.append(global_protections_long_dump == True)
           long_entry_logic.append(rsi_14_1d > 30.0)
           long_entry_logic.append(roc_9_1d > -20.0)
           long_entry_logic.append(rsi_14_4h > 25.0)
@@ -10024,8 +10004,6 @@ class NostalgiaForInfinityX9(IStrategy):
           # Protections
           long_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           long_entry_logic.append(protections_long_global == True)
-          long_entry_logic.append(global_protections_long_pump == True)
-          long_entry_logic.append(global_protections_long_dump == True)
           long_entry_logic.append(rsi_14_1d > 30.0)
           long_entry_logic.append(roc_9_1d > -20.0)
           long_entry_logic.append((ema_12_4h > ema_200_4h) | (rsi_14_4h > 40.0))
@@ -15967,8 +15945,6 @@ class NostalgiaForInfinityX9(IStrategy):
         if long_entry_condition_index == 68:
           long_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           long_entry_logic.append(protections_long_global == True)
-          long_entry_logic.append(global_protections_long_pump == True)
-          long_entry_logic.append(global_protections_long_dump == True)
           long_entry_logic.append(rsi_14_1d > 25.0)
           long_entry_logic.append(rsi_14_4h > 20.0)
           long_entry_logic.append(roc_9_1d > -25.0)
@@ -26639,9 +26615,6 @@ class NostalgiaForInfinityX9(IStrategy):
           # Protections
           short_entry_logic.append(num_empty_288 <= allowed_empty_candles_288)
           short_entry_logic.append(protections_short_global == True)
-          short_entry_logic.append(global_protections_short_pump == True)
-          short_entry_logic.append(global_protections_short_dump == True)
-
           short_entry_logic.append(rsi_3_1h >= 5.0)
           short_entry_logic.append(rsi_3_4h >= 20.0)
           short_entry_logic.append(rsi_3_1d >= 20.0)
@@ -47967,10 +47940,6 @@ class NostalgiaForInfinityX9(IStrategy):
           or (grind_order_age_time > last_filled_order.order_filled_utc)
           or slice_profit_lt_neg_0_06
         )
-        and (
-          (last_candle["global_protections_long_pump"] == True)
-          and (last_candle["global_protections_long_dump"] == True)
-        )
         and is_long_grind_entry
         and buy_amount <= max_stake
       ):
@@ -48076,9 +48045,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (last_candle["protections_long_global"] == True)
-      and (last_candle["protections_long_rebuy"] == True)
-      and (last_candle["global_protections_long_pump"] == True)
-      and (last_candle["global_protections_long_dump"] == True)
       and (
         (last_candle["enter_long"] == True)
         or (
@@ -61349,10 +61315,6 @@ class NostalgiaForInfinityX9(IStrategy):
         and (
           num_open_grinds_eq_0 or (grind_order_age_time > last_filled_order.order_filled_utc) or slice_profit_gt_0_06
         )
-        and (
-          (last_candle["global_protections_short_pump"] == True)
-          and (last_candle["global_protections_short_dump"] == True)
-        )
         and is_short_grind_entry
         and buy_amount <= max_stake
       ):
@@ -61455,9 +61417,6 @@ class NostalgiaForInfinityX9(IStrategy):
 
     if (
       (last_candle["protections_short_global"] == True)
-      and (last_candle["protections_short_rebuy"] == True)
-      and (last_candle["global_protections_short_pump"] == True)
-      and (last_candle["global_protections_short_dump"] == True)
       and (
         (last_candle["enter_short"] == True)
         or (
