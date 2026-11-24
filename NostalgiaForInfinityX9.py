@@ -8,10 +8,8 @@ import pandas as pd
 from freqtrade.strategy.interface import IStrategy
 from freqtrade.strategy import merge_informative_pair
 from pandas import DataFrame, Series
-from functools import reduce
 from freqtrade.persistence import Trade, Order
 from datetime import datetime, timedelta
-import time
 from typing import Optional
 import warnings
 
@@ -291,14 +289,10 @@ class NostalgiaForInfinityX9(IStrategy):
   custom_fee_open_rate = None
   custom_fee_close_rate = None
 
-  # Rebuy mode minimum number of free slots
-  rebuy_mode_min_free_slots = 2
-
   # Position adjust feature
   position_adjustment_enable = True
 
-  # Grinding feature
-  grinding_enable = True
+  # Position management features
   derisk_enable = True
   stops_enable = True
   doom_stops_enable = True
@@ -387,9 +381,6 @@ class NostalgiaForInfinityX9(IStrategy):
   grind_2_derisk_1_profit_threshold_futures = 0.018
   grind_2_derisk_1_stakes_futures = [0.20, 0.24, 0.28]
   grind_2_derisk_1_sub_thresholds_futures = [-0.12, -0.16, -0.20]
-
-  grinds_stop_spot = -0.12
-  grinds_stop_futures = -0.12
 
   # Non rebuy modes
   regular_mode_stake_multiplier_spot = [1.0]
@@ -963,11 +954,6 @@ class NostalgiaForInfinityX9(IStrategy):
     "ZEC",
   ]
 
-  btc_mode_max_slots = 0
-  btc_mode_coins = [
-    "BTC",
-  ]
-
   # Top coins mode coins
   top_coins_mode_coins = [
     "1INCH",
@@ -1025,9 +1011,6 @@ class NostalgiaForInfinityX9(IStrategy):
     "XTZ",
     "ZEC",
   ]
-
-  # Profit max thresholds
-  profit_max_thresholds = [0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.05, 0.05]
 
   # Max allowed buy "slippage", how high to buy on the candle
   max_slippage = 0.02
@@ -3202,51 +3185,6 @@ class NostalgiaForInfinityX9(IStrategy):
     return kst_main, kst_signal
 
   @staticmethod
-  def validate_indicators(df: pd.DataFrame, columns: list[str], pair: str, timeframe: str) -> None:
-    expected_len = len(df)
-    for col in columns:
-      # Missing column
-      if col not in df.columns:
-        log.warning(f"[{pair}] [{timeframe}] Missing column: {col}")
-        continue
-
-      series = df[col]
-
-      # Length check
-      if len(series) != expected_len:
-        log.warning(f"[{pair}] [{timeframe}] {col} length mismatch: {len(series)} != {expected_len}")
-
-      # Dtype check
-      if not pd.api.types.is_numeric_dtype(series):
-        log.warning(f"[{pair}] [{timeframe}] {col} non-numeric dtype: {series.dtype}")
-        continue
-
-      arr = series.to_numpy(copy=False)
-
-      # Empty array protection
-      if arr.size == 0:
-        log.warning(f"[{pair}] [{timeframe}] {col} empty array")
-        continue
-
-      # Inf check
-      inf_count = np.isinf(arr).sum()
-
-      if inf_count:
-        log.warning(f"[{pair}] [{timeframe}] {col} contains {inf_count} inf values")
-
-      # NaN diagnostics
-      nan_count = np.isnan(arr).sum()
-
-      if nan_count == expected_len:
-        log.warning(f"[{pair}] [{timeframe}] {col} is ALL NaN")
-
-      elif nan_count:
-        nan_pct = (nan_count / expected_len) * 100.0
-
-        if nan_pct > 50.0:
-          log.warning(f"[{pair}] [{timeframe}] {col} has {nan_pct:.1f}% NaN")
-        else:
-          log.debug("[%s] [%s] %s NaNs: %s (%.1f%%)", pair, timeframe, col, nan_count, nan_pct)
 
   @staticmethod
   def np_shift(arr, periods):
@@ -3258,9 +3196,6 @@ class NostalgiaForInfinityX9(IStrategy):
   # Informative 1d Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_1d_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
-    if debug_time:
-      tik = time.perf_counter()
     dp = self.dp
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
@@ -3400,54 +3335,16 @@ class NostalgiaForInfinityX9(IStrategy):
     informative_1d = pd.concat([informative_1d, new_cols], axis=1, copy=False)
 
     # Enable ONLY during debugging
-    debug = False
-    if debug:
-      debug_cols = [
-        "RSI_3",
-        "RSI_14",
-        "STOCHk_14_3_3",
-        "STOCHRSIk_14_14_3_3",
-        "MFI_14",
-        "CMF_20",
-        "WILLR_14",
-        "AROONU_14",
-        "AROOND_14",
-        "ROC_2",
-        "ROC_7",
-        "ROC_9",
-        "RSI_3_change_pct",
-        "change_pct",
-        "top_wick_pct",
-        "bot_wick_pct",
-        "high_max_6",
-        "high_max_12",
-        "high_max_20",
-        "high_max_30",
-        "low_min_6",
-        "low_min_12",
-        "low_min_20",
-        "low_min_30",
-      ]
-      if bad_trade_exit_indicators:
-        debug_cols.extend(["EMA_50", "EMA_200", "RANGE_PCT_14"])
-
-      self.validate_indicators(df=informative_1d, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
 
     # =========================================================================
     # LOGGING
     # =========================================================================
-    if debug_time:
-      tok = time.perf_counter()
-      log.debug("[%s] informative_1d_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_1d
 
   # Informative 4h Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_4h_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
-    if debug_time:
-      tik = time.perf_counter()
     dp = self.dp
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
@@ -3617,57 +3514,15 @@ class NostalgiaForInfinityX9(IStrategy):
     informative_4h = pd.concat([informative_4h, new_cols], axis=1, copy=False)
 
     # Enable ONLY during debugging
-    debug = False
-    if debug:
-      debug_cols = [
-        "RSI_3",
-        "RSI_14",
-        "AROONU_14",
-        "AROOND_14",
-        "STOCHk_14_3_3",
-        "STOCHRSIk_14_14_3_3",
-        "KST_10_15_20_30_10_10_10_15",
-        "KSTs_9",
-        "MFI_14",
-        "CMF_20",
-        "EMA_12",
-        "EMA_50",
-        "EMA_100",
-        "EMA_200",
-        "WILLR_14",
-        "UO_7_14_28",
-        "ROC_2",
-        "ROC_9",
-        "CCI_20",
-        "STOCHRSIk_14_14_3_3_change_pct",
-        "CCI_20_change_pct",
-        "RSI_3_change_pct",
-        "RSI_14_change_pct",
-        "OBV_change_pct",
-        "change_pct",
-        "high_max_6",
-        "high_max_12",
-        "high_max_24",
-        "low_min_12",
-        "low_min_24",
-      ]
-
-      self.validate_indicators(df=informative_4h, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
     # =========================================================================
     # LOGGING
     # =========================================================================
-    if debug_time:
-      tok = time.perf_counter()
-      log.debug("[%s] informative_4h_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_4h
 
   # Informative 1h Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_1h_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
-    if debug_time:
-      tik = time.perf_counter()
     dp = self.dp
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
@@ -3849,60 +3704,16 @@ class NostalgiaForInfinityX9(IStrategy):
     informative_1h = pd.concat([informative_1h, new_cols], axis=1, copy=False)
 
     # Enable ONLY during debugging
-    debug = False
-    if debug:
-      debug_cols = [
-        "RSI_3",
-        "RSI_14",
-        "RSI_3_change_pct",
-        "RSI_14_change_pct",
-        "EMA_12",
-        "EMA_200",
-        "SMA_16",
-        "BBL_20_2.0",
-        "BBU_20_2.0",
-        "BBB_20_2.0",
-        "MFI_14",
-        "CMF_20",
-        "WILLR_14",
-        "WILLR_84",
-        "AROONU_14",
-        "AROOND_14",
-        "STOCHk_14_3_3",
-        "STOCHRSIk_14_14_3_3",
-        "KST_10_15_20_30_10_10_10_15",
-        "KSTs_9",
-        "UO_7_14_28",
-        "ROC_2",
-        "ROC_9",
-        "CCI_20",
-        "CCI_20_change_pct",
-        "change_pct",
-        "high_max_6",
-        "high_max_12",
-        "high_max_24",
-        "low_min_6",
-        "low_min_12",
-        "low_min_24",
-      ]
-
-      self.validate_indicators(df=informative_1h, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
 
     # =========================================================================
     # LOGGING
     # =========================================================================
-    if debug_time:
-      tok = time.perf_counter()
-      log.debug("[%s] informative_1h_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_1h
 
   # Informative 15m Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def informative_15m_indicators(self, metadata: dict, info_timeframe) -> DataFrame:
-    debug_time = False
-    if debug_time:
-      tik = time.perf_counter()
     dp = self.dp
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
@@ -4024,42 +3835,10 @@ class NostalgiaForInfinityX9(IStrategy):
     informative_15m = pd.concat([informative_15m, new_cols], axis=1, copy=False)
 
     # Enable ONLY during debugging
-    debug = False
-    if debug:
-      debug_cols = [
-        "RSI_3",
-        "RSI_14",
-        "RSI_3_change_pct",
-        "RSI_14_change_pct",
-        "EMA_12",
-        "EMA_20",
-        "EMA_26",
-        "EMA_50",
-        "EMA_200",
-        "MFI_14",
-        "CMF_20",
-        "WILLR_14",
-        "AROONU_14",
-        "AROOND_14",
-        "STOCHk_14_3_3",
-        "STOCHRSIk_14_14_3_3",
-        "UO_7_14_28",
-        "UO_7_14_28_change_pct",
-        "OBV_change_pct",
-        "ROC_9",
-        "CCI_20",
-        "CCI_20_change_pct",
-        "change_pct",
-      ]
-
-      self.validate_indicators(df=informative_15m, columns=debug_cols, pair=metadata_pair, timeframe=info_timeframe)
 
     # =========================================================================
     # LOGGING
     # =========================================================================
-    if debug_time:
-      tok = time.perf_counter()
-      log.debug("[%s] informative_15m_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return informative_15m
 
@@ -4074,10 +3853,6 @@ class NostalgiaForInfinityX9(IStrategy):
   # Coin Pair Base Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def base_tf_5m_indicators(self, metadata: dict, df: DataFrame) -> DataFrame:
-    debug_time = False
-    if debug_time:
-      tik = time.perf_counter()
-    metadata_pair = metadata["pair"]
     fast_pct_change = self.fast_pct_change
     stochrsi_k_func = self.stochrsi_k
     chaikin_money_flow = self.chaikin_money_flow
@@ -4443,59 +4218,6 @@ class NostalgiaForInfinityX9(IStrategy):
     df = pd.concat([df, new_cols], axis=1, copy=False)
 
     # Enable ONLY during debugging
-    debug = False
-    if debug:
-      debug_cols = [
-        "RSI_3",
-        "RSI_4",
-        "RSI_14",
-        "RSI_20",
-        "RSI_14_change_pct",
-        "EMA_9",
-        "EMA_12",
-        "EMA_16",
-        "EMA_20",
-        "EMA_26",
-        "EMA_50",
-        "EMA_100",
-        "EMA_200",
-        "SMA_9",
-        "SMA_16",
-        "SMA_21",
-        "SMA_30",
-        "SMA_200",
-        "BBL_20_2.0",
-        "BBU_20_2.0",
-        "BBB_20_2.0",
-        "BBL_40_2.0",
-        "BBD_40_2.0",
-        "BBT_40_2.0",
-        "MFI_14",
-        "CMF_20",
-        "WILLR_14",
-        "WILLR_480",
-        "AROONU_14",
-        "AROOND_14",
-        "STOCHRSIk_14_14_3_3",
-        "KST_10_15_20_30_10_10_10_15",
-        "KSTs_9",
-        "ROC_2",
-        "ROC_9",
-        "change_pct",
-        "close_delta",
-        "close_max_6",
-        "close_max_12",
-        "close_max_48",
-        "close_min_6",
-        "close_min_12",
-        "close_min_48",
-        "num_empty_288",
-        "LARGE_BUBBLE_THR",
-        "CVD_BUY_VOL",
-        "CVD_SELL_VOL",
-      ]
-
-      self.validate_indicators(df=df, columns=debug_cols, pair=metadata_pair, timeframe=self.timeframe)
 
     # =========================================================================
     # GLOBAL PROTECTIONS
@@ -4509,18 +4231,12 @@ class NostalgiaForInfinityX9(IStrategy):
     # =========================================================================
     # LOGGING
     # =========================================================================
-    if debug_time:
-      tok = time.perf_counter()
-      log.debug("[%s] base_tf_5m_indicators took: %.4f seconds.", metadata_pair, tok - tik)
 
     return df
 
   # BTC Informative 4h Timeframe Indicators
   # ---------------------------------------------------------------------------------------------
   def btc_informative_4h_indicators(self, btc_pair: str, btc_info_timeframe: str) -> DataFrame:
-    debug_time = False
-    if debug_time:
-      tik = time.perf_counter()
     dp = self.dp
 
     assert dp, "DataProvider is required for multiple timeframes."
@@ -4555,20 +4271,10 @@ class NostalgiaForInfinityX9(IStrategy):
     btc_informative_4h = pd.concat([btc_informative_4h, new_cols], axis=1, copy=False)
 
     # Enable ONLY during debugging
-    debug = False
-    if debug:
-      debug_cols = [
-        "BTC_RSI_14",
-      ]
-
-      self.validate_indicators(df=btc_informative_4h, columns=debug_cols, pair=btc_pair, timeframe=btc_info_timeframe)
 
     # =========================================================================
     # LOGGING
     # =========================================================================
-    if debug_time:
-      tok = time.perf_counter()
-      log.debug("[%s] btc_informative_4h_indicators took: %.4f seconds.", btc_pair, tok - tik)
 
     return btc_informative_4h
 
@@ -4597,13 +4303,8 @@ class NostalgiaForInfinityX9(IStrategy):
   # Populate Indicators
   # ---------------------------------------------------------------------------------------------
   def populate_indicators(self, df: DataFrame, metadata: dict) -> DataFrame:
-    debug = False
-    debug_time = True
-    if debug_time:
-      tik = time.perf_counter()
     base_timeframe = self.timeframe
     prepare_informative_merge = self.prepare_informative_merge
-    metadata_pair = metadata["pair"]
 
     # ============================================================
     # BTC CASCADE GUARD: return of the last closed BTC candle
@@ -4679,29 +4380,6 @@ class NostalgiaForInfinityX9(IStrategy):
     # ============================================================
     # POST-FFILL VALIDATION
     # ============================================================
-    if debug:
-      groups = {
-        "INFO": self.info_timeframes,
-        "BTC": self.btc_info_timeframes,
-      }
-
-      for source, tfs in groups.items():
-        for tf in tfs:
-          if source == "BTC":
-            tf_cols = [c for c in df.columns if c.startswith("BTC_") and c.endswith(f"_{tf}")]
-          else:
-            tf_cols = [c for c in df.columns if not c.startswith("BTC_") and c.endswith(f"_{tf}")]
-
-          if not tf_cols:
-            continue
-
-          recent = df[tf_cols].tail(500)
-          total_nans = recent.isna().sum().sum()
-
-          if total_nans > 0:
-            log.warning("[%s] %s %s recent500 contains %s NaNs", metadata_pair, source, tf, total_nans)
-          else:
-            log.info("[%s] %s %s merge OK", metadata_pair, source, tf)
 
     # ============================================================
     # BASE TF (LAST)
@@ -4711,19 +4389,7 @@ class NostalgiaForInfinityX9(IStrategy):
     # ============================================================
     # FINAL INDICATOR VALIDATION
     # ============================================================
-    if debug:
-      recent = df.tail(500)
-      final_nan = recent.isna().sum()
-      final_nan = final_nan[final_nan > 0]
-      if not final_nan.empty:
-        log.warning(
-          "[%s] Unexpected indicator NaNs in recent candles:\n%s",
-          metadata_pair,
-          final_nan.sort_values(ascending=False).to_string(),
-        )
 
-    if debug_time:
-      tok_before_protections = time.perf_counter()
 
     np_view = lambda c: df[c].to_numpy(copy=False)
     rsi_3_1h = np_view("RSI_3_1h")
@@ -4851,18 +4517,6 @@ class NostalgiaForInfinityX9(IStrategy):
     df["global_protections_short_dump"] = True
     df["protections_short_rebuy"] = True
 
-    if debug_time:
-      tok_after_protections = time.perf_counter()
-      tok_total = time.perf_counter()
-      log.debug(
-        f"[{metadata_pair}] "
-        f"populate_indicators pre-protections: "
-        f"{tok_before_protections - tik:0.4f}s | "
-        f"protections: "
-        f"{tok_after_protections - tok_before_protections:0.4f}s | "
-        f"total: "
-        f"{tok_total - tik:0.4f}s"
-      )
 
     return df
 
@@ -5337,9 +4991,6 @@ class NostalgiaForInfinityX9(IStrategy):
   # Populate Entry Trend
   # ---------------------------------------------------------------------------------------------
   def populate_entry_trend(self, df: DataFrame, metadata: dict) -> DataFrame:
-    debug = False
-    if debug:
-      tik = time.perf_counter()
     config = self.config
     long_entry_signal_params = self.long_entry_signal_params
     short_entry_signal_params = self.short_entry_signal_params
@@ -36911,9 +36562,6 @@ class NostalgiaForInfinityX9(IStrategy):
       df.loc[:, "enter_short"] = _or_entry_conditions(short_entry_conditions).astype(int)
 
     df.loc[:, "enter_tag"] = entry_tags
-    if debug:
-      tok = time.perf_counter()
-      log.debug("populate_entry_trend took a total of: %.4f seconds.", tok - tik)
     return df
 
   ###############################################################################################
@@ -63878,168 +63526,30 @@ class NostalgiaForInfinityX9(IStrategy):
 
 # Range midpoint acts as Support
 # ---------------------------------------------------------------------------------------------
-def is_support(row_data) -> bool:
-  conditions = []
-  for row in range(len(row_data) - 1):
-    if row < len(row_data) // 2:
-      conditions.append(row_data[row] > row_data[row + 1])
-    else:
-      conditions.append(row_data[row] < row_data[row + 1])
-  result = reduce(lambda x, y: x & y, conditions)
-  return result
 
 
 # Range midpoint acts as Resistance
 # ---------------------------------------------------------------------------------------------
-def is_resistance(row_data) -> bool:
-  conditions = []
-  for row in range(len(row_data) - 1):
-    if row < len(row_data) // 2:
-      conditions.append(row_data[row] < row_data[row + 1])
-    else:
-      conditions.append(row_data[row] > row_data[row + 1])
-  result = reduce(lambda x, y: x & y, conditions)
-  return result
 
 
 # Elliot Wave Oscillator
 # ---------------------------------------------------------------------------------------------
-def ewo(df, ema1_length=5, ema2_length=35):
-  ema1 = ta.EMA(df, timeperiod=ema1_length)
-  ema2 = ta.EMA(df, timeperiod=ema2_length)
-  emadiff = (ema1 - ema2) / df["close"] * 100.0
-  return emadiff
 
 
 # Pivot Points - 3 variants - daily recommended
 # ---------------------------------------------------------------------------------------------
-def pivot_points(df: DataFrame, mode="fibonacci") -> Series:
-  df_high = df["high"]
-  df_low = df["low"]
-  df_close = df["close"]
-  df_open = df["open"]
-
-  if mode == "simple":
-    hlc3_pivot = (df_high + df_low + df_close).shift(1) / 3
-    res1 = hlc3_pivot * 2 - df_low.shift(1)
-    sup1 = hlc3_pivot * 2 - df_high.shift(1)
-    high_low_range = df_high - df_low
-    res2 = hlc3_pivot + high_low_range.shift()
-    sup2 = hlc3_pivot - high_low_range.shift()
-    res3 = hlc3_pivot * 2 + (df_high - 2 * df_low).shift()
-    sup3 = hlc3_pivot * 2 - (2 * df_high - df_low).shift()
-    return hlc3_pivot, res1, res2, res3, sup1, sup2, sup3
-  elif mode == "fibonacci":
-    hlc3_pivot = (df_high + df_low + df_close).shift(1) / 3
-    hl_range = (df_high - df_low).shift(1)
-    res1 = hlc3_pivot + 0.382 * hl_range
-    sup1 = hlc3_pivot - 0.382 * hl_range
-    res2 = hlc3_pivot + 0.618 * hl_range
-    sup2 = hlc3_pivot - 0.618 * hl_range
-    res3 = hlc3_pivot + 1 * hl_range
-    sup3 = hlc3_pivot - 1 * hl_range
-    return hlc3_pivot, res1, res2, res3, sup1, sup2, sup3
-  elif mode == "DeMark":
-    demark_pivot_lt = df_low * 2 + df_high + df_close
-    demark_pivot_eq = df_close * 2 + df_low + df_high
-    demark_pivot_gt = df_high * 2 + df_low + df_close
-    demark_pivot = np.where(
-      (df_close < df_open),
-      demark_pivot_lt,
-      np.where((df_close > df_open), demark_pivot_gt, demark_pivot_eq),
-    )
-    dm_pivot = demark_pivot / 4
-    dm_res = demark_pivot / 2 - df_low
-    dm_sup = demark_pivot / 2 - df_high
-    return dm_pivot, dm_res, dm_sup
 
 
 # Heikin Ashi candles
 # ---------------------------------------------------------------------------------------------
-def heikin_ashi(df, smooth_inputs=False, smooth_outputs=False, length=10):
-  df = df[["open", "close", "high", "low"]].copy().fillna(0)
-  df_open = df["open"]
-  df_high = df["high"]
-  df_low = df["low"]
-  df_close = df["close"]
-
-  if smooth_inputs:
-    df["open_s"] = ta.EMA(df_open, timeframe=length)
-    df["high_s"] = ta.EMA(df_high, timeframe=length)
-    df["low_s"] = ta.EMA(df_low, timeframe=length)
-    df["close_s"] = ta.EMA(df_close, timeframe=length)
-
-    df_open_s = df["open_s"]
-    df_high_s = df["high_s"]
-    df_low_s = df["low_s"]
-    df_close_s = df["close_s"]
-
-    open_ha = (df_open_s.shift(1) + df_close_s.shift(1)) / 2
-    high_ha = df.loc[:, ["high_s", "open_s", "close_s"]].max(axis=1)
-    low_ha = df.loc[:, ["low_s", "open_s", "close_s"]].min(axis=1)
-    close_ha = (df_open_s + df_high_s + df_low_s + df_close_s) / 4
-  else:
-    open_ha = (df_open.shift(1) + df_close.shift(1)) / 2
-    high_ha = df.loc[:, ["high", "open", "close"]].max(axis=1)
-    low_ha = df.loc[:, ["low", "open", "close"]].min(axis=1)
-    close_ha = (df_open + df_high + df_low + df_close) / 4
-
-  open_ha = open_ha.fillna(0)
-  high_ha = high_ha.fillna(0)
-  low_ha = low_ha.fillna(0)
-  close_ha = close_ha.fillna(0)
-
-  if smooth_outputs:
-    open_sha = ta.EMA(open_ha, timeframe=length)
-    low_sha = ta.EMA(low_ha, timeframe=length)
-    close_sha = ta.EMA(close_ha, timeframe=length)
-
-    return open_sha, close_sha, low_sha
-  else:
-    return open_ha, close_ha, low_ha
 
 
 # Peak Percentage Change
 # ---------------------------------------------------------------------------------------------
-def range_percent_change(self, df: DataFrame, method, length: int) -> float:
-  """
-  Rolling Percentage Change Maximum across interval.
-
-  :param df: DataFrame The original OHLC df
-  :param method: High to Low / Open to Close
-  :param length: int The length to look back
-  """
-  df_high = df["high"]
-  df_low = df["low"]
-  df_open = df["open"]
-  df_close = df["close"]
-
-  if method == "HL":
-    low_min = df_low.rolling(length).min()
-    return (df_high.rolling(length).max() - low_min) / low_min
-  elif method == "OC":
-    close_min = df_close.rolling(length).min()
-    return (df_open.rolling(length).max() - close_min) / close_min
-  else:
-    raise ValueError(f"Method {method} not defined!")
 
 
 # Percentage distance to top peak
 # ---------------------------------------------------------------------------------------------
-def top_percent_change(self, df: DataFrame, length: int) -> float:
-  """
-  Percentage change of the current close from the range maximum Open price
-
-  :param df: DataFrame The original OHLC df
-  :param length: int The length to look back
-  """
-  df_open = df["open"]
-  df_close = df["close"]
-
-  if length == 0:
-    return (df_open - df_close) / df_close
-  else:
-    return (df_open.rolling(length).max() - df_close) / df_close
 
 
 def _is_entry_bool_scalar(condition) -> bool:
